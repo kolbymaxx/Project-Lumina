@@ -41,6 +41,7 @@ Notes dirs:
 | [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
+| [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
