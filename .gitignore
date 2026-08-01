@@ -1,0 +1,19 @@
+# Local operator config / dumps
+boot/config.env
+artifacts/xr-18.7.5/boot-logs/
+artifacts/xr-18.7.5/*.txt
+artifacts/xr-18.7.5/*.plist
+!artifacts/xr-18.7.5/*.placeholder
+artifacts/xr-18.7.5/kernelcache/
+artifacts/xr-18.7.5/notes.md
+research/kexploit/darksword-kexploit/
+research/kexploit/DarkSword-RCE/
+research/kexploit/Dopamine/
+research/kexploit/lara/
+research/kexploit/notes/*
+!research/kexploit/notes/.gitkeep
+
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
