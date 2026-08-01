@@ -36,21 +36,30 @@ from the tethered session, without regressing BootROM → ramdisk SSH.
 - Optional: newer restore ramdisk matching 18.x tooling
 
 ### Candidate approaches (theory)
-1. **Newer restore ramdisk** from a late-18 / matching IPSW family — *speculation:* newer `mount_apfs` may accept Data.
-2. **Host-side IPSW extract** for kernelcache / trustcaches while Data stays blocked.
-3. **Deeper on-device search** under `/mnt1` and `/mnt4` (cryptex, preboot, locked paths).
+1. **Newer restore ramdisk `mount_apfs`** — staged candidates:
+   - **16.0 n841** (still HFS restore DMG in SSHRD practice; newer APFS userspace)
+   - **18.x APFS restore** (closest tooling to 22H311; Mac `hdiutil` packaging)
+2. **SSHRD-style SEP staging** (process reference only) — after tools clear
+   exit 76: Preboot + xART → `seputil --gigalocker-init` → `seputil --load`
+   → Data. Full write-up: [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md).
+3. **Host-side IPSW extract** for kernelcache / trustcaches while Data stays blocked.
+4. **Deeper on-device search** under `/mnt1` and mounted non-Data volumes.
 
 ### How we’d reverse-engineer / validate
-- Diff 15.1 vs newer restore ramdisk binaries (`mount_apfs`, `fsck_apfs`)
-- Mount System always; retry Data; log exact errno/strings
+- Diff 15.1 vs 16.0 vs 18.x restore ramdisk binaries (`mount_apfs`, `fsck_apfs`, `apfs.util`)
+- Mount System always; retry Data **before** seputil; log exact errno/strings
+- Only if errno leaves “Program version wrong”, run SEP staging and compare
 - Host: `ipsw extract --kernel` (or equivalent) from 22H311 IPSW; hash artifacts into `artifacts/xr-18.7.5/` (gitignored dumps)
 
 ### Dependencies / risks
 - Newer ramdisk may need different iBSS/iBoot patches — do not break the known-good boot
+- ≥16 restore sessions may renumber NAND to `disk1s*` — re-probe, don’t hardcode
 - Data may also be SEP/file-protection constrained even after mount
+- Public SSHRD iOS 17+ Data mounts are frequently broken — not a ready recipe
 - Keep all experiments off the production `boot/` path until proven
 
 ### Exit criteria — done when…
+- [x] Documented SSHRD / restore-ramdisk staging research ([DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md))
 - [ ] Documented recipe mounts Data **or** proves a hard SEP/crypto blocker with evidence
 - [ ] Kernelcache for 22H311 obtained (device path and/or host IPSW) with hash noted in STATUS
 

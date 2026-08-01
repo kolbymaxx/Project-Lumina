@@ -42,12 +42,13 @@ Notes dirs:
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
+| [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
 ## Hard gates (current)
 
-1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`)
+1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
 2. **Kernel exploit for 18.7.5 / A12** — not available / not proven; keep isolated
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
