@@ -1,1 +1,4 @@
-# Phase A placeholder — seal / writable probes (/tmp, /var/tmp, mounted volumes).
+# Phase A 2026-08-01
+# Ramdisk root: HFS RO (/dev/md0)
+# System /mnt1: mounted readable; write/seal not fully characterized
+# Data: not mounted — no assessment yet

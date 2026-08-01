@@ -1,2 +1,5 @@
-# Phase A placeholder — replace with output of: mount
-# Save real dump as mount.txt (gitignored) and paste summary into docs/STATUS.md A2.
+# Phase A 2026-08-01
+# / (ramdisk) = /dev/md0 HFS RO
+# disk0s1s1 → /mnt1 System OK
+# disk0s1s2 → Data FAIL mount_apfs: Program version wrong
+# disk0s1s5 → /mnt4 preboot-ish OK

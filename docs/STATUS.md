@@ -16,38 +16,51 @@ XR UDID: `00008020-00117540340B002E`
 ECID: `00117540340B002E`  
 Serial (Recovery): `F2LZJAE1KXKQ`
 
-## Current verified state (tonight — do not regress)
+## Current verified state (do not regress)
 
 On **iMac + macOS** with PR #2-era `usbliter8ctl` host path:
 
 1. **usbliter8** Pico → Pwned DFU (`05ac:1227`, `PWND:[usbliter8]`) — works
-2. **Remote iBSS boot** → Recovery `05ac:1281` — works (device **leaves** SecureROM DFU)
-3. **hsbugss usbliter8-xr-ramdisk** `exploit.sh` full chain — works  
-   firmwares → DeviceTree → ramdisk → trustcache → kernel → `bootx`
+2. **Remote iBSS boot** → Recovery `05ac:1281` — works
+3. **hsbugss usbliter8-xr-ramdisk** full chain → `bootx` — works
 4. **Root SSH** on ramdisk — works (`alpine` / `root` via `iproxy 2222 22`)
-5. Device appears on usbmux after `bootx` (not stuck in Recovery)
+5. Device appears on usbmux after `bootx`
 
-Earlier “stuck on `05ac:1227`” notes were from the patched-image / host-path
-debug phase. That is **not** the current state when booting known-good
-`payload/iBSS.raw` on macOS.
+## Phase A — 2026-08-01 (XR ramdisk SSH) — PARTIAL
+
+| Item | Result |
+|------|--------|
+| Boot | usbliter8 → hsbugss xr-ramdisk → root SSH (`alpine`, `iproxy 2222`) |
+| UDID | `00008020-00117540340B002E` |
+| Ramdisk identity | **iOS 15.1 restore (`19B5042h`)**, root `/dev/md0` HFS **RO** |
+| System | `disk0s1s1` → `/mnt1` **OK** |
+| Real device OS | `/mnt1` SystemVersion = **iOS 18.7.5 (22H311)** |
+| Data | `disk0s1s2` → **FAIL** `mount_apfs: Program version wrong` |
+| Preboot-ish | `disk0s1s5` → `/mnt4` OK (`mobile/Library` present) |
+| Kernel under `/mnt1` | not yet located (`Caches` / `Kernels` empty or missing) |
+
+**Blocker:** the 15.1 ramdisk `mount_apfs` cannot mount the iOS 18 Data volume.
+
+Implications:
+- System volume is readable → can inspect on-disk 18.7.5 userspace from `/mnt1`
+- Data volume is **not** mountable with this ramdisk tool — need a newer
+  `mount_apfs` / newer restore ramdisk, or another read path
+- Kernelcache for 22H311 may need IPSW extract on host if not under `/mnt1`
 
 ## Paths
 - Host tool (iMac): PR #2 macOS `usbliter8ctl` remote-boot path
-  - also `~/Projects/usbliter8-jailbreak/usbliter8ctl` or this repo’s `usbliter8ctl`
-- Ramdisk project: `~/Projects/usbliter8-xr-ramdisk`
+- Ramdisk project: `~/Projects/usbliter8-xr-ramdisk` (15.1-based payloads)
 - IPSW-related: `iPhone11,8_18.7.5_22H311_Restore`
-- This monorepo boot wrapper: `boot/lumina-boot.sh`  
-  (UDID default / auto-detect for `00008020-00117540340B002E`)
+- Lumina boot wrapper: `boot/lumina-boot.sh`
 
 ## Known issues
-- Upstream hsbugss `exploit.sh` historically waited on a **foreign UDID**;
-  Lumina wrappers use this XR’s UDID or `idevice_id` auto-detect — do not
-  copy the foreign id back into `boot/`
+- Upstream hsbugss `exploit.sh` historically used a foreign UDID; Lumina
+  wrappers use this XR’s UDID / auto-detect
 - `sshpass` may need `brew install sshpass`
 - After `bootx`, `irecovery` fails (expected — left Recovery)
 - Black screen can still be a live ramdisk (SSH is the check)
 - Session is **tethered**: unplug/reboot = full re-pwn
-- Phase A mount / disk ground truth not yet pasted (placeholders below)
+- **Data mount blocked** by 15.1 `mount_apfs` vs iOS 18 APFS
 
 ## Research map (other codebases)
 | Project | Use for Lumina |
@@ -62,66 +75,67 @@ Lumina stack intent:
   usbliter8 → ramdisk/SSH → (research) kernel r/w → (hard) PPL → Dopamine-like bootstrap
 
 ## Phases
-### A — Device ground truth (XR ramdisk SSH) — NEXT
-- [ ] `uname -a`, SystemVersion, build
-- [ ] `mount`, `ls /dev/disk*`
-- [ ] Mount System + Data if possible
-- [ ] Pull kernelcache + note paths
-- [ ] Record seal / writable reality
-
-Collect with:
-```bash
-./boot/lumina-ssh.sh 'bash -s' < boot/collect-ground-truth.sh \
-  | tee artifacts/xr-18.7.5/ground-truth.txt
-```
-Paste under **Device notes** and fill `artifacts/xr-18.7.5/*.placeholder` files.
+### A — Device ground truth (XR ramdisk SSH)
+- [x] Ramdisk identity / root mount noted (15.1 / `19B5042h`, `/dev/md0` HFS RO)
+- [x] System mount `disk0s1s1` → `/mnt1`; SystemVersion **18.7.5 (22H311)**
+- [x] Data mount `disk0s1s2` attempted — **FAIL** (program version wrong)
+- [x] Preboot-ish `disk0s1s5` → `/mnt4`
+- [ ] Locate kernelcache under `/mnt1` or pull from IPSW on host
+- [ ] Record fuller seal / writable reality beyond volume mounts
+- [ ] Unblock Data mount (newer ramdisk / `mount_apfs`)
 
 ### B — Lumina monorepo
-- [x] Create Lumina repo layout in Project-Lumina
-- [x] `docs/STATUS.md` = this file
-- [x] `boot/` wrappers around known-good usbliter8ctl + exploit flow
-- [x] Fix UDID / SSH wait for *this* XR (`00008020-00117540340B002E`)
-- [x] `tools/mount_from_ramdisk.sh` stubs fed by A output
-- [x] Phase A artifact placeholders under `artifacts/xr-18.7.5/`
+- [x] Repo layout, STATUS, boot wrappers, UDID fix, mount stubs, artifacts
 
 ### C — Kexploit study tree (separate, don’t break boot)
-- [x] Index public darksword-kexploit / related under `research/kexploit/`
+- [x] Index under `research/kexploit/`
 - [ ] Operator may clone study trees locally; never mix into boot path
 - [x] Document claimed version windows vs **18.7.5 / 22H311**
 - **No kexploit implementation in this phase**
 
-## Device notes (operator paste)
+## Device notes (Phase A)
 
 ### A1 — uname / SystemVersion / build
 ```
-(paste here)
+Ramdisk: iOS 15.1 restore identity (19B5042h)
+Root FS: /dev/md0 HFS read-only
+On-disk System (/mnt1) SystemVersion: iOS 18.7.5 (22H311)
+UDID: 00008020-00117540340B002E
 ```
-Also: `artifacts/xr-18.7.5/uname.txt`, `SystemVersion.plist`
 
 ### A2 — mount / disks
 ```
-(paste here)
+/ (ramdisk) = /dev/md0 HFS RO
+disk0s1s1 → /mnt1  (System) OK
+disk0s1s2 → Data   FAIL mount_apfs: Program version wrong
+disk0s1s5 → /mnt4  (preboot-ish; mobile/Library present) OK
 ```
-Also: `artifacts/xr-18.7.5/mount.txt`, `disks.txt`
 
 ### A3 — System + Data mount attempts
 ```
-(paste here)
+SYSTEM_DEV=/dev/disk0s1s1  → /mnt1 OK
+DATA_DEV=/dev/disk0s1s2    → FAIL (15.1 mount_apfs vs iOS 18 Data)
+PREBOOT_DEV=/dev/disk0s1s5 → /mnt4 OK
 ```
-Also: `artifacts/xr-18.7.5/mount-system-data.txt`  
-Then set `SYSTEM_DEV` / `DATA_DEV` for `tools/mount_from_ramdisk.sh`.
 
 ### A4 — kernelcache paths
 ```
-(paste here)
+Under /mnt1: Caches/Kernels empty or missing — not located yet.
+Next: search /mnt1 more thoroughly and/or extract from
+iPhone11,8_18.7.5_22H311_Restore IPSW on the Mac host.
 ```
-Also: `artifacts/xr-18.7.5/kernelcache-paths.txt`
 
 ### A5 — seal / writable reality
 ```
-(paste here)
+Ramdisk root is HFS RO.
+System (/mnt1) mounted (readable; write/seal not fully characterized).
+Data not mounted — no Data writable assessment yet.
 ```
-Also: `artifacts/xr-18.7.5/writable.txt`
+
+## Next (after Phase A partial)
+1. Find kernelcache (host IPSW extract and/or deeper `/mnt1` + `/mnt4` search)
+2. Research newer restore ramdisk / `mount_apfs` that can mount iOS 18 Data
+3. Keep kexploit study isolated — do not block boot path on Data mount
 
 ## Hard gates (do not skip)
 - No public claim of Sileo / package manager on 18.7.5
@@ -130,6 +144,6 @@ Also: `artifacts/xr-18.7.5/writable.txt`
 - PPL / SPTM remain open research problems after any k r/w primitive
 
 ## Success criteria (near term)
-1. [x] One command re-enters ramdisk SSH on this XR → `boot/lumina-boot.sh`
-2. [ ] STATUS contains real mount + build notes from the device → Phase A paste
+1. [x] One command re-enters ramdisk SSH on this XR
+2. [x] STATUS contains real mount + build notes from the device (partial; Data blocked)
 3. [x] Repo exists; kexploit clones are isolated under `research/`

@@ -60,8 +60,16 @@ Rules:
 2. Do not run kexploit against the live XR until Phase A build notes exist.
 3. Record claimed vs observed version windows in STATUS after any experiment.
 
+## Phase A note (2026-08-01)
+
+Working hsbugss XR ramdisk is a **15.1** restore environment (`19B5042h`).
+It can mount System (`disk0s1s1` → `/mnt1`, on-disk **18.7.5 / 22H311**) but
+**cannot** mount Data (`disk0s1s2`) — `mount_apfs: Program version wrong`.
+Any Data-dependent tooling needs a newer ramdisk/`mount_apfs` first.
+
 ## Related Lumina docs
 
-- [STATUS.md](STATUS.md) — live device status and Phase A paste area
+- [STATUS.md](STATUS.md) — live device status and Phase A notes
+- [../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md)
 - [../research/CUSTOM_BOOT_NEXT.md](../research/CUSTOM_BOOT_NEXT.md) — earlier CUSTOM_BOOT host research
 - [../research/kexploit/README.md](../research/kexploit/README.md) — isolation rules
