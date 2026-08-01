@@ -3,15 +3,21 @@
 Research monorepo for a **tethered → (eventual) semi-untethered** A12/A13 path
 starting from usbliter8 BootROM.
 
-**Not** a claim of public Sileo / package-manager jailbreak on iOS **18.7.5**.
+**This is not a jailbreak.** No Sileo / package-manager claim on iOS **18.7.5**.
 
 Primary live device: iPhone XR (`n841ap`) on **18.7.5 (22H311)**.
+
+### Honest status (Phase A, 2026-08-01)
+- **Done:** BootROM (usbliter8) → ramdisk SSH → System volume mount (`/mnt1` shows 18.7.5)
+- **Blocked:** Data volume mount (`mount_apfs: Program version wrong` on 15.1 ramdisk tooling)
+- **Not done:** kernel exploit, PPL, userspace bootstrap
 
 ## What works today
 1. usbliter8 Pico → Pwned DFU
 2. iBSS → Recovery
 3. hsbugss XR ramdisk payload chain → `bootx`
 4. Root SSH (`alpine`) via `iproxy 2222 22`
+5. System `disk0s1s1` → `/mnt1` (on-disk 18.7.5 / 22H311)
 
 ## Quick start (Mac)
 ```bash
@@ -34,7 +40,9 @@ docs/STATUS.md            # live project status + Phase A paste area
 docs/RESEARCH.md          # Dopamine / DarkSword / LARA index
 artifacts/xr-18.7.5/      # dumps from the live XR (mostly gitignored)
 research/CUSTOM_BOOT_NEXT.md
-research/kexploit/        # isolated kexploit study index (not in boot path)
+research/kexploit/        # isolated kexploit study (not in boot path)
+research/checkm8/         # A11-and-older knowledge only
+research/palera1n/        # A8–A11 reference only
 tools/                    # host helpers / stubs
 usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
@@ -44,12 +52,15 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 - [docs/RESEARCH.md](docs/RESEARCH.md)
 - [boot/README.md](boot/README.md)
 - [research/kexploit/README.md](research/kexploit/README.md)
+- [research/checkm8/README.md](research/checkm8/README.md)
+- [research/palera1n/README.md](research/palera1n/README.md)
 
 ## Hard gates
-- No Sileo / userspace jailbreak claim on 18.7.5
-- No working-kexploit claim on 18.7.5 / 22H311
-- Public LARA matrix ends at 18.7.1 (`18.7.2+` not supported there)
-- Kexploit clones stay under `research/kexploit/` only
+- Data mount blocked on current 15.1 ramdisk `mount_apfs`
+- No working-kexploit claim on 18.7.5 / A12
+- No Sileo / userspace bootstrap claim
+- checkm8 / palera1n = knowledge only; usbliter8 = A12 BootROM entry only
+- Kexploit stays under `research/kexploit/` — never wired into boot
 
 ## usbliter8ctl
 
