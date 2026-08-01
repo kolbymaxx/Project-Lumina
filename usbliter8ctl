@@ -1,0 +1,329 @@
+#!/usr/bin/env python3
+"""Host utility for a device exploited by usbliter8."""
+
+import argparse
+import errno
+import os
+import sys
+import time
+from contextlib import contextmanager
+
+try:
+    import usb.core
+    import usb.util
+except ImportError:
+    print("error: pyusb is required (python3 -m pip install pyusb)", file=sys.stderr)
+    sys.exit(1)
+
+
+VENDOR = 0x05AC
+PID_DFU = 0x1227
+PID_RECOVERY = 0x1281
+
+DFU_DNLOAD = 1
+DFU_ABORT = 4
+CUSTOM_DEMOTE = 7
+CUSTOM_BOOT = 8
+
+TRANSFER_SIZE = 0x800
+INTERFACE = 0
+HOST_TO_DEVICE_CLASS_INTERFACE = 0x21
+CONTROL_TIMEOUT_MS = 5000
+PWND_MARKER = "PWND:[usbliter8]"
+
+
+class ToolError(Exception):
+    """An error that should be shown without a traceback."""
+
+
+def find_device(pid):
+    return usb.core.find(idVendor=VENDOR, idProduct=pid)
+
+
+def device_serial(dev):
+    if not dev.iSerialNumber:
+        return ""
+    try:
+        return usb.util.get_string(dev, dev.iSerialNumber) or ""
+    except usb.core.USBError as exc:
+        return "<unavailable: {}>".format(exc)
+
+
+def require_pwned_dfu():
+    dev = find_device(PID_DFU)
+    if dev is None:
+        raise ToolError(
+            "Pwned DFU device {:04x}:{:04x} was not found".format(
+                VENDOR, PID_DFU
+            )
+        )
+    return dev
+
+
+def verify_pwned(dev):
+    serial = device_serial(dev)
+    if serial.startswith("<unavailable:"):
+        raise ToolError("could not read the DFU serial: {}".format(serial))
+    if PWND_MARKER not in serial:
+        raise ToolError(
+            "DFU device is not marked as pwned (serial: {!r})".format(serial)
+        )
+
+
+def try_set_configuration(dev):
+    """Configure the device when possible; macOS may report it as already set."""
+    try:
+        dev.set_configuration()
+    except usb.core.USBError as exc:
+        print("note: set_configuration failed; continuing: {}".format(exc))
+
+
+@contextmanager
+def claim_device(dev):
+    usb.util.claim_interface(dev, INTERFACE)
+    try:
+        yield
+    finally:
+        try:
+            usb.util.release_interface(dev, INTERFACE)
+        except usb.core.USBError:
+            # A successful boot can disconnect the old DFU device immediately.
+            pass
+        usb.util.dispose_resources(dev)
+
+
+def is_pipe_stall(exc):
+    """Return True for the EPIPE/libusb PIPE forms used for USB stalls."""
+    if getattr(exc, "errno", None) == errno.EPIPE:
+        return True
+    # PyUSB's libusb1 backend uses LIBUSB_ERROR_PIPE (-9).
+    if getattr(exc, "backend_error_code", None) == -9:
+        return True
+    text = str(exc).lower()
+    return "pipe error" in text or "endpoint has been stalled" in text
+
+
+def control_request_allow_stall(dev, request, name):
+    try:
+        dev.ctrl_transfer(
+            HOST_TO_DEVICE_CLASS_INTERFACE,
+            request,
+            0,
+            INTERFACE,
+            None,
+            timeout=CONTROL_TIMEOUT_MS,
+        )
+    except usb.core.USBError as exc:
+        if is_pipe_stall(exc):
+            print(
+                "note: {} returned a USB pipe/stall; "
+                "this is expected and execution will continue".format(name)
+            )
+            return
+        raise
+
+
+def do_info(_args):
+    found = False
+    for pid, default_status in (
+        (PID_DFU, "DFU"),
+        (PID_RECOVERY, "Recovery"),
+    ):
+        devices = usb.core.find(
+            find_all=True, idVendor=VENDOR, idProduct=pid
+        )
+        for dev in devices:
+            found = True
+            serial = device_serial(dev)
+            status = default_status
+            if pid == PID_DFU and PWND_MARKER in serial:
+                status = "Pwned DFU"
+            print("{:04x}:{:04x} {}".format(VENDOR, pid, status))
+            print("serial: {}".format(serial or "<none>"))
+
+    if not found:
+        raise ToolError(
+            "no DFU or Recovery device found "
+            "({:04x}:{:04x} or {:04x}:{:04x})".format(
+                VENDOR, PID_DFU, VENDOR, PID_RECOVERY
+            )
+        )
+
+
+def do_demote(_args):
+    dev = require_pwned_dfu()
+    try_set_configuration(dev)
+
+    with claim_device(dev):
+        verify_pwned(dev)
+        control_request_allow_stall(dev, CUSTOM_DEMOTE, "CUSTOM_DEMOTE")
+
+    print("demote request sent")
+
+
+def do_boot(args):
+    image_path = os.path.expanduser(args.image)
+    try:
+        with open(image_path, "rb") as image_file:
+            image = image_file.read()
+    except OSError as exc:
+        raise ToolError("could not read {!r}: {}".format(image_path, exc))
+
+    if not image:
+        raise ToolError("refusing to boot an empty image")
+
+    dev = require_pwned_dfu()
+    try_set_configuration(dev)
+
+    with claim_device(dev):
+        verify_pwned(dev)
+
+        block = 0
+        sent = 0
+        while sent < len(image):
+            chunk = image[sent : sent + TRANSFER_SIZE]
+            transferred = dev.ctrl_transfer(
+                HOST_TO_DEVICE_CLASS_INTERFACE,
+                DFU_DNLOAD,
+                block,
+                INTERFACE,
+                chunk,
+                timeout=CONTROL_TIMEOUT_MS,
+            )
+            if transferred != len(chunk):
+                raise ToolError(
+                    "short DFU transfer in block {}: sent {} of {} bytes".format(
+                        block, transferred, len(chunk)
+                    )
+                )
+            sent += transferred
+            block += 1
+
+        # A zero-length DNLOAD terminates the DFU download.
+        transferred = dev.ctrl_transfer(
+            HOST_TO_DEVICE_CLASS_INTERFACE,
+            DFU_DNLOAD,
+            block,
+            INTERFACE,
+            b"",
+            timeout=CONTROL_TIMEOUT_MS,
+        )
+        if transferred not in (0, None):
+            raise ToolError(
+                "final empty DNLOAD unexpectedly transferred {} bytes".format(
+                    transferred
+                )
+            )
+
+        print("sent - 0x{:x}".format(sent))
+        control_request_allow_stall(dev, CUSTOM_BOOT, "CUSTOM_BOOT")
+        control_request_allow_stall(dev, DFU_ABORT, "DFU_ABORT")
+
+    print(
+        "boot sequence sent; wait for Recovery with: "
+        "python3 usbliter8ctl wait --pid 0x1281"
+    )
+
+
+def parse_pid(value):
+    text = str(value).strip().lower()
+    if text.startswith("0x"):
+        text = text[2:]
+    try:
+        pid = int(text, 16)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            "PID must be hexadecimal, for example 0x1281 or 1281"
+        )
+    if not 0 <= pid <= 0xFFFF:
+        raise argparse.ArgumentTypeError("PID must be between 0000 and ffff")
+    return pid
+
+
+def do_wait(args):
+    print(
+        "waiting for {:04x}:{:04x} (press Ctrl-C to stop)...".format(
+            VENDOR, args.pid
+        )
+    )
+    while find_device(args.pid) is None:
+        time.sleep(args.interval)
+    print("found {:04x}:{:04x}".format(VENDOR, args.pid))
+
+
+def do_send(args):
+    print(
+        "send is not implemented yet; Recovery bulk upload for {!r} "
+        "will be added later".format(args.image)
+    )
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        prog="usbliter8ctl",
+        description="Control an Apple device exploited by usbliter8",
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.required = True
+
+    info_parser = subparsers.add_parser(
+        "info", help="show a connected DFU or Recovery device"
+    )
+    info_parser.set_defaults(func=do_info)
+
+    demote_parser = subparsers.add_parser(
+        "demote", help="send CUSTOM_DEMOTE to a Pwned DFU device"
+    )
+    demote_parser.set_defaults(func=do_demote)
+
+    boot_parser = subparsers.add_parser(
+        "boot", help="upload and boot a raw image on a Pwned DFU device"
+    )
+    boot_parser.add_argument("image", help="raw iBSS/iBoot image")
+    boot_parser.set_defaults(func=do_boot)
+
+    wait_parser = subparsers.add_parser(
+        "wait", help="wait until an Apple USB device appears"
+    )
+    wait_parser.add_argument(
+        "--pid",
+        type=parse_pid,
+        default=PID_RECOVERY,
+        help="USB product ID in hex (default: 0x1281)",
+    )
+    wait_parser.add_argument(
+        "--interval",
+        type=float,
+        default=0.25,
+        help=argparse.SUPPRESS,
+    )
+    wait_parser.set_defaults(func=do_wait)
+
+    send_parser = subparsers.add_parser(
+        "send", help="placeholder for a future Recovery bulk upload"
+    )
+    send_parser.add_argument("image", help="image to send later")
+    send_parser.set_defaults(func=do_send)
+
+    return parser
+
+
+def main(argv=None):
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    try:
+        args.func(args)
+    except ToolError as exc:
+        print("error: {}".format(exc), file=sys.stderr)
+        return 1
+    except usb.core.USBError as exc:
+        print("USB error: {}".format(exc), file=sys.stderr)
+        return 1
+    except KeyboardInterrupt:
+        print("\nstopped", file=sys.stderr)
+        return 130
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
