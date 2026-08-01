@@ -50,8 +50,10 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ## Docs
 - [docs/STATUS.md](docs/STATUS.md)
 - [docs/RESEARCH.md](docs/RESEARCH.md)
+- [docs/ROADMAP_THEORY.md](docs/ROADMAP_THEORY.md) — staged RE / JB theory (docs only)
 - [boot/README.md](boot/README.md)
-- [research/kexploit/README.md](research/kexploit/README.md)
+- [research/mitigations/README.md](research/mitigations/README.md)
+- [research/kexploit/THEORY.md](research/kexploit/THEORY.md)
 - [research/checkm8/README.md](research/checkm8/README.md)
 - [research/palera1n/README.md](research/palera1n/README.md)
 

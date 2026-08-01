@@ -45,6 +45,15 @@ Serial (Recovery): `F2LZJAE1KXKQ`
 - No Sileo / tweak injection / persistence
 - No kexploit wired into `boot/`
 
+Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
+`research/` (mitigations, kexploit theory, checkm8/palera1n notes). **No new
+live capability** — docs only; boot path unchanged.
+
+Offline Stage C artifact noted (Mac only): see
+[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md)
+(`kernelcache.release.iphone11b` / `kernelcache.payload`). **Not** a kexploit
+claim — documentation of an extract for later RE probes.
+
 Host note: Mac clone `boot/config.env` is already correct for this XR; keep docs in sync with UDID above.
 
 ## Paths
