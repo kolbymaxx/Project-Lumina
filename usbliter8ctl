@@ -21,18 +21,39 @@ PID_DFU = 0x1227
 PID_RECOVERY = 0x1281
 
 DFU_DNLOAD = 1
-DFU_ABORT = 4
+DFU_GETSTATUS = 3
+DFU_CLRSTATUS = 4
+DFU_ABORT = 6
 CUSTOM_DEMOTE = 7
 CUSTOM_BOOT = 8
 
 TRANSFER_SIZE = 0x800
 INTERFACE = 0
 HOST_TO_DEVICE_CLASS_INTERFACE = 0x21
+DEVICE_TO_HOST_CLASS_INTERFACE = 0xA1
 CONTROL_TIMEOUT_MS = 100
 CUSTOM_BOOT_TIMEOUT_MS = 2000
+GETSTATUS_TIMEOUT_MS = 1000
+MAX_MANIFEST_POLLS = 20
 POST_BOOT_SCAN_SECONDS = 5.0
 POST_BOOT_SCAN_INTERVAL = 0.25
 PWND_MARKER = "PWND:[usbliter8]"
+
+DFU_STATES = {
+    0: "APP_IDLE",
+    1: "APP_DETACH",
+    2: "DFU_IDLE",
+    3: "DNLOAD_SYNC",
+    4: "DNLOAD_BUSY",
+    5: "DNLOAD_IDLE",
+    6: "MANIFEST_SYNC",
+    7: "MANIFEST",
+    8: "MANIFEST_WAIT_RESET",
+    9: "UPLOAD_IDLE",
+    10: "ERROR",
+}
+DFU_MANIFEST_WAIT_RESET = 8
+DFU_ERROR = 10
 
 
 class ToolError(Exception):
@@ -191,7 +212,11 @@ def upload_dfu_image(dev, image):
         sent += transferred
         chunk_number += 1
 
-    # Match the official host tool: wValue=0, wIndex=0, and None payload.
+    print("sent - 0x{:x}".format(sent))
+
+
+def finish_dfu_download(dev):
+    """Send the empty DNLOAD that starts the DFU manifestation phase."""
     transferred = dev.ctrl_transfer(
         HOST_TO_DEVICE_CLASS_INTERFACE,
         DFU_DNLOAD,
@@ -206,21 +231,112 @@ def upload_dfu_image(dev, image):
                 transferred
             )
         )
+    print("final empty DNLOAD sent")
 
-    print("sent - 0x{:x}".format(sent))
 
-
-def send_boot_requests(dev, send_abort):
+def send_custom_boot(dev):
     control_request_allow_stall(
         dev,
         CUSTOM_BOOT,
         "CUSTOM_BOOT",
         timeout=CUSTOM_BOOT_TIMEOUT_MS,
     )
+
+
+def send_dfu_abort(dev, send_abort):
     if send_abort:
         control_request_allow_stall(dev, DFU_ABORT, "DFU_ABORT")
     else:
         print("note: DFU_ABORT omitted for this boot attempt")
+
+
+def get_dfu_status(dev):
+    response = dev.ctrl_transfer(
+        DEVICE_TO_HOST_CLASS_INTERFACE,
+        DFU_GETSTATUS,
+        0,
+        0,
+        6,
+        timeout=GETSTATUS_TIMEOUT_MS,
+    )
+    if len(response) != 6:
+        raise ToolError(
+            "DFU_GETSTATUS returned {} bytes instead of 6".format(
+                len(response)
+            )
+        )
+
+    status = int(response[0])
+    poll_timeout_ms = (
+        int(response[1])
+        | (int(response[2]) << 8)
+        | (int(response[3]) << 16)
+    )
+    state = int(response[4])
+    state_name = DFU_STATES.get(state, "UNKNOWN")
+    print(
+        "GETSTATUS: state={} ({}), status={}, poll={}ms".format(
+            state, state_name, status, poll_timeout_ms
+        )
+    )
+    return status, poll_timeout_ms, state
+
+
+def wait_for_manifest_reset(dev):
+    for _ in range(MAX_MANIFEST_POLLS):
+        status, poll_timeout_ms, state = get_dfu_status(dev)
+        if status != 0 or state == DFU_ERROR:
+            raise ToolError(
+                "DFU manifestation failed: status={}, state={} ({})".format(
+                    status, state, DFU_STATES.get(state, "UNKNOWN")
+                )
+            )
+        if state == DFU_MANIFEST_WAIT_RESET:
+            return
+        if poll_timeout_ms:
+            time.sleep(poll_timeout_ms / 1000.0)
+
+    raise ToolError(
+        "DFU did not reach MANIFEST_WAIT_RESET after {} GETSTATUS requests".format(
+            MAX_MANIFEST_POLLS
+        )
+    )
+
+
+def reset_after_boot(dev, should_reset):
+    if not should_reset:
+        print("note: USB reset omitted for this boot attempt")
+        return
+
+    print("issuing USB reset from MANIFEST_WAIT_RESET")
+    try:
+        dev.reset()
+    except usb.core.USBError as exc:
+        # A reset can invalidate the old handle if re-enumeration starts.
+        print(
+            "note: USB reset returned {}; continuing to verify USB identity".format(
+                exc
+            )
+        )
+
+
+def run_boot_sequence(
+    dev, image, send_abort, should_reset, boot_before_final_dnload
+):
+    upload_dfu_image(dev, image)
+
+    if boot_before_final_dnload:
+        print("experimental order: CUSTOM_BOOT before final empty DNLOAD")
+        send_custom_boot(dev)
+
+    finish_dfu_download(dev)
+    wait_for_manifest_reset(dev)
+
+    if not boot_before_final_dnload:
+        send_custom_boot(dev)
+
+    send_dfu_abort(dev, send_abort)
+    reset_after_boot(dev, should_reset)
 
 
 def scan_device_serial(pid):
@@ -305,6 +421,7 @@ def do_boot(args):
     previous_serial = verify_pwned(dev)
     is_macos = sys.platform == "darwin"
     send_abort = args.abort if args.abort is not None else not is_macos
+    should_reset = args.reset if args.reset is not None else is_macos
 
     if is_macos:
         print(
@@ -312,16 +429,26 @@ def do_boot(args):
             "connect the phone directly to the Mac"
         )
         try:
-            upload_dfu_image(dev, image)
-            send_boot_requests(dev, send_abort)
+            run_boot_sequence(
+                dev,
+                image,
+                send_abort,
+                should_reset,
+                args.boot_before_final_dnload,
+            )
         finally:
             # Release the macOS USB handle before checking for re-enumeration.
             usb.util.dispose_resources(dev)
     else:
         try_set_configuration(dev)
         with claim_device(dev):
-            upload_dfu_image(dev, image)
-            send_boot_requests(dev, send_abort)
+            run_boot_sequence(
+                dev,
+                image,
+                send_abort,
+                should_reset,
+                args.boot_before_final_dnload,
+            )
 
     scan_after_boot(previous_serial, args.post_boot_timeout)
 
@@ -394,13 +521,31 @@ def build_parser():
         action="store_true",
         help="send DFU_ABORT after CUSTOM_BOOT (the non-macOS default)",
     )
+    reset_group = boot_parser.add_mutually_exclusive_group()
+    reset_group.add_argument(
+        "--reset",
+        dest="reset",
+        action="store_true",
+        help="issue a USB reset after CUSTOM_BOOT (the macOS default)",
+    )
+    reset_group.add_argument(
+        "--no-reset",
+        dest="reset",
+        action="store_false",
+        help="do not issue a USB reset after CUSTOM_BOOT",
+    )
+    boot_parser.add_argument(
+        "--boot-before-final-dnload",
+        action="store_true",
+        help="experimentally send CUSTOM_BOOT before the empty DNLOAD",
+    )
     boot_parser.add_argument(
         "--post-boot-timeout",
         type=float,
         default=POST_BOOT_SCAN_SECONDS,
         help="seconds to scan for re-enumeration (default: 5)",
     )
-    boot_parser.set_defaults(abort=None)
+    boot_parser.set_defaults(abort=None, reset=None)
     boot_parser.set_defaults(func=do_boot)
 
     wait_parser = subparsers.add_parser(
