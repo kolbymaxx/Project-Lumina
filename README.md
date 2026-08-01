@@ -47,3 +47,16 @@ The alternative ordering requested for protocol diagnosis is also available:
 ```sh
 python3 usbliter8ctl boot --boot-before-final-dnload iBoot_patched.raw
 ```
+
+## CUSTOM_BOOT research
+
+After host USB paths were exhausted on XR/macOS, next steps are documented in
+[research/CUSTOM_BOOT_NEXT.md](research/CUSTOM_BOOT_NEXT.md):
+
+1. boot the known-good `hsbugss/usbliter8-xr-ramdisk` `payload/iBSS.raw`
+2. verify published t8020 handler offsets for CPRV:11
+3. compare against the XR ramdisk helper behavior
+
+```sh
+python3 tools/decode_t8020_handler.py
+```
