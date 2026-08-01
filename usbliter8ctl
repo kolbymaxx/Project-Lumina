@@ -100,7 +100,7 @@ def is_pipe_stall(exc):
     if getattr(exc, "backend_error_code", None) == -9:
         return True
     text = str(exc).lower()
-    return "pipe error" in text or "endpoint has been stalled" in text
+    return "pipe error" in text or "stall" in text
 
 
 def control_request_allow_stall(dev, request, name):
