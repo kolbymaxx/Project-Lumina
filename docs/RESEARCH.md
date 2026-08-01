@@ -31,6 +31,18 @@ Notes dirs:
 - [../research/checkm8/README.md](../research/checkm8/README.md)
 - [../research/palera1n/README.md](../research/palera1n/README.md)
 - [../research/kexploit/README.md](../research/kexploit/README.md)
+- [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md)
+- [../research/mitigations/README.md](../research/mitigations/README.md)
+
+## Theory / RE roadmap (docs only — not wired to boot)
+
+| Doc | Contents |
+|-----|----------|
+| [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
+| [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
+| [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
+
+Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
 ## Hard gates (current)
 

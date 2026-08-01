@@ -45,6 +45,10 @@ Serial (Recovery): `F2LZJAE1KXKQ`
 - No Sileo / tweak injection / persistence
 - No kexploit wired into `boot/`
 
+Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
+`research/` (mitigations, kexploit theory, checkm8/palera1n notes). **No new
+live capability** — docs only; boot path unchanged.
+
 Host note: Mac clone `boot/config.env` is already correct for this XR; keep docs in sync with UDID above.
 
 ## Paths
