@@ -3,18 +3,22 @@
 Research plan only. **Not a claim of a working jailbreak or kexploit.**
 Nothing here is wired into `boot/`. Speculation is marked as such.
 
-## Current proven foothold
+## Current proven foothold (Phase A inventory locked — 2026-08-01)
 
 | Capability | Status |
 |------------|--------|
 | usbliter8 BootROM (A12) | Works |
 | Tethered ramdisk + root SSH | Works (15.1 restore env `19B5042h`) |
-| System volume readable (`/mnt1`) | Works — on-disk **18.7.5 (22H311)** |
-| Data volume mount | **Blocked** (`mount_apfs: Program version wrong`) |
+| System `disk0s1s1` → `/mnt1` | Works — RO sealed **18.7.5 / 22H311** |
+| Update `disk0s1s5` → `/mnt4` | Works — ota-result → **22H311** |
+| Cryptex `disk0s1s6` → `/mnt6` | Works — active cryptex1/current (**18.7.5 / 22H311**, RestoreVersion **22.8.311.0.0**) |
+| Preboot / bbfs / FactoryData | Works RO (`s3` / `s4` / `s7`) |
+| Data `disk0s1s2` / `disk0s1s8` | **Blocked** — `mount_apfs -o rdonly` exit **76** (`Program version wrong`) |
 | Kernel / userspace on the *running* OS | **Not reached** |
 
-We can inspect on-disk System from a tethered ramdisk. We cannot yet alter the
-live SpringBoard session or claim persistence.
+Claim scope: tethered SSH + those RO mounts. **No** Data R/W, kexploit, or Sileo.
+We cannot yet alter the live SpringBoard session or claim persistence.
+Inventory: [STATUS.md](STATUS.md), [../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md).
 
 ---
 

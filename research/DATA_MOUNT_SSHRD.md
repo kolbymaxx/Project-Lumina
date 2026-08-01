@@ -84,13 +84,16 @@ Do **not** copy these node names onto the XR map blindly.
 
 | Live node | Role this session | SSHRD analogue |
 |-----------|-------------------|----------------|
-| `disk0s1s1` `/mnt1` | System (OK) | System → `/mnt1` |
+| `disk0s1s1` `/mnt1` | System RO sealed **18.7.5 / 22H311** (OK) | System → `/mnt1` |
 | `disk0s1s2` | Data (**exit 76**) | Data → `/mnt2` |
-| `disk0s1s3` `/mnt3` | Preboot (minimal) | Preboot → `/mnt6` |
-| `disk0s1s5` `/mnt4` | Update | (not in classic script) |
-| `disk0s1s6` `/mnt6` | Cryptexes | **not** Preboot here |
-| `disk0s1s7` `/mnt7` | FactoryData | not xART |
+| `disk0s1s3` `/mnt3` | Preboot minimal (OK) | Preboot → `/mnt6` |
+| `disk0s1s5` `/mnt4` | Update ota→**22H311** (OK) | (not in classic script) |
+| `disk0s1s6` `/mnt6` | Cryptex active + cryptex1/current (OK) | **not** Preboot here |
+| `disk0s1s7` `/mnt7` | FactoryData / Pearl (OK) | not xART |
 | `disk0s1s8` | unlabeled; same exit 76 | unknown; treat as same failure class |
+
+Phase A inventory locked 2026-08-01 — see
+[../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md).
 
 Live naming used `disk0s1s*` because the **15.1** ramdisk keeps the classic
 layout. A **≥16** restore ramdisk would likely renumber NAND to `disk1s*` —

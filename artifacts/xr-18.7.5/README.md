@@ -2,11 +2,12 @@
 
 Staging area for Phase A dumps from the live iPhone XR ramdisk.
 
-Boot path is **working** (iBSS → Recovery → ramdisk SSH). Phase A partial
-notes are in `phase-a-2026-08-01.md` and `docs/STATUS.md`.
+Boot path is **working** (iBSS → Recovery → ramdisk SSH). Phase A inventory
+is **locked** in `phase-a-2026-08-01.md` and `docs/STATUS.md`.
 
-Key fact: ramdisk is **15.1** (`19B5042h`); System `/mnt1` shows on-disk
-**18.7.5 (22H311)**; Data mount fails (`mount_apfs: Program version wrong`).
+Key facts: ramdisk **15.1** (`19B5042h`); System/Update/Cryptex RO mounts
+confirm on-disk **18.7.5 (22H311)**; Data/`s8` fail (`mount_apfs` exit **76**).
+No kexploit / Data R/W / Sileo claim.
 
 ## Placeholders (tracked)
 | Placeholder | Fill with |

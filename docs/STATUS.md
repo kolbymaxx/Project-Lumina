@@ -16,33 +16,43 @@ XR UDID: `00008020-00117540340B002E`
 ECID: `00117540340B002E`  
 Serial (Recovery): `F2LZJAE1KXKQ`
 
-## Phase A — 2026-08-01 (live XR ramdisk SSH)
+## Phase A — 2026-08-01 (live XR ramdisk SSH) — **inventory locked**
 
-### Works
-| Step | Detail |
-|------|--------|
-| BootROM entry | usbliter8 Pico → Pwned DFU |
-| Ramdisk boot | usbliter8 → XR ramdisk → root SSH (`alpine`, `iproxy 2222`) |
-| Identity | UDID `00008020-00117540340B002E`, ECID `00117540340B002E` |
-| Ramdisk env | iOS **15.1** restore (`19B5042h`), root `/dev/md0` HFS **RO** |
-| System mount | `disk0s1s1` → `/mnt1` **OK** |
-| Real device OS | `/mnt1` SystemVersion = **iOS 18.7.5 (22H311)** |
-| Preboot-ish | `disk0s1s5` → `/mnt4` OK |
+Tethered usbliter8 → XR ramdisk → root SSH (`alpine`, `iproxy 2222`).
+Ramdisk env: iOS **15.1** restore (`19B5042h`), root `/dev/md0` HFS **RO**.
 
-### Fails
-| Step | Detail |
-|------|--------|
-| Data mount | `disk0s1s2` → **FAIL** `mount_apfs: Program version wrong` |
-| Kernel under `/mnt1` | `Caches` / `Kernels` not found this session |
+### Locked volume inventory
+
+| Node | Mount | Result | Notes |
+|------|-------|--------|-------|
+| `disk0s1s1` | `/mnt1` | **OK** RO sealed | **System** — ProductVersion **18.7.5**, ProductBuildVersion **22H311** |
+| `disk0s1s5` | `/mnt4` | **OK** | **Update** — ota-result success → **22H311** |
+| `disk0s1s6` | `/mnt6` | **OK** | **Cryptex** — see cryptex detail below |
+| `disk0s1s3` | `/mnt3` | **OK** RO | **Preboot** (minimal) |
+| `disk0s1s4` | `/mnt5` | **OK** RO | **bbfs** |
+| `disk0s1s7` | `/mnt7` | **OK** RO | **FactoryData** / MobileActivation / Pearl |
+| `disk0s1s2` | — | **FAIL** exit **76** | **Data** — `mount_apfs -o rdonly` → `Program version wrong` |
+| `disk0s1s8` | — | **FAIL** exit **76** | same as Data |
+
+**Cryptex (`/mnt6`) detail (locked):**
+- `active` → `E66645393AB5A31AE432195F142B705037F78B2AAD76DBADC4C66682285578663DC2BC9C05C6C84346C3ED69D7B91C51`
+- `cryptex1/current`: `os.dmg` (~4GB), `app.dmg`, trustcaches, `apticket.n841ap.117540340B002E.im4m`
+- SystemVersion **18.7.5 / 22H311**; RestoreVersion **22.8.311.0.0**
+
+### Interpretation (locked)
+Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock).
+**System + Update + Cryptex path works.** Full write-up:
+[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md),
+[../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md).
 
 ### Blockers (hard gates for later work)
-1. **Data volume** — 15.1 ramdisk `mount_apfs` cannot mount iOS 18 Data
+1. **Data volume** — 15.1 ramdisk `mount_apfs` cannot mount iOS 18 Data/`s8` (exit 76)
 2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
 3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
 
 ### Not claimed
-- Not a working jailbreak
-- No Sileo / tweak injection / persistence
+- Not a working jailbreak; no kexploit; no Data R/W; no Sileo
+- No claim beyond tethered SSH + the RO mounts in the inventory above
 - No kexploit wired into `boot/`
 
 Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
@@ -88,6 +98,7 @@ Full index: [RESEARCH.md](RESEARCH.md)
 ## Phases
 ### A — Device ground truth
 - [x] Dated works / fails / blockers (this section)
+- [x] Phase A volume inventory **locked** (System/Update/Cryptex/… + Data/`s8` exit 76)
 - [x] Offline kernelcache artifact noted (Mac `22H311_NOTES.md`)
 - [x] Research newer restore-ramdisk / SSHRD staging docs (`research/DATA_MOUNT_SSHRD.md`)
 - [ ] Unblock Data mount in a live session (newer `mount_apfs` ± `seputil` — **not done**)
