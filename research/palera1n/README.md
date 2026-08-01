@@ -19,8 +19,17 @@
 | Bootstrap (Sileo, etc.) | Integrated for supported devices | **Out of scope** until kernel-capable path exists |
 | Persistence | Tethered / semi depending on setup | Honest default: **fully tethered** via usbliter8 |
 
+## RE priority for Lumina
+**High** for boot chain (DFU → iBSS/iBEC → ramdisk staging — same *family* as
+usbliter8). **Low** for finding a new A12 18.7.5 kernel bug.
+
+Treat palera1n as a **teacher for tethered bring-up**, not an installer and not
+the kernel exploit source. Full RE order:
+[../kexploit/RE_PRIORITY.md](../kexploit/RE_PRIORITY.md).
+
 ## What to RE from open palera1n-era code
 - Boot **flow orchestration** (order of loads, waits, failure handling)
+- How Pongo / ramdisk / mount path is structured vs our usbliter8 → SSH flow
 - How ramdisk + bootstrap artifacts are packaged
 - User-facing tether expectations (re-pwn, cable rules)
 - Patch **strategy categories** (image4, AMFI-related boot patches) as *labels to investigate* — not blobs to copy onto A12

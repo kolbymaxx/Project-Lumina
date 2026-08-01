@@ -115,30 +115,42 @@ into boot.
 
 ### What we already have
 - BootROM arbitrary entry (usbliter8) — helpful for loading stages, **not** live kernel r/w
-- Study indexes: DarkSword / LARA / Dopamine (*references only*)
+- RE priority framing: [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)
+  (**teachers, not installers**)
+- Primitive matrix skeleton:
+  [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
+- Study indexes: palera1n (boot), Dopamine/kfd (kernel ideas), Coruna/Relaxin,
+  DarkSword/LARA (*references only*)
+- Explicit status: **no matching public primitive for A12 / 18.7.5**
 
 ### What’s missing
 - Proven kernel read/write on **this** build
-- Version/offset matrix for 22H311
+- Cited rows in the public primitive matrix (sources + last-known iOS)
+- Version/offset matrix for 22H311 (only after a live primitive exists)
 - Clear statement of entrypoint (app, WebKit, installed helper, etc.) vs tethered-only
 
 ### Candidate approaches (theory)
-1. **Study public kexploit families** (e.g. DarkSword-class) for bug class + mitigations touched — *not* “it works on 18.7.5”
-2. **LARA matrix honesty:** public support called out through **18.7.1**; 18.7.5 is outside until proven
-3. **BootROM-assisted loaders** that still need a separate kernel bug for the *running* OS
-4. Long-shot: find/port a different public chain — treat as new research, not a given
+1. **palera1n boot-only compare** to usbliter8 → SSH (structure, not exploit)
+2. **Dopamine / kfd / physpuppet-class writeups** — bug class, Apple fix, gap on 18.x
+3. **Relaxin / Coruna public material** — claim vs proof; SoC/iOS; entry model
+4. **LARA matrix honesty:** through **18.7.1**; 18.7.5 outside until proven
+5. Long-shot: find a still-live or new bug — treat as new research, not a given
 
 ### How we’d reverse-engineer / validate
+- Follow RE order in [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)
 - Applicability checklist in [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md)
-- Compare claimed version windows to 22H311; reject silent assumption of support
+- Fill matrix rows with citations; reject silent “supports 15–26” marketing
+- Cursor: diffs + mitigation timeline — **not** IPA decompile → free exploit
 - If ever testing: isolated branch/device session; never merge into `boot/`
 
 ### Dependencies / risks
-- False confidence from “supports iOS 15–26” README marketing
-- PAC/PPL/SPTM confusion across SoC generations
+- False confidence from README marketing or closed binaries
+- PAC/PPL/SPTM confusion across SoC generations (A12 has PPL, not SPTM)
+- Blind offset ports to 22H311 without a live primitive
 - Legal/ethical: own device research only; no weaponization writeups
 
 ### Exit criteria — done when…
+- [x] RE priority + matrix skeleton committed (teachers framing)
 - [ ] Written go/no-go for each studied family on A12/22H311 with evidence
 - [ ] If “go”: minimal PoC plan that still stays out of the boot scripts
 - [ ] If “no-go”: STATUS updated; roadmap pivots (new bug class or accept tethered-only limits)
