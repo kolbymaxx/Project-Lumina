@@ -88,8 +88,8 @@ Full index: [RESEARCH.md](RESEARCH.md)
 ## Phases
 ### A — Device ground truth
 - [x] Dated works / fails / blockers (this section)
-- [ ] Locate kernelcache (deeper search and/or host IPSW extract)
-- [ ] Unblock Data mount (newer ramdisk / `mount_apfs`)
+- [x] Offline kernelcache artifact noted (Mac `22H311_NOTES.md`)
+- [ ] Unblock Data mount (newer ramdisk `mount_apfs` / SSHRD-style flow — **not done**)
 
 ### B — Lumina monorepo
 - [x] Repo layout, STATUS, boot wrappers, UDID fix, mount stubs, artifacts
@@ -100,6 +100,9 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. Host-extract or locate kernelcache for 22H311
-2. Newer restore ramdisk / `mount_apfs` for iOS 18 Data
+1. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
+2. **Data mount research:** newer restore-ramdisk `mount_apfs` and/or
+   documented SSHRD-style staging — public guidance points at tool
+   version-skew vs iOS 16+ APFS (+ possible keybag unlock). **No working
+   A12/18.7.5 Data mount claimed yet** (exit 76 on `s2`/`s8`)
 3. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
