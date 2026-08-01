@@ -40,6 +40,8 @@ Notes dirs:
 |-----|----------|
 | [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
+| [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md) | **Teachers not installers** — palera1n/Dopamine/Coruna map + RE order |
+| [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md) | Bug → SoC → last iOS → why dead on 18.7.5 (**no public match**) |
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
 | [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
@@ -49,7 +51,8 @@ Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 ## Hard gates (current)
 
 1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
-2. **Kernel exploit for 18.7.5 / A12** — not available / not proven; keep isolated
+2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; study
+   Dopamine/palera1n/Coruna as teachers ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md))
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
 Crossing these gates is future work. Document progress in [STATUS.md](STATUS.md).
@@ -101,12 +104,12 @@ binary (offline artifact noted in
 [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md)).
 That is documentation / future RE — **not** a claim that a kexploit exists.
 
-## Phase A note (2026-08-01)
+## Phase A note (2026-08-01) — inventory locked
 
 - Ramdisk = **15.1** (`19B5042h`), `/dev/md0` HFS RO
-- System `disk0s1s1` → `/mnt1` OK; on-disk OS **18.7.5 (22H311)**
-- Data `disk0s1s2` FAIL; preboot-ish `disk0s1s5` → `/mnt4` OK
-- Kernel under `/mnt1` Caches/Kernels not found this session
+- System `/mnt1`, Update `/mnt4`, Cryptex `/mnt6` OK → on-disk **18.7.5 (22H311)**
+- Data `s2` + `s8` FAIL exit **76**; Preboot/`s3`, bbfs/`s4`, FactoryData/`s7` RO OK
+- Kernel RE next: public chains as teachers — **no public A12 18.7.5 primitive**
 
 ## Related
 

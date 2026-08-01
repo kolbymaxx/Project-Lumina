@@ -109,12 +109,18 @@ Full index: [RESEARCH.md](RESEARCH.md)
 ### C — Kexploit / legacy BootROM study (isolated)
 - [x] `research/kexploit/` index
 - [x] `research/checkm8/` + `research/palera1n/` notes (knowledge only)
+- [x] RE priority + public primitive matrix (`RE_PRIORITY.md`, `PUBLIC_PRIMITIVE_MATRIX.md`)
+- **No matching public primitive for A12 / 18.7.5** — teachers, not installers
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-2. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
+1. **Kernel RE (teachers):** palera1n boot-flow compare → Dopamine/kfd writeups →
+   Relaxin/Coruna public claim-vs-proof → fill
+   [`PUBLIC_PRIMITIVE_MATRIX.md`](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
+   (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
+2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
+3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
    then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
    SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
    mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
-3. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
+4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
