@@ -21,5 +21,9 @@ __pycache__/
 .DS_Store
 .venv/
 
+# Lab automation run logs
+logs/*
+!logs/.gitkeep
+
 # Nested upstream clones (see upstream/README.md)
 upstream/usbliter8/

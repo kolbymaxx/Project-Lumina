@@ -35,9 +35,15 @@ UDID used for usbmux wait: `00008020-00117540340B002E`
 
 ## Layout
 ```text
+PROJECT_STATUS.md         # lab package SoT (current / blocked / next)
 boot/                     # one-command ramdisk re-entry (do not regress)
 docs/STATUS.md            # live project status + Phase A paste area
 docs/RESEARCH.md          # Dopamine / DarkSword / LARA index
+scripts/                  # lab automation 00–04 (wait / boot / SSH / Data probe)
+host/usbliter8ctl         # preferred DFU tool path for scripts/
+ramdisk/NOTES_NEXT.md     # newer ramdisk checklist (no 15.1 Data claim)
+gui/lab_console.py        # optional tkinter lab console
+logs/                     # timestamped lab runs (gitignored)
 artifacts/xr-18.7.5/      # dumps from the live XR (mostly gitignored)
 research/CUSTOM_BOOT_NEXT.md
 research/kexploit/        # isolated kexploit study (not in boot path)
@@ -45,6 +51,16 @@ research/checkm8/         # A11-and-older knowledge only
 research/palera1n/        # A8–A11 reference only
 tools/                    # host helpers / stubs
 usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
+```
+
+## Lab automation (Mac)
+```bash
+./scripts/00_check_env.sh
+python3 scripts/01_wait_pwned.py          # after Pico-pwn, direct USB
+python3 scripts/02_boot_chain.py --skip-ibec   # or pass --ibss/--ibec
+# full ramdisk: ./boot/lumina-boot.sh
+./scripts/03_ramdisk_ssh.sh
+./scripts/04_data_mount_probe.sh          # exit 76 expected — NOT Data success
 ```
 
 ## Docs
