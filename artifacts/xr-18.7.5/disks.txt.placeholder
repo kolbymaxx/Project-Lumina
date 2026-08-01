@@ -1,5 +1,10 @@
-# Phase A 2026-08-01 (nodes used)
-# /dev/disk0s1s1  System  → /mnt1 OK
-# /dev/disk0s1s2  Data    → FAIL (15.1 mount_apfs)
-# /dev/disk0s1s5  preboot → /mnt4 OK
+# Phase A 2026-08-01 — inventory locked
+# /dev/disk0s1s1  System     → /mnt1 OK
+# /dev/disk0s1s2  Data       → FAIL exit 76
+# /dev/disk0s1s3  Preboot    → /mnt3 OK (minimal)
+# /dev/disk0s1s4  bbfs       → /mnt5 OK
+# /dev/disk0s1s5  Update     → /mnt4 OK
+# /dev/disk0s1s6  Cryptex    → /mnt6 OK
+# /dev/disk0s1s7  FactoryData→ /mnt7 OK
+# /dev/disk0s1s8  (unlabeled)→ FAIL exit 76
 # Full `ls -la /dev/disk*` dump still welcome as disks.txt (gitignored).
