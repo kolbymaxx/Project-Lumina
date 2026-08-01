@@ -28,7 +28,8 @@
 ## Next
 1. Treat 15.1 Data + DYLD paths as **closed negatives**
 2. Build/boot a **newer restore ramdisk** — `ramdisk/NOTES_NEXT.md`
-3. Use `scripts/01`–`04` for re-entry; logs under `logs/`
+3. Use `scripts/01`–`05` for re-entry; logs under `logs/`
+4. Agent ops: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md) — human gates DFU; after `pwned, go` run end-to-end
 
 ## Explicit non-goals
 - Working Data mount / Data R/W on the **15.1** ramdisk

@@ -54,6 +54,8 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
 
 ## Lab automation (Mac)
+Agent rules: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md).
+
 ```bash
 ./scripts/00_check_env.sh
 python3 scripts/01_wait_pwned.py          # after Pico-pwn, direct USB
@@ -61,6 +63,11 @@ python3 scripts/02_boot_chain.py --skip-ibec   # or pass --ibss/--ibec
 # full ramdisk: ./boot/lumina-boot.sh
 ./scripts/03_ramdisk_ssh.sh
 ./scripts/04_data_mount_probe.sh          # exit 76 expected — NOT Data success
+
+# End-to-end after PWND (requires IBSS + IBEC):
+export IBSS="$HOME/Projects/usbliter8-xr-ramdisk/payload/iBSS.raw"
+export IBEC="$HOME/Projects/usbliter8-xr-ramdisk/payload/iBEC.raw"
+./scripts/05_run_experiment.sh            # writes logs/last_run.md; exit 10 = NEED_REPWN
 ```
 
 ## Docs
