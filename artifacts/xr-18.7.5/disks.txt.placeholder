@@ -1,3 +1,5 @@
-# Phase A placeholder — replace with output of: ls -la /dev/disk*
-# Save real dump as disks.txt (gitignored). Note SYSTEM_DEV / DATA_DEV nodes
-# for tools/mount_from_ramdisk.sh.
+# Phase A 2026-08-01 (nodes used)
+# /dev/disk0s1s1  System  → /mnt1 OK
+# /dev/disk0s1s2  Data    → FAIL (15.1 mount_apfs)
+# /dev/disk0s1s5  preboot → /mnt4 OK
+# Full `ls -la /dev/disk*` dump still welcome as disks.txt (gitignored).

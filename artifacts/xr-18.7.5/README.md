@@ -2,8 +2,11 @@
 
 Staging area for Phase A dumps from the live iPhone XR ramdisk.
 
-Boot path is **working** (iBSS → Recovery → ramdisk SSH). These files are for
-mount / disk / build ground truth — not CUSTOM_BOOT debugging.
+Boot path is **working** (iBSS → Recovery → ramdisk SSH). Phase A partial
+notes are in `phase-a-2026-08-01.md` and `docs/STATUS.md`.
+
+Key fact: ramdisk is **15.1** (`19B5042h`); System `/mnt1` shows on-disk
+**18.7.5 (22H311)**; Data mount fails (`mount_apfs: Program version wrong`).
 
 ## Placeholders (tracked)
 | Placeholder | Fill with |

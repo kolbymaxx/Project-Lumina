@@ -1,2 +1,5 @@
-# Phase A placeholder — replace with output of: uname -a
-# Or: ./boot/lumina-ssh.sh 'bash -s' < boot/collect-ground-truth.sh
+# Phase A 2026-08-01 — filled from operator notes (partial)
+# Ramdisk identity: iOS 15.1 restore (19B5042h)
+# On-disk System (/mnt1): iOS 18.7.5 (22H311)
+# UDID: 00008020-00117540340B002E
+# Replace this file with real `uname -a` + SystemVersion dump when convenient.

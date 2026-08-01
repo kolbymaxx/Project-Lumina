@@ -1,2 +1,4 @@
-# Phase A placeholder — kernelcache / preboot / cache paths from ramdisk.
-# collect-ground-truth.sh probes common locations.
+# Phase A 2026-08-01
+# Under /mnt1: Caches/Kernels empty or missing — kernelcache not located.
+# Next: deeper /mnt1 + /mnt4 search; host extract from
+# iPhone11,8_18.7.5_22H311_Restore IPSW.

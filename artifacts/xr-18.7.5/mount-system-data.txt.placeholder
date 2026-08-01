@@ -1,5 +1,7 @@
-# Phase A placeholder — System + Data mount attempts from ramdisk SSH.
-# After success, record:
-#   SYSTEM_DEV=...
-#   DATA_DEV=...
-# for: SYSTEM_DEV=... DATA_DEV=... ./tools/mount_from_ramdisk.sh mount
+# Phase A 2026-08-01
+# SYSTEM_DEV=/dev/disk0s1s1 → /mnt1 OK (SystemVersion 18.7.5 / 22H311)
+# DATA_DEV=/dev/disk0s1s2   → FAIL: mount_apfs: Program version wrong
+# PREBOOT_DEV=/dev/disk0s1s5 → /mnt4 OK
+#
+# tools/mount_from_ramdisk.sh defaults match these nodes.
+# Data mount skipped unless ALLOW_DATA_MOUNT=1 (still expected to fail).
