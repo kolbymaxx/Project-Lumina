@@ -9,7 +9,9 @@ research/kexploit/darksword-kexploit/
 research/kexploit/DarkSword-RCE/
 research/kexploit/Dopamine/
 research/kexploit/lara/
-research/kexploit/notes/
+research/kexploit/notes/*
+!research/kexploit/notes/.gitkeep
+
 __pycache__/
 *.pyc
 .DS_Store
