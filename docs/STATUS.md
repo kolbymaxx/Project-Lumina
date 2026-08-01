@@ -54,6 +54,10 @@ Offline Stage C artifact noted (Mac only): see
 (`kernelcache.release.iphone11b` / `kernelcache.payload`). **Not** a kexploit
 claim — documentation of an extract for later RE probes.
 
+Public tool applicability (2026-08-01): only **usbliter8 + ramdisk** applies as
+a real public capability on A12/18.7.5; Dopamine/palera1n are not drop-in for
+this chip+build. See [RESEARCH.md](RESEARCH.md#public-tool-applicability-2026-08-01).
+
 Host note: Mac clone `boot/config.env` is already correct for this XR; keep docs in sync with UDID above.
 
 ## Paths
