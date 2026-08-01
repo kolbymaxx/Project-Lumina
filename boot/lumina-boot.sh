@@ -10,8 +10,9 @@ if [[ -f "${BOOT_DIR}/config.env" ]]; then
   # shellcheck disable=SC1091
   source "${BOOT_DIR}/config.env"
 fi
+# shellcheck disable=SC1091
+source "${BOOT_DIR}/lib-udid.sh"
 
-LUMINA_UDID="${LUMINA_UDID:-00008020-00117540340B002E}"
 RAMDISK_ROOT="${RAMDISK_ROOT:-${HOME}/Projects/usbliter8-xr-ramdisk}"
 USBLITER8CTL="${USBLITER8CTL:-${HOME}/Projects/usbliter8-jailbreak/usbliter8ctl}"
 IRECOVERY="${IRECOVERY:-irecovery}"
@@ -23,6 +24,7 @@ SSH_PORT_LOCAL="${SSH_PORT_LOCAL:-2222}"
 SSH_USER="${SSH_USER:-root}"
 SSH_PASS="${SSH_PASS:-alpine}"
 BOOTARGS="${BOOTARGS:-rd=md0 -v debug=0x2014e serial=3 wdt=-1 amfi_get_out_of_my_way=1 pmap_cs_allow_any_signature=1}"
+LUMINA_UDID="$(lumina_resolve_udid)"
 
 PAYLOAD="${RAMDISK_ROOT}/payload"
 LOGDIR="${ROOT}/artifacts/xr-18.7.5/boot-logs"

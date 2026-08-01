@@ -1,0 +1,3 @@
+# Phase A placeholder — replace with output of: ls -la /dev/disk*
+# Save real dump as disks.txt (gitignored). Note SYSTEM_DEV / DATA_DEV nodes
+# for tools/mount_from_ramdisk.sh.

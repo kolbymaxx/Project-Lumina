@@ -23,8 +23,13 @@ cp boot/config.env.example boot/config.env
 ./boot/lumina-boot.sh
 ```
 
-This uses UDID `00008020-00117540340B002E` for the usbmux wait (not the
-foreign hardcoded id from upstream `exploit.sh`).
+UDID resolution (`boot/lib-udid.sh`):
+
+1. explicit `LUMINA_UDID` from env / `config.env`
+2. else the single connected `idevice_id` device
+3. else this XR: `00008020-00117540340B002E`
+
+The foreign hsbugss sample UDID `00008020-000231A00EE9002E` is refused.
 
 ## SSH again
 ```bash

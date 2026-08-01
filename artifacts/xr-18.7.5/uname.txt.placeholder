@@ -1,0 +1,2 @@
+# Phase A placeholder — replace with output of: uname -a
+# Or: ./boot/lumina-ssh.sh 'bash -s' < boot/collect-ground-truth.sh

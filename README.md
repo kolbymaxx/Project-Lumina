@@ -104,13 +104,11 @@ python3 usbliter8ctl boot --boot-before-final-dnload iBoot_patched.raw
 
 ## CUSTOM_BOOT research
 
-After host USB paths were exhausted on XR/macOS, next steps are documented in
-[research/CUSTOM_BOOT_NEXT.md](research/CUSTOM_BOOT_NEXT.md):
-
-1. boot the known-good `hsbugss/usbliter8-xr-ramdisk` `payload/iBSS.raw`
-2. verify published t8020 handler offsets for CPRV:11
-3. compare against the XR ramdisk helper behavior
+**Current:** known-good `payload/iBSS.raw` remote-boots to `05ac:1281` on
+macOS; full ramdisk + SSH works. Historical stuck-on-`1227` notes and offset
+checks live in [research/CUSTOM_BOOT_NEXT.md](research/CUSTOM_BOOT_NEXT.md).
 
 ```sh
 python3 tools/decode_t8020_handler.py
+./boot/lumina-boot.sh
 ```

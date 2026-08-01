@@ -7,14 +7,16 @@ if [[ -f "${BOOT_DIR}/config.env" ]]; then
   # shellcheck disable=SC1091
   source "${BOOT_DIR}/config.env"
 fi
+# shellcheck disable=SC1091
+source "${BOOT_DIR}/lib-udid.sh"
 
-LUMINA_UDID="${LUMINA_UDID:-00008020-00117540340B002E}"
 IPROXY="${IPROXY:-iproxy}"
 SSHPASS="${SSHPASS:-sshpass}"
 IDEVICE_ID="${IDEVICE_ID:-idevice_id}"
 SSH_PORT_LOCAL="${SSH_PORT_LOCAL:-2222}"
 SSH_USER="${SSH_USER:-root}"
 SSH_PASS="${SSH_PASS:-alpine}"
+LUMINA_UDID="$(lumina_resolve_udid)"
 
 if ! command -v "$IDEVICE_ID" >/dev/null 2>&1; then
   echo "missing idevice_id" >&2
