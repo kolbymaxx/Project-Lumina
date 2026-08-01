@@ -89,7 +89,8 @@ Full index: [RESEARCH.md](RESEARCH.md)
 ### A — Device ground truth
 - [x] Dated works / fails / blockers (this section)
 - [x] Offline kernelcache artifact noted (Mac `22H311_NOTES.md`)
-- [ ] Unblock Data mount (newer ramdisk `mount_apfs` / SSHRD-style flow — **not done**)
+- [x] Research newer restore-ramdisk / SSHRD staging docs (`research/DATA_MOUNT_SSHRD.md`)
+- [ ] Unblock Data mount in a live session (newer `mount_apfs` ± `seputil` — **not done**)
 
 ### B — Lumina monorepo
 - [x] Repo layout, STATUS, boot wrappers, UDID fix, mount stubs, artifacts
@@ -101,8 +102,8 @@ Full index: [RESEARCH.md](RESEARCH.md)
 
 ## Next
 1. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-2. **Data mount research:** newer restore-ramdisk `mount_apfs` and/or
-   documented SSHRD-style staging — public guidance points at tool
-   version-skew vs iOS 16+ APFS (+ possible keybag unlock). **No working
-   A12/18.7.5 Data mount claimed yet** (exit 76 on `s2`/`s8`)
+2. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
+   then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
+   SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
+   mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
 3. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
