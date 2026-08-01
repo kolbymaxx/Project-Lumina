@@ -28,7 +28,10 @@ CUSTOM_BOOT = 8
 TRANSFER_SIZE = 0x800
 INTERFACE = 0
 HOST_TO_DEVICE_CLASS_INTERFACE = 0x21
-CONTROL_TIMEOUT_MS = 5000
+CONTROL_TIMEOUT_MS = 100
+CUSTOM_BOOT_TIMEOUT_MS = 2000
+POST_BOOT_SCAN_SECONDS = 5.0
+POST_BOOT_SCAN_INTERVAL = 0.25
 PWND_MARKER = "PWND:[usbliter8]"
 
 
@@ -68,6 +71,7 @@ def verify_pwned(dev):
         raise ToolError(
             "DFU device is not marked as pwned (serial: {!r})".format(serial)
         )
+    return serial
 
 
 def try_set_configuration(dev):
@@ -103,7 +107,9 @@ def is_pipe_stall(exc):
     return "pipe error" in text or "stall" in text
 
 
-def control_request_allow_stall(dev, request, name):
+def control_request_allow_stall(
+    dev, request, name, timeout=CONTROL_TIMEOUT_MS
+):
     try:
         dev.ctrl_transfer(
             HOST_TO_DEVICE_CLASS_INTERFACE,
@@ -111,13 +117,15 @@ def control_request_allow_stall(dev, request, name):
             0,
             INTERFACE,
             None,
-            timeout=CONTROL_TIMEOUT_MS,
+            timeout=timeout,
         )
     except usb.core.USBError as exc:
         if is_pipe_stall(exc):
             print(
-                "note: {} returned a USB pipe/stall; "
-                "this is expected and execution will continue".format(name)
+                "note: {} ended with a USB pipe/stall; "
+                "continuing, but this does not prove that boot succeeded".format(
+                    name
+                )
             )
             return
         raise
@@ -161,6 +169,125 @@ def do_demote(_args):
     print("demote request sent")
 
 
+def upload_dfu_image(dev, image):
+    sent = 0
+    chunk_number = 0
+    while sent < len(image):
+        chunk = image[sent : sent + TRANSFER_SIZE]
+        transferred = dev.ctrl_transfer(
+            HOST_TO_DEVICE_CLASS_INTERFACE,
+            DFU_DNLOAD,
+            0,
+            0,
+            chunk,
+            timeout=CONTROL_TIMEOUT_MS,
+        )
+        if transferred != len(chunk):
+            raise ToolError(
+                "short DFU transfer in chunk {}: sent {} of {} bytes".format(
+                    chunk_number, transferred, len(chunk)
+                )
+            )
+        sent += transferred
+        chunk_number += 1
+
+    # Match the official host tool: wValue=0, wIndex=0, and None payload.
+    transferred = dev.ctrl_transfer(
+        HOST_TO_DEVICE_CLASS_INTERFACE,
+        DFU_DNLOAD,
+        0,
+        0,
+        None,
+        timeout=CONTROL_TIMEOUT_MS,
+    )
+    if transferred not in (0, None):
+        raise ToolError(
+            "final empty DNLOAD unexpectedly transferred {} bytes".format(
+                transferred
+            )
+        )
+
+    print("sent - 0x{:x}".format(sent))
+
+
+def send_boot_requests(dev, send_abort):
+    control_request_allow_stall(
+        dev,
+        CUSTOM_BOOT,
+        "CUSTOM_BOOT",
+        timeout=CUSTOM_BOOT_TIMEOUT_MS,
+    )
+    if send_abort:
+        control_request_allow_stall(dev, DFU_ABORT, "DFU_ABORT")
+    else:
+        print("note: DFU_ABORT omitted for this boot attempt")
+
+
+def scan_device_serial(pid):
+    dev = find_device(pid)
+    if dev is None:
+        return None
+    try:
+        return device_serial(dev)
+    finally:
+        usb.util.dispose_resources(dev)
+
+
+def scan_after_boot(previous_serial, timeout):
+    print(
+        "scanning for Recovery {:04x}:{:04x} for up to {:.1f}s...".format(
+            VENDOR, PID_RECOVERY, timeout
+        )
+    )
+    deadline = time.monotonic() + timeout
+    last_dfu_serial = None
+
+    while True:
+        recovery_serial = scan_device_serial(PID_RECOVERY)
+        if recovery_serial is not None:
+            print(
+                "success: found Recovery {:04x}:{:04x}".format(
+                    VENDOR, PID_RECOVERY
+                )
+            )
+            print("serial: {}".format(recovery_serial or "<none>"))
+            return
+
+        dfu_serial = scan_device_serial(PID_DFU)
+        if dfu_serial is not None:
+            last_dfu_serial = dfu_serial
+            serial_is_readable = not dfu_serial.startswith("<unavailable:")
+            if (
+                serial_is_readable
+                and dfu_serial
+                and dfu_serial != previous_serial
+            ):
+                print(
+                    "success: device re-enumerated as {:04x}:{:04x} "
+                    "with a new identity".format(VENDOR, PID_DFU)
+                )
+                print("serial: {}".format(dfu_serial))
+                return
+
+        if time.monotonic() >= deadline:
+            break
+        time.sleep(POST_BOOT_SCAN_INTERVAL)
+
+    if last_dfu_serial is not None:
+        raise ToolError(
+            "CUSTOM_BOOT did not leave SecureROM: device remains "
+            "{:04x}:{:04x} (serial: {})".format(
+                VENDOR, PID_DFU, last_dfu_serial or "<none>"
+            )
+        )
+    raise ToolError(
+        "device disappeared, but did not re-enumerate as Recovery "
+        "{:04x}:{:04x} within {:.1f}s".format(
+            VENDOR, PID_RECOVERY, timeout
+        )
+    )
+
+
 def do_boot(args):
     image_path = os.path.expanduser(args.image)
     try:
@@ -171,58 +298,32 @@ def do_boot(args):
 
     if not image:
         raise ToolError("refusing to boot an empty image")
+    if args.post_boot_timeout < 0:
+        raise ToolError("--post-boot-timeout cannot be negative")
 
     dev = require_pwned_dfu()
-    try_set_configuration(dev)
+    previous_serial = verify_pwned(dev)
+    is_macos = sys.platform == "darwin"
+    send_abort = args.abort if args.abort is not None else not is_macos
 
-    with claim_device(dev):
-        verify_pwned(dev)
-
-        block = 0
-        sent = 0
-        while sent < len(image):
-            chunk = image[sent : sent + TRANSFER_SIZE]
-            transferred = dev.ctrl_transfer(
-                HOST_TO_DEVICE_CLASS_INTERFACE,
-                DFU_DNLOAD,
-                block,
-                INTERFACE,
-                chunk,
-                timeout=CONTROL_TIMEOUT_MS,
-            )
-            if transferred != len(chunk):
-                raise ToolError(
-                    "short DFU transfer in block {}: sent {} of {} bytes".format(
-                        block, transferred, len(chunk)
-                    )
-                )
-            sent += transferred
-            block += 1
-
-        # A zero-length DNLOAD terminates the DFU download.
-        transferred = dev.ctrl_transfer(
-            HOST_TO_DEVICE_CLASS_INTERFACE,
-            DFU_DNLOAD,
-            block,
-            INTERFACE,
-            b"",
-            timeout=CONTROL_TIMEOUT_MS,
+    if is_macos:
+        print(
+            "macOS minimal mode: no set_configuration or interface claim; "
+            "connect the phone directly to the Mac"
         )
-        if transferred not in (0, None):
-            raise ToolError(
-                "final empty DNLOAD unexpectedly transferred {} bytes".format(
-                    transferred
-                )
-            )
+        try:
+            upload_dfu_image(dev, image)
+            send_boot_requests(dev, send_abort)
+        finally:
+            # Release the macOS USB handle before checking for re-enumeration.
+            usb.util.dispose_resources(dev)
+    else:
+        try_set_configuration(dev)
+        with claim_device(dev):
+            upload_dfu_image(dev, image)
+            send_boot_requests(dev, send_abort)
 
-        print("sent - 0x{:x}".format(sent))
-        control_request_allow_stall(dev, CUSTOM_BOOT, "CUSTOM_BOOT")
-        control_request_allow_stall(dev, DFU_ABORT, "DFU_ABORT")
-
-    print(
-        "boot sequence sent; wait for Recovery with: "
-        "python3 usbliter8ctl wait --pid 0x1281"
-    )
+    scan_after_boot(previous_serial, args.post_boot_timeout)
 
 
 def parse_pid(value):
@@ -280,6 +381,26 @@ def build_parser():
         "boot", help="upload and boot a raw image on a Pwned DFU device"
     )
     boot_parser.add_argument("image", help="raw iBSS/iBoot image")
+    abort_group = boot_parser.add_mutually_exclusive_group()
+    abort_group.add_argument(
+        "--no-abort",
+        dest="abort",
+        action="store_false",
+        help="omit DFU_ABORT after CUSTOM_BOOT (the macOS default)",
+    )
+    abort_group.add_argument(
+        "--abort",
+        dest="abort",
+        action="store_true",
+        help="send DFU_ABORT after CUSTOM_BOOT (the non-macOS default)",
+    )
+    boot_parser.add_argument(
+        "--post-boot-timeout",
+        type=float,
+        default=POST_BOOT_SCAN_SECONDS,
+        help="seconds to scan for re-enumeration (default: 5)",
+    )
+    boot_parser.set_defaults(abort=None)
     boot_parser.set_defaults(func=do_boot)
 
     wait_parser = subparsers.add_parser(
