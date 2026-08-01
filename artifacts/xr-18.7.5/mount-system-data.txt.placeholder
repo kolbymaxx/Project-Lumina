@@ -1,7 +1,11 @@
-# Phase A 2026-08-01
-# SYSTEM_DEV=/dev/disk0s1s1 → /mnt1 OK (SystemVersion 18.7.5 / 22H311)
-# DATA_DEV=/dev/disk0s1s2   → FAIL: mount_apfs: Program version wrong
-# PREBOOT_DEV=/dev/disk0s1s5 → /mnt4 OK
+# Phase A 2026-08-01 — inventory locked
+# disk0s1s1 → /mnt1 OK RO sealed System 18.7.5 / 22H311
+# disk0s1s5 → /mnt4 OK Update (ota-result → 22H311)
+# disk0s1s6 → /mnt6 OK Cryptex (active + cryptex1/current; 18.7.5 / 22H311)
+# disk0s1s3 → /mnt3 OK Preboot (minimal)
+# disk0s1s4 → /mnt5 OK bbfs
+# disk0s1s7 → /mnt7 OK FactoryData / MobileActivation / Pearl
+# disk0s1s2 → FAIL exit 76 mount_apfs -o rdonly: Program version wrong (Data)
+# disk0s1s8 → FAIL exit 76 same
 #
-# tools/mount_from_ramdisk.sh defaults match these nodes.
-# Data mount skipped unless ALLOW_DATA_MOUNT=1 (still expected to fail).
+# tools/mount_from_ramdisk.sh: Data skipped unless ALLOW_DATA_MOUNT=1 (still fails).
