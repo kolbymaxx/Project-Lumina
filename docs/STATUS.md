@@ -110,13 +110,20 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - [x] `research/kexploit/` index
 - [x] `research/checkm8/` + `research/palera1n/` notes (knowledge only)
 - [x] RE priority + public primitive matrix (`RE_PRIORITY.md`, `PUBLIC_PRIMITIVE_MATRIX.md`)
+- [x] Hunt loop + filter + intakes (`HUNT_LOOP.md`, `FILTER.md`, `experiments/`)
 - **No matching public primitive for A12 / 18.7.5** — teachers, not installers
+- Open **candidate watches** (docs only): **primary** T008 CVE-2026-28972 +
+  T009 CVE-2026-28951; secondary/side T005–T007 — see
+  [`INTAKE_2026-08-02c.md`](../research/kexploit/experiments/INTAKE_2026-08-02c.md)
+- Pre-lab theory pack: **T010–T012** — checklist
+  [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Kernel RE (teachers):** palera1n boot-flow compare → Dopamine/kfd writeups →
-   Relaxin/Coruna public claim-vs-proof → fill
-   [`PUBLIC_PRIMITIVE_MATRIX.md`](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
+1. **Device session 01 (RO):** T011 → T010 → T012 per
+   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
+2. **Kernel hunt:** citable writeups for **T008/T009**; continue
+   [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
    (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
 2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
 3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
