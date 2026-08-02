@@ -195,10 +195,16 @@ So death is **not** “missing platform entitlements” relative to bash — has
 
 **dpkg recheck after probes:** still **Killed: 9** / 137.
 
-### Verdict (unchanged)
+### Verdict (unchanged for “dpkg runs”)
 
-**NO-GO** for live `dpkg` on this session.  
-**Missing primitive:** still runtime CDHash authorization (loadable TC inject and/or kernel r/w / stronger pre-boot KPF). Remap + probes did **not** clear SIGKILL.
+**NO-GO** for a working `dpkg --version` on this session.  
+**Missing primitive:** still full runtime authorization for the Procursus tree (deps + any post-TC gates), and/or stronger KPF — not “ldid harder.”
+
+### B005 → B006 (2026-08-02 evening)
+
+- **B005:** append **dpkg** CDHash only into boot `trustcache.img4` (`rtsc`) → exit **134** (was **137**); dyld rejects `libz-ng.2.dylib` CS.  
+- **B006:** boot loads that same `rtsc`; hash present; `num_loadable=0`; bash CDHash was already in pre-append TC. Verdict: **static TC hit likely** for main binary → next scoped dep append, not mass libs.  
+- Details: [`research/bootstrap/DFU_SESSION_TC_APPEND.md`](../bootstrap/DFU_SESSION_TC_APPEND.md), [`research/bootstrap/B006_TC_STUB_HIT.md`](../bootstrap/B006_TC_STUB_HIT.md).
 
 ---
 
