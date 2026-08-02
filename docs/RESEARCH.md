@@ -116,3 +116,4 @@ That is documentation / future RE — **not** a claim that a kexploit exists.
 - [STATUS.md](STATUS.md)
 - [../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md)
 - [../research/CUSTOM_BOOT_NEXT.md](../research/CUSTOM_BOOT_NEXT.md)
+- [research/usbliter8-a12x-ipad-pro-12.9-3rd.md](research/usbliter8-a12x-ipad-pro-12.9-3rd.md) — research-only A12X (iPad Pro 12.9" 3rd) usbliter8 bring-up memo (not wired to boot)
