@@ -12,7 +12,7 @@ usbliter8 (BootROM / Pico)          [WORKS — A12 entry]
   → mount System / Data             [System OK; Data BLOCKED]
   → (research) kernel r/w           [NOT DONE — isolated]
   → (hard) PPL / SPTM               [NOT DONE]
-  → Dopamine-like bootstrap         [NOT DONE]
+  → Dopamine-like bootstrap         [NOT DONE — dpkg still SIGKILL/137; AMFI/TC lab]
 ```
 
 ## Roles
@@ -32,6 +32,7 @@ Notes dirs:
 - [../research/palera1n/README.md](../research/palera1n/README.md)
 - [../research/kexploit/README.md](../research/kexploit/README.md)
 - [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md)
+- [../research/bootstrap/README.md](../research/bootstrap/README.md) — AMFI/TC / dpkg-137 lab
 - [../research/mitigations/README.md](../research/mitigations/README.md)
 
 ## Theory / RE roadmap (docs only — not wired to boot)
