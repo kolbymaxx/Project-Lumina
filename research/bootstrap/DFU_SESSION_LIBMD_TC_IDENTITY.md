@@ -101,3 +101,20 @@ Kernel static-TC lookup is consistent with **binary search** on a sorted CDHash 
 Not “fix boot path.” Not “move to CS-blob/page-hash (F)” until after a sorted-TC retest.
 
 **Do not** append more deps until this retest.
+
+---
+
+## Sort fix — Phase 1 host (2026-08-02)
+
+| Field | Before | After |
+|-------|--------|-------|
+| Entry count | 474 | **474** |
+| Inversions | 1 | **0** |
+| `ff08beac…` index | 473 (tail) | **472** |
+| Neighbors | `ff7a…` then `ff08…` | `fee4…` · **`ff08…`** · `ff7a…` |
+| Trailer bytes | unchanged (`02 00`) | unchanged |
+| img4 size | 17909 | **17909** |
+| Backup | — | `work/lumina-b005-libmd-sort/trustcache.img4.pre-sort` |
+| New img4 sha256 | `c50982fd…` | `8d6dec53c8557bca12cac38ce0b2369085a1d3a2e73892fb51e9dd8a306017c0` |
+
+**Status:** Phase 1 ready — ping PWND for libmd retest.
