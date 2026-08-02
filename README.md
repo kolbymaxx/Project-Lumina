@@ -20,24 +20,78 @@ Primary live device: iPhone XR (`n841ap`) on **18.7.5 (22H311)**.
 5. System `disk0s1s1` → `/mnt1` (on-disk 18.7.5 / 22H311)
 
 ## Quick start (Mac)
-```bash
-# 1) Pico-pwn the XR, then plug it directly into the Mac
-# 2) Ensure payloads exist:
-#    ~/Projects/usbliter8-xr-ramdisk  (git lfs pull)
-# 3) Boot + SSH check:
-./boot/lumina-boot.sh
 
-# Reconnect later in the same tethered session:
+**Preferred live path:** Pico usbliter8 → direct Mac USB →
+`~/Projects/ICH_A12_plus_Ramdisk` (`./boot.sh`) → ICH `tools/darwin/iproxy`
+→ SSH (`root` / `alpine`) → `mount_ich`.
+
+```bash
+# 1) Pico-pwn the XR, then plug it directly into the Mac (not through the Pico)
+# 2) Boot ICH ramdisk (built for n841ap / 22H311):
+cd ~/Projects/ICH_A12_plus_Ramdisk && ./boot.sh
+
+# 3) Host helper (tool check + iproxy + prints SSH):
+cd ~/Projects/lumina && ./scripts/user/one_shot_mac.sh
+
+# Or reconnect with Lumina wrapper:
 ./boot/lumina-ssh.sh
 ```
 
+Full button-by-button DFU → pwn → ramdisk → SSH sequence:
+[`scripts/user/from_dfu_to_ssh.md`](scripts/user/from_dfu_to_ssh.md).
+
+Alternate (15.1-style payloads, System mount only historically):
+`./boot/lumina-boot.sh` with `~/Projects/usbliter8-xr-ramdisk` — see
+[`boot/README.md`](boot/README.md).
+
 UDID used for usbmux wait: `00008020-00117540340B002E`
+
+## Supported devices
+
+| Device | SoC | iOS | Status |
+|--------|-----|-----|--------|
+| iPhone XR (`n841ap`) | A12 | **18.7.5 (22H311)** | **Supported** — only combo these scripts/docs are verified against |
+| Other A12/A13 (usbliter8 SoCs) | A12/A13 | any | **Not verified here** — expect to redo payload/config yourself |
+| A11 and older, A14 and newer | — | — | **Out of scope** for usbliter8 entry |
+
+## Requirements
+
+- **Hardware:** iPhone XR, Mac, Raspberry Pi Pico 2 (RP2350) or other
+  supported RP2350 board with `usbliter8` firmware, Lightning cable
+  (prefer USB-A → Lightning for Mac boot). Pico flash/wiring is upstream
+  usbliter8 scope — see [`upstream/README.md`](upstream/README.md).
+- **Software (Mac):** `irecovery`, `idevice_id`, `sshpass`, `python3` +
+  `pyusb` (`brew install libusb libirecovery libimobiledevice usbmuxd sshpass
+  && python3 -m pip install pyusb`). Prefer ICH vendored
+  `~/Projects/ICH_A12_plus_Ramdisk/tools/darwin/iproxy`.
+- **Payloads:** `~/Projects/ICH_A12_plus_Ramdisk` (preferred live boot+SSH)
+  and optionally `~/Projects/usbliter8-xr-ramdisk` for Lumina
+  `boot/lumina-boot.sh`. Root `./usbliter8ctl` for DFU info/boot helpers.
+- No Windows path for the ramdisk/SSH stage.
+
+## Safety
+
+- **Never write to `/mnt1`** (sealed System). Stage only under
+  `JBROOT=/mnt2/root/jb` (or `/mnt2/tmp/…`) — never `/mnt2/jb` or classic
+  `/var/jb` on disk.
+- **PATH rule:** do not put `JBROOT` first until a full-path binary from
+  `JBROOT` runs without `Killed: 9` (SIGKILL fix lands in
+  `scripts/bootstrap/`; do not reimplement it here).
+- **Uninstall** Data-side bootstrap with
+  `./scripts/bootstrap/uninstall_bootstrap.sh` when that tree is present
+  (Data-only; never touches `/mnt1`).
+- **Tethered = lost on reboot.** Every reboot/unplug returns stock iOS;
+  re-entry requires Pico pwn + ramdisk boot again — see
+  [`scripts/user/from_dfu_to_ssh.md`](scripts/user/from_dfu_to_ssh.md#safety).
+- Only run this on a device you own or have explicit permission to service.
 
 ## Layout
 ```text
 boot/                     # one-command ramdisk re-entry (do not regress)
 docs/STATUS.md            # live project status + Phase A paste area
 docs/RESEARCH.md          # Dopamine / DarkSword / LARA index
+scripts/user/             # end-user packaging: DFU→SSH doc + one-shot Mac helper
+scripts/bootstrap/        # Data-only Procursus-shaped staging (JBROOT; when present)
 artifacts/xr-18.7.5/      # dumps from the live XR (mostly gitignored)
 research/CUSTOM_BOOT_NEXT.md
 research/kexploit/        # isolated kexploit study (not in boot path)
@@ -48,6 +102,7 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
 
 ## Docs
+- [scripts/user/from_dfu_to_ssh.md](scripts/user/from_dfu_to_ssh.md) — DFU → pwn → ramdisk → SSH
 - [docs/STATUS.md](docs/STATUS.md)
 - [docs/RESEARCH.md](docs/RESEARCH.md)
 - [docs/ROADMAP_THEORY.md](docs/ROADMAP_THEORY.md) — staged RE / JB theory (docs only)
@@ -74,8 +129,10 @@ the Pico and connect it directly to the Mac before running `usbliter8ctl`.
 Leaving the phone connected through the Pico can prevent the remote-boot path
 from completing.
 
-For day-to-day XR ramdisk boots, prefer the known-good Mac helper paths
-configured in `boot/config.env.example` and `./boot/lumina-boot.sh`.
+For day-to-day XR ramdisk boots, prefer Mac +
+`~/Projects/ICH_A12_plus_Ramdisk/boot.sh` (see
+[`scripts/user/from_dfu_to_ssh.md`](scripts/user/from_dfu_to_ssh.md)).
+Lumina `./boot/lumina-boot.sh` remains the alternate payload-tree wrapper.
 
 ```sh
 python3 -m pip install pyusb
