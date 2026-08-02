@@ -1,8 +1,13 @@
 #!/bin/bash
-# Run ON DEVICE (ICH ramdisk root). Installs bootstrap under /mnt2/jb only.
+# Run ON DEVICE (ICH ramdisk root). Installs bootstrap under $JBROOT only.
 # Args: <staging_tar_path> | --skeleton
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=env.sh
+[[ -f "$SCRIPT_DIR/env.sh" ]] && source "$SCRIPT_DIR/env.sh"
+
+# Fallback mirrors scripts/bootstrap/env.sh in case it wasn't staged.
 # Default under /mnt2/root — NEW top-level dirs on Data (e.g. /mnt2/jb) allow
 # mkdir but reject file creates (Operation not permitted) on this 18.7.5 volume.
 JBROOT="${JBROOT:-/mnt2/root/jb}"
@@ -68,9 +73,10 @@ case "$TAR" in
 esac
 
 SRC="$WORK"
+# Archive layout only — Procursus rootless tarballs ship under var/jb/; we merge into $JBROOT.
 if [[ -d "$WORK/var/jb" ]]; then
   SRC="$WORK/var/jb"
-  echo "note: detected var/jb/ prefix in archive"
+  echo "note: detected var/jb/ prefix in archive (not installing to host /var/jb)"
 elif [[ -d "$WORK/jb" ]]; then
   SRC="$WORK/jb"
   echo "note: detected jb/ prefix in archive"

@@ -2,6 +2,11 @@
 # Run ON DEVICE. Remove Lumina bootstrap from Data only.
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=env.sh
+[[ -f "$SCRIPT_DIR/env.sh" ]] && source "$SCRIPT_DIR/env.sh"
+
+# Fallback mirrors scripts/bootstrap/env.sh in case it wasn't staged.
 JBROOT="${JBROOT:-/mnt2/root/jb}"
 STAGE="${STAGE:-/mnt2/tmp/lumina-bootstrap}"
 

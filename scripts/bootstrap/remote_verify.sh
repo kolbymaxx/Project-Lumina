@@ -1,7 +1,12 @@
 #!/bin/bash
-# Run ON DEVICE. Verify /mnt2/jb bootstrap. Exit 0=ok, 1=fail, 2=skeleton only.
+# Run ON DEVICE. Verify $JBROOT bootstrap. Exit 0=ok, 1=fail, 2=skeleton only.
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=env.sh
+[[ -f "$SCRIPT_DIR/env.sh" ]] && source "$SCRIPT_DIR/env.sh"
+
+# Fallback mirrors scripts/bootstrap/env.sh in case it wasn't staged.
 JBROOT="${JBROOT:-/mnt2/root/jb}"
 MARKER="${JBROOT}/.lumina_bootstrap"
 FAIL=0
@@ -47,13 +52,13 @@ for c in dpkg apt-get apt uicache; do
 done
 
 if [[ -x "$JBROOT/usr/bin/dpkg" ]]; then
-  echo "----- dpkg --version (JBROOT env) -----"
-  # Rootless Procursus often expects /var/jb; force via PATH + optional DPKG_ADMINDIR
-  export PATH="$JBROOT/usr/bin:$JBROOT/usr/sbin:${PATH}"
+  echo "----- dpkg --version (full path; do not put JBROOT first on PATH) -----"
+  # Keep system PATH — never put JBROOT first until a full-path binary runs.
+  export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
   if [[ -d "$JBROOT/var/lib/dpkg" ]]; then
     export DPKG_ADMINDIR="$JBROOT/var/lib/dpkg"
   fi
-  dpkg --version 2>&1 | head -5 || FAIL=1
+  "$JBROOT/usr/bin/dpkg" --version 2>&1 | head -5 || FAIL=1
 fi
 
 echo "----- ldid (ramdisk tool) -----"

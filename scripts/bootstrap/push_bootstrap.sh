@@ -3,12 +3,12 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# shellcheck source=env.sh
+source "${ROOT}/scripts/bootstrap/env.sh"
 SSH_PORT="${SSH_PORT:-2222}"
 SSH_USER="${SSH_USER:-root}"
 SSH_PASS="${SSH_PASS:-alpine}"
 SSH_HOST="${SSH_HOST:-127.0.0.1}"
-JBROOT="${JBROOT:-/mnt2/root/jb}"
-STAGE="/mnt2/tmp/lumina-bootstrap"
 LOGDIR="${ROOT}/logs"
 mkdir -p "$LOGDIR"
 STAMP="$(date +%Y%m%d-%H%M%S)"
@@ -68,13 +68,14 @@ log "target=${SSH_USER}@${SSH_HOST}:${SSH_PORT} JBROOT=$JBROOT"
 
 "${ssh_base[@]}" "mkdir -p $STAGE"
 "${scp_base[@]}" \
+  "${ROOT}/scripts/bootstrap/env.sh" \
   "${ROOT}/scripts/bootstrap/remote_install.sh" \
   "${ROOT}/scripts/bootstrap/remote_verify.sh" \
   "${ROOT}/scripts/bootstrap/remote_uninstall.sh" \
   "${SSH_USER}@${SSH_HOST}:${STAGE}/"
 
 # /mnt2 is effectively noexec for shebangs — always invoke with ramdisk bash/sh.
-"${ssh_base[@]}" "chmod 644 $STAGE/remote_install.sh $STAGE/remote_verify.sh $STAGE/remote_uninstall.sh"
+"${ssh_base[@]}" "chmod 644 $STAGE/env.sh $STAGE/remote_install.sh $STAGE/remote_verify.sh $STAGE/remote_uninstall.sh"
 
 run_remote() {
   local script="$1"; shift
