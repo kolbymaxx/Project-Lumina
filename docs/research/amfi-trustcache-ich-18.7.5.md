@@ -121,6 +121,87 @@ Live SSH on iPhone 12 mini (`iPhone13,1`, 17.3 / 21D50) with Relaxin **0.3.8** (
 
 ---
 
+## 4c. Live session — `/var/jb` remap + LC/AMFI probes (2026-08-02 PM)
+
+**Scope:** evidence only. No ldid resign, no bootstrap re-download, no exploit claims.  
+**Host:** ICH `boot.sh` already up; `iproxy 2222` → `root`/`alpine`.
+
+### PHASE1 — tmpfs remap (`remote_fix_exec` `map_var_jb` scheme)
+
+| Step | Result |
+|------|--------|
+| `mount_ich` | `/mnt1` System, `/mnt2` Data |
+| Bootstrap | `.procursus_strapped` + `/mnt2/root/jb/usr/bin/dpkg` present |
+| `mount_tmpfs -s 8M /private/var` | **rc=0** → `tmpfs on /private/var` |
+| Recreate SSH dirs | `empty`, `tmp`, `root`, `run`, `log`, `db` |
+| `ln -s /mnt2/root/jb /private/var/jb` | **rc=0** → `/var/jb -> /mnt2/root/jb` |
+| Fresh SSH after remap | **SSH_AFTER_REMAP_OK** (new connection) |
+
+**PHASE1_OK** — SSH survived remap.
+
+### PHASE2 — baseline exec (no signing)
+
+| Binary | Result | RC |
+|--------|--------|-----|
+| `/bin/bash -c '…'` | RAMDISK_BASH_OK | 0 |
+| `/mnt2/tmp/b1` (prior Data bash copy) | DATA_BASH_COPY_OK | 0 |
+| `/var/jb/usr/bin/dpkg --version` | **Killed: 9** | **137** |
+
+### PHASE3 — probe facts
+
+**Boot-args (live):** `rd=md0 -v debug=0x2014e`  
+— no `amfi_get_out_of_my_way` / `cs_enforcement_disable`.
+
+**Trustcache / AMFI / LC sysctls (selected):**
+```text
+security.codesigning.trustcaches.num_static: 1
+security.codesigning.trustcaches.num_engineering: 0
+security.codesigning.trustcaches.num_loadable: 0
+security.codesigning.monitor: 1
+security.codesigning.config: 3422552064
+security.mac.amfi.trust_cache_interface: 3
+security.mac.amfi.developer_mode_status: 0
+security.mac.amfi.launch_constraints_enforced: 1
+security.mac.amfi.launch_constraints_3rd_party_allowed: 0
+security.mac.amfi.launch_constraints_cc_types_enforced: 15
+```
+
+**CSM / cs_* vm knobs (selected):**
+```text
+vm.cs_blob_count: 165
+vm.cs_defer_to_csm: 68113
+vm.cs_defer_to_csm_not: 9710
+vm.cs_force_kill: 0
+vm.cs_force_hard: 0
+vm.cs_debug: 0
+```
+
+**Binary identity (read-only `ldid -e` / `ldid -h`; no `-S`):**
+
+| | `/var/jb/usr/bin/dpkg` | `/bin/bash` |
+|--|------------------------|-------------|
+| Mach-O | arm64 PIE | arm64 PIE |
+| Entitlements | `platform-application` + `container-required=false` | **same** |
+| CDHash (sha256) | `f223c26287b8acc9057ef74d109a07b171857dc2` | `27a45d021f9ce3092c2c4d5a186153900a51a603` |
+| Runs? | **SIGKILL** | **yes** |
+
+So death is **not** “missing platform entitlements” relative to bash — hashes differ; bash CDHash is authorized (stock/TC), dpkg’s is not.
+
+**Launch-constraint filesystem scan (scoped):** no `launch_constraint` string hits under ramdisk `/System/Library/LaunchDaemons`, `/usr/standalone`, `/etc`. On `/mnt1`, `DeveloperModeLaunchDaemons` dir name present; Security / MobileContainerManager frameworks listed. LC evidence remains the **sysctl** surface above.
+
+**Logs:** `/private/var/log` empty after tmpfs; `amfid` not on ramdisk PATH; stock binary exists at `/mnt1/usr/libexec/amfid` (not executed).
+
+**Control:** `cp /bin/bash /mnt2/tmp/bash_copy` → runs (RC 0). Ramdisk `/tmp` not writable for this copy.
+
+**dpkg recheck after probes:** still **Killed: 9** / 137.
+
+### Verdict (unchanged)
+
+**NO-GO** for live `dpkg` on this session.  
+**Missing primitive:** still runtime CDHash authorization (loadable TC inject and/or kernel r/w / stronger pre-boot KPF). Remap + probes did **not** clear SIGKILL.
+
+---
+
 ## 5. Next real work (ordered, no fantasy)
 
 1. **Explain the residual kill** after the claimed `AMFIIsCDHashInTrustCache` stub (launch constraints / CSM / wrong patch site) — static RE of the 22H311 patched kernelcache vs live `SIGKILL` path.

@@ -45,11 +45,12 @@ Prefer ICH’s vendored `iproxy` (brew `iproxy` can drop). Stay on **Mac/ICH** f
 boot+SSH. Windows `usbliter8ctl` iBSS→go is **not** required for current ramdisk use.
 
 ### Latest lab (2026-08-02 PM)
-Re-pwn → ICH `boot.sh` → SSH → `mount_ich` OK. Bootstrap tree still at
-`/mnt2/root/jb` (Procursus strapped). **`dpkg` still SIGKILL (137)**;
-`num_loadable: 0`; launch constraints enforced. See
+Re-pwn → ICH `boot.sh` → SSH → `mount_ich` OK. Bootstrap at
+`/mnt2/root/jb`. **`/var/jb` tmpfs remap PHASE1_OK** (SSH survived).
+**`dpkg` still SIGKILL (137)**; `num_loadable: 0`; LC enforced; dpkg vs bash
+share platform ents but different CDHashes. See
 [`docs/research/amfi-trustcache-ich-18.7.5.md`](research/amfi-trustcache-ich-18.7.5.md)
-(includes Relaxin A14 comparative teacher — not an XR install path).
+§4c (live remap + LC probes).
 
 ### Data partition (this erase)
 | Path | Observation |
