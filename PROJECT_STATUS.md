@@ -32,6 +32,12 @@
 2. Agent ops: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md)
 3. Lumina `scripts/01`–`05` remain for host DFU helpers; **live boot = ICH `boot.sh`**
 
+## Host tool (usbliter8ctl) notes
+- `05ac:1227` = DFU (Pwned when serial has `PWND:[usbliter8]`); `05ac:1281` = Recovery (after successful `boot` / `CUSTOM_BOOT`)
+- `boot` (DFU→Recovery, implemented) vs `send` (Recovery bulk upload, **not implemented** — raises; Mac fallback `irecovery -f`)
+- Mac: `brew install libusb` + `pyusb`; no Zadig. Windows: provide `libusb-1.0` (see `usbliter8ctl diagnose`); DFU/pwn handoff only — do ramdisk boot on Mac/ICH
+- Session drop = full re-pwn (Pico → direct-to-Mac → ICH `boot.sh`); checklist: [`docs/HOST_USB_HANDOFF.md`](docs/HOST_USB_HANDOFF.md)
+
 ## Explicit non-goals
 - Reviving Windows iBEC-go for current ramdisk sessions
 - DYLD hacks on 15.1 Data
@@ -50,3 +56,4 @@ sshpass -p alpine ssh -p 2222 root@127.0.0.1
 | Lumina | `~/Projects/lumina` |
 | ICH ramdisk | `~/Projects/ICH_A12_plus_Ramdisk` |
 | Bootchain | `…/bootchain/n841ap-18.7.5-22H311-ramdisk` |
+| Host handoff notes | [`docs/HOST_USB_HANDOFF.md`](docs/HOST_USB_HANDOFF.md) |

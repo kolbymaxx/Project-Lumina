@@ -95,6 +95,7 @@ Superseded for live Data access by ICH path above; keep as negative for 15.1 too
 | Lumina monorepo / lab scripts | `~/Projects/lumina` |
 | Legacy 15.1 payloads | `~/Projects/usbliter8-xr-ramdisk` |
 | Host DFU utility | `~/Projects/lumina/host/usbliter8ctl` / root `usbliter8ctl` |
+| Host handoff notes (1227/1281, boot vs send, Windows/Mac, re-pwn checklist) | [`docs/HOST_USB_HANDOFF.md`](HOST_USB_HANDOFF.md) |
 
 ## Research map (short)
 | Project | Role |
