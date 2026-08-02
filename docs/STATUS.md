@@ -122,9 +122,10 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Kernel hunt:** citable technical writeups / triggers for **T008/T009**
-   (window confirmed open); continue [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
+1. **Kernel hunt:** T008/T009 **stalled** — no writeup beyond advisory
+   ([`INTAKE_2026-08-02d.md`](../research/kexploit/experiments/INTAKE_2026-08-02d.md));
+   watch for Xint/STAR/Fitzl deep dives; Lab = No
 2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-3. **Data mount:** reconcile ICH `/mnt2` Data vs Phase A hsbugss exit-76
-   (`research/DATA_MOUNT_SSHRD.md`) — do not conflate with kernel PE
+3. Parallel OK: bootstrap **B005** TC append; Data ICH `/mnt2` vs exit-76 —
+   not substitutes for a kernel PE
 4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
