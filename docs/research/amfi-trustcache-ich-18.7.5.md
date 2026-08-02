@@ -200,11 +200,12 @@ So death is **not** “missing platform entitlements” relative to bash — has
 **NO-GO** for a working `dpkg --version` on this session.  
 **Missing primitive:** still full runtime authorization for the Procursus tree (deps + any post-TC gates), and/or stronger KPF — not “ldid harder.”
 
-### B005 → B006 (2026-08-02 evening)
+### B005 → B006 → scoped libz-ng (2026-08-02)
 
 - **B005:** append **dpkg** CDHash only into boot `trustcache.img4` (`rtsc`) → exit **134** (was **137**); dyld rejects `libz-ng.2.dylib` CS.  
 - **B006:** boot loads that same `rtsc`; hash present; `num_loadable=0`; bash CDHash was already in pre-append TC. Verdict: **static TC hit likely** for main binary → next scoped dep append, not mass libs.  
-- Details: [`research/bootstrap/DFU_SESSION_TC_APPEND.md`](../bootstrap/DFU_SESSION_TC_APPEND.md), [`research/bootstrap/B006_TC_STUB_HIT.md`](../bootstrap/B006_TC_STUB_HIT.md).
+- **Scoped libz-ng:** append `75f20eb6…` → still exit **134**; blocker moved to **`liblzma.5.dylib`** CS invalid (libz-ng cleared).  
+- Details: [`research/bootstrap/DFU_SESSION_TC_APPEND.md`](../bootstrap/DFU_SESSION_TC_APPEND.md), [`research/bootstrap/B006_TC_STUB_HIT.md`](../bootstrap/B006_TC_STUB_HIT.md), [`research/bootstrap/DFU_SESSION_TC_APPEND_DEPS.md`](../bootstrap/DFU_SESSION_TC_APPEND_DEPS.md).
 
 ---
 
