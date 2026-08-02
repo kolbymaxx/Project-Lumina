@@ -3,6 +3,20 @@
 Operating rules for agents driving the usbliter8 lab package under
 `~/Projects/lumina`. Do **not** re-scaffold the package when these change.
 
+## Live constants (always)
+```text
+DEVICE: iPhone XR n841ap, A12, iOS 18.7.5 (22H311)
+ENTRY: usbliter8 SecureROM pwn + ICH A12 ramdisk (tethered)
+JBROOT: /mnt2/root/jb only (NOT /mnt2/jb, NOT classic /var/jb on disk)
+/mnt1 = System (treat RO — do not write JB here)
+/mnt2 = Data (writable)
+SSH: iproxy 2222 22, root/alpine
+PATH rule: never put JBROOT first until a full-path binary runs without Killed: 9
+Bootstrap: Procursus CFVER 3000 already extracted; do not re-download unless tree is missing
+```
+
+Cursor rule (alwaysApply): [`.cursor/rules/xr-ich-lab.mdc`](.cursor/rules/xr-ich-lab.mdc)
+
 ## Human gates
 The human only gates:
 - DFU / re-pwn

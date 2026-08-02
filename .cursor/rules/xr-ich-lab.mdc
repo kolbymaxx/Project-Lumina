@@ -1,0 +1,25 @@
+---
+description: Live XR ICH ramdisk lab constants (JBROOT, mounts, SSH, PATH, bootstrap)
+alwaysApply: true
+---
+
+# XR / ICH lab — agent constants
+
+```text
+DEVICE: iPhone XR n841ap, A12, iOS 18.7.5 (22H311)
+ENTRY: usbliter8 SecureROM pwn + ICH A12 ramdisk (tethered)
+JBROOT: /mnt2/root/jb only (NOT /mnt2/jb, NOT classic /var/jb on disk)
+/mnt1 = System (treat RO — do not write JB here)
+/mnt2 = Data (writable)
+SSH: iproxy 2222 22, root/alpine
+PATH rule: never put JBROOT first until a full-path binary runs without Killed: 9
+Bootstrap: Procursus CFVER 3000 already extracted; do not re-download unless tree is missing
+```
+
+## Enforce
+- Prefer Mac + `~/Projects/ICH_A12_plus_Ramdisk` for boot/SSH (`tools/darwin/iproxy`).
+- Install / stage packages only under **`/mnt2/root/jb`** (or `/mnt2/tmp/…` staging).
+- Do **not** create or prefer `/mnt2/jb` — new top-level Data dirs reject file creates.
+- Do **not** assume ramdisk `/var/jb` exists (ramdisk `/` is RO; `/var` ≠ Data).
+- Verify with **full-path** exec only, e.g. `/mnt2/root/jb/usr/bin/dpkg --version`.
+- Status twin: `docs/STATUS.md` + `PROJECT_STATUS.md`. Lab ops: `LAB_AGENT_RULES.md`.

@@ -28,7 +28,7 @@
 2. Tethered only — unplug = re-pwn + ICH `boot.sh`
 
 ## Next
-1. Clean-lab bootstrap / Sileo research **or** pause after documenting SSH success
+1. Data-only bootstrap staging: [`scripts/bootstrap/`](scripts/bootstrap/) (`JBROOT=/mnt2/root/jb`, Mac push)
 2. Agent ops: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md)
 3. Lumina `scripts/01`–`05` remain for host DFU helpers; **live boot = ICH `boot.sh`**
 

@@ -1,5 +1,18 @@
 # AGENTS.md
 
+## Live lab constants (Mac + device)
+```text
+DEVICE: iPhone XR n841ap, A12, iOS 18.7.5 (22H311)
+ENTRY: usbliter8 SecureROM pwn + ICH A12 ramdisk (tethered)
+JBROOT: /mnt2/root/jb only (NOT /mnt2/jb, NOT classic /var/jb on disk)
+/mnt1 = System (treat RO — do not write JB here)
+/mnt2 = Data (writable)
+SSH: iproxy 2222 22, root/alpine
+PATH rule: never put JBROOT first until a full-path binary runs without Killed: 9
+Bootstrap: Procursus CFVER 3000 already extracted; do not re-download unless tree is missing
+```
+Also: `.cursor/rules/xr-ich-lab.mdc` (alwaysApply), `LAB_AGENT_RULES.md`, `docs/STATUS.md`.
+
 ## Cursor Cloud specific instructions
 
 Project Lumina is a **Mac + USB hardware** research repo (iPhone XR / A12, Pico 2, usbliter8). The cloud VM can verify host tooling and docs; it cannot run the live BootROM → ramdisk path without the phone + Pico.
