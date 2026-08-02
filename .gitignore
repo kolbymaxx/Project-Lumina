@@ -13,7 +13,13 @@ research/kexploit/lara/
 research/kexploit/notes/*
 !research/kexploit/notes/.gitkeep
 
+# Nested upstream clones (see upstream/README.md)
+upstream/usbliter8/
+
 __pycache__/
 *.pyc
 .DS_Store
 .venv/
+
+# Nested upstream clones (see upstream/README.md)
+upstream/usbliter8/
