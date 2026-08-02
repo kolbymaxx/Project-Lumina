@@ -112,13 +112,14 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - [x] RE priority + public primitive matrix (`RE_PRIORITY.md`, `PUBLIC_PRIMITIVE_MATRIX.md`)
 - [x] Hunt loop + filter + intakes (`HUNT_LOOP.md`, `FILTER.md`, `experiments/`)
 - **No matching public primitive for A12 / 18.7.5** — teachers, not installers
-- Open **candidate watches** (docs only): T005 CVE-2026-20687, T006 CVE-2026-28819,
-  T007 CVE-2026-28992 — see [`INTAKE_2026-08-02b.md`](../research/kexploit/experiments/INTAKE_2026-08-02b.md)
+- Open **candidate watches** (docs only): **primary** T008 CVE-2026-28972 +
+  T009 CVE-2026-28951; secondary/side T005–T007 — see
+  [`INTAKE_2026-08-02c.md`](../research/kexploit/experiments/INTAKE_2026-08-02c.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Kernel hunt:** watch T005/T006 for citable writeups; continue
-   [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md) cadence; fill
+1. **Kernel hunt:** prioritize citable writeups for **T008/T009** (18.7.9 set);
+   continue [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md); fill
    [`PUBLIC_PRIMITIVE_MATRIX.md`](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
    (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
 2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
