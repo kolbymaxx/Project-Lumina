@@ -1,4 +1,4 @@
-# Lumina Jailbreak — Project Status (2026-08-01)
+# Lumina Jailbreak — Project Status (2026-08-01 night)
 
 ## Goal
 Research tethered → semi-untethered style jailbreak path for A12/A13 on modern iOS,
@@ -16,111 +16,112 @@ XR UDID: `00008020-00117540340B002E`
 ECID: `00117540340B002E`  
 Serial (Recovery): `F2LZJAE1KXKQ`
 
-## Phase A — 2026-08-01 (live XR ramdisk SSH) — **inventory locked**
+**Lab phone note (2026-08-01 night):** XR was intentionally erased (no passcode,
+never set up). Empty user Data is expected — not a mount failure.
 
-Tethered usbliter8 → XR ramdisk → root SSH (`alpine`, `iproxy 2222`).
-Ramdisk env: iOS **15.1** restore (`19B5042h`), root `/dev/md0` HFS **RO**.
+## Live path (preferred) — Mac + ICH_A12_plus_Ramdisk — **WORKS**
 
-### Locked volume inventory
+Measured 2026-08-01 night on Mac (USB-A, no hub):
+
+1. Pico usbliter8 → Pwned DFU (`PWND:[usbliter8]`, `05ac:1227`)
+2. `~/Projects/ICH_A12_plus_Ramdisk` → `bootchain/n841ap-18.7.5-22H311-ramdisk`
+   - `with_fw`, `kpf_set=ios18`, IMG4+IM4M packaging
+   - **Direct iBEC** (no separate iBSS stage) → Recovery → `bootx`
+3. SSH: ICH `tools/darwin/iproxy 2222 22` → `sshpass -p alpine ssh -p 2222 root@127.0.0.1`
+4. `mount_ich` → **System `/mnt1`**, **Data `/mnt2`** (and other volumes)
+5. Reported **18.7.5 (22H311)** / Darwin kernel for T8020
+
+### Reconnect (USB stays plugged)
+```bash
+# Terminal 1
+~/Projects/ICH_A12_plus_Ramdisk/tools/darwin/iproxy 2222 22
+# Terminal 2
+sshpass -p alpine ssh -p 2222 root@127.0.0.1
+# remount if needed
+mount_ich
+```
+
+Prefer ICH’s vendored `iproxy` (brew `iproxy` can drop). Stay on **Mac/ICH** for
+boot+SSH. Windows `usbliter8ctl` iBSS→go is **not** required for current ramdisk use.
+
+### Data partition (this erase)
+| Path | Observation |
+|------|-------------|
+| `/mnt2/mobile` | empty (only tmp) |
+| `/mnt2/root/.obliterated` | present |
+| `containers/Data` | System only — no personal photos/apps |
+
+Expected after fresh erase to remove passcode — **not** a mount bug.
+
+## Abandoned — Windows usbliter8ctl iBSS→iBEC→go
+- Bulk upload OK; device stayed on `05ac:1281` after `go` / `bootx` (no new `SRTG`)
+- Stock signed iBEC.im4p also failed to jump; EP0 `setenv`/`go` pipe errors
+- Mac ICH path bypasses that by loading its own patched iBoot + full ramdisk chain
+- Do **not** resume Windows iBEC-go work unless returning to custom host-side iBoot experiments
+
+## Phase A (earlier) — 15.1 hsbugss-style ramdisk — **inventory locked (historical)**
+
+Tethered usbliter8 → **15.1** restore ramdisk → SSH. Data failed exit **76**.
+Superseded for live Data access by ICH path above; keep as negative for 15.1 tools.
 
 | Node | Mount | Result | Notes |
 |------|-------|--------|-------|
-| `disk0s1s1` | `/mnt1` | **OK** RO sealed | **System** — ProductVersion **18.7.5**, ProductBuildVersion **22H311** |
-| `disk0s1s5` | `/mnt4` | **OK** | **Update** — ota-result success → **22H311** |
-| `disk0s1s6` | `/mnt6` | **OK** | **Cryptex** — see cryptex detail below |
-| `disk0s1s3` | `/mnt3` | **OK** RO | **Preboot** (minimal) |
-| `disk0s1s4` | `/mnt5` | **OK** RO | **bbfs** |
-| `disk0s1s7` | `/mnt7` | **OK** RO | **FactoryData** / MobileActivation / Pearl |
-| `disk0s1s2` | — | **FAIL** exit **76** | **Data** — `mount_apfs -o rdonly` → `Program version wrong` |
-| `disk0s1s8` | — | **FAIL** exit **76** | same as Data |
+| `disk0s1s1` | `/mnt1` | **OK** RO sealed | System **18.7.5 / 22H311** |
+| `disk0s1s5` | `/mnt4` | **OK** | Update → **22H311** |
+| `disk0s1s6` | `/mnt6` | **OK** | Cryptex |
+| `disk0s1s3` | `/mnt3` | **OK** RO | Preboot (minimal) |
+| `disk0s1s4` | `/mnt5` | **OK** RO | bbfs |
+| `disk0s1s7` | `/mnt7` | **OK** RO | FactoryData |
+| `disk0s1s2` | — | **FAIL** exit **76** | Data — 15.1 `mount_apfs` |
+| `disk0s1s8` | — | **FAIL** exit **76** | same class |
 
-**Cryptex (`/mnt6`) detail (locked):**
-- `active` → `E66645393AB5A31AE432195F142B705037F78B2AAD76DBADC4C66682285578663DC2BC9C05C6C84346C3ED69D7B91C51`
-- `cryptex1/current`: `os.dmg` (~4GB), `app.dmg`, trustcaches, `apticket.n841ap.117540340B002E.im4m`
-- SystemVersion **18.7.5 / 22H311**; RestoreVersion **22.8.311.0.0**
+**HARD RULE (15.1 only):** no `DYLD_LIBRARY_PATH` hacks for Data.
 
-### Interpretation (locked)
-Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock).
-**System + Update + Cryptex path works.** Full write-up:
-[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md),
-[../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md).
+## Blockers (remaining)
+1. **No kernel exploit** for A12 / 18.7.5 — study only under `research/kexploit/`
+2. **Userspace bootstrap / Sileo** — not done; phone is a clean lab target for tethered JB research
+3. Session is **tethered**: unplug/reboot = full re-pwn (Pico → DFU → ICH `boot.sh`)
 
-### Blockers (hard gates for later work)
-1. **Data volume** — 15.1 ramdisk `mount_apfs` cannot mount iOS 18 Data/`s8` (exit 76)
-2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
-3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
-
-### Not claimed
-- Not a working jailbreak; no kexploit; no Data R/W; no Sileo
-- No claim beyond tethered SSH + the RO mounts in the inventory above
-- No kexploit wired into `boot/`
-
-Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
-`research/` (mitigations, kexploit theory, checkm8/palera1n notes). **No new
-live capability** — docs only; boot path unchanged.
-
-Offline Stage C artifact noted (Mac only): see
-[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md)
-(`kernelcache.release.iphone11b` / `kernelcache.payload`). **Not** a kexploit
-claim — documentation of an extract for later RE probes.
-
-Public tool applicability (2026-08-01): only **usbliter8 + ramdisk** applies as
-a real public capability on A12/18.7.5; Dopamine/palera1n are not drop-in for
-this chip+build. See [RESEARCH.md](RESEARCH.md#public-tool-applicability-2026-08-01).
-
-Host note: Mac clone `boot/config.env` is already correct for this XR; keep docs in sync with UDID above.
+## Not claimed
+- Not a working jailbreak; no Sileo; no kexploit
+- Empty Data ≠ failed Data mount (erase)
+- Windows host iBEC execute path **not** solved — unused for current SSH
 
 ## Paths
-- Host tool (iMac): PR #2 macOS `usbliter8ctl` remote-boot path
-- Ramdisk project: `~/Projects/usbliter8-xr-ramdisk` (15.1-based payloads)
-- IPSW-related: `iPhone11,8_18.7.5_22H311_Restore`
-- Lumina boot wrapper: `boot/lumina-boot.sh`
-
-## Known issues
-- Upstream hsbugss `exploit.sh` historically used a foreign UDID; Lumina
-  wrappers use this XR’s UDID / auto-detect
-- `sshpass` may need `brew install sshpass`
-- After `bootx`, `irecovery` fails (expected — left Recovery)
-- Black screen can still be a live ramdisk (SSH is the check)
-- Session is **tethered**: unplug/reboot = full re-pwn
-- **Data mount blocked** by 15.1 `mount_apfs` vs iOS 18 APFS
+| Role | Path |
+|------|------|
+| Preferred boot+SSH | `~/Projects/ICH_A12_plus_Ramdisk` (`build.sh` / `boot.sh`) |
+| Bootchain (built) | `…/bootchain/n841ap-18.7.5-22H311-ramdisk` |
+| Lumina monorepo / lab scripts | `~/Projects/lumina` |
+| Legacy 15.1 payloads | `~/Projects/usbliter8-xr-ramdisk` |
+| Host DFU utility | `~/Projects/lumina/host/usbliter8ctl` / root `usbliter8ctl` |
 
 ## Research map (short)
 | Project | Role |
 |---------|------|
-| usbliter8 | A12/A13 **BootROM entry only** (live) |
-| XR ramdisk | Tethered SSH + volume inspection (live; 15.1 tooling) |
-| checkm8 / palera1n | **A8–A11 knowledge only** — does not apply as a drop-in on A12/18.7.5 |
-| DarkSword / LARA / Dopamine | Isolated study for future k r/w + bootstrap — **not wired to boot** |
+| usbliter8 | A12/A13 **BootROM entry** (live) |
+| ICH_A12_plus_Ramdisk | **Live** tethered SSH + `mount_ich` on 18.7.5 XR |
+| 15.1 hsbugss ramdisk | Historical; Data exit 76 |
+| checkm8 / palera1n | Knowledge only on A12/18.7.5 |
+| kexploit / Dopamine / LARA | Study only — **not wired** to boot |
 
 Full index: [RESEARCH.md](RESEARCH.md)
 
 ## Phases
 ### A — Device ground truth
-- [x] Dated works / fails / blockers (this section)
-- [x] Phase A volume inventory **locked** (System/Update/Cryptex/… + Data/`s8` exit 76)
-- [x] Offline kernelcache artifact noted (Mac `22H311_NOTES.md`)
-- [x] Research newer restore-ramdisk / SSHRD staging docs (`research/DATA_MOUNT_SSHRD.md`)
-- [ ] Unblock Data mount in a live session (newer `mount_apfs` ± `seputil` — **not done**)
+- [x] 15.1 inventory locked (Data exit 76)
+- [x] ICH Mac path: SSH + System/Data mounts on 18.7.5 XR (2026-08-01 night)
+- [ ] Userspace bootstrap / Sileo on clean lab phone — **not done**
 
 ### B — Lumina monorepo
-- [x] Repo layout, STATUS, boot wrappers, UDID fix, mount stubs, artifacts
+- [x] Repo layout, STATUS, lab scripts, UDID guards
 
-### C — Kexploit / legacy BootROM study (isolated)
-- [x] `research/kexploit/` index
-- [x] `research/checkm8/` + `research/palera1n/` notes (knowledge only)
-- [x] RE priority + public primitive matrix (`RE_PRIORITY.md`, `PUBLIC_PRIMITIVE_MATRIX.md`)
+### C — Kexploit study (isolated)
+- [x] Notes / matrices under `research/kexploit/`
 - **No matching public primitive for A12 / 18.7.5** — teachers, not installers
-- **No kexploit implementation wired into boot**
 
-## Next
-1. **Kernel RE (teachers):** palera1n boot-flow compare → Dopamine/kfd writeups →
-   Relaxin/Coruna public claim-vs-proof → fill
-   [`PUBLIC_PRIMITIVE_MATRIX.md`](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
-   (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
-2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
-   then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
-   SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
-   mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
-4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
+## Next (user choice)
+1. Treat XR as clean lab phone for bootstrap / Sileo / tethered JB research, **or**
+2. Document “ramdisk SSH works on 18.7.5 XR” and pause
+3. Stay on Mac/ICH for boot+SSH; do not chase Windows iBEC-go for ramdisk use
+4. Kernel RE teachers remain optional background (`research/kexploit/`)

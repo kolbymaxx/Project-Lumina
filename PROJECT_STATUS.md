@@ -1,46 +1,52 @@
 # PROJECT_STATUS — usbliter8 lab automation
 
-**Source of truth for this lab package.** Device inventory twin: `docs/STATUS.md`.  
+**Lab package SoT.** Device inventory twin: [`docs/STATUS.md`](docs/STATUS.md).  
 **Not a jailbreak.** No Sileo / full-JB claim on 18.7.5.
 
 ## Device
 | Field | Value |
 |-------|-------|
 | Device | iPhone XR (n841ap) |
-| SoC | A12 |
+| SoC | A12 / CPID 8020 |
 | NAND iOS | **18.7.5 (22H311)** |
 | Entry | Pico usbliter8 → Pwned DFU `05ac:1227` `PWND:[usbliter8]` |
+| Lab state | Intentionally erased (no passcode) — empty user Data expected |
 
-## Current (measured)
-- Host: `host/usbliter8ctl` — `info`, `wait`, `boot`, `demote`, `diagnose`; `send` is placeholder (Mac: `irecovery -f`)
-- Boot: optional demote → boot patched iBSS → Recovery `05ac:1281` → send iBEC → 15.1 ramdisk → SSH
-- Mac SSH: `idevice_id`, `iproxy 2222 22`, `ssh -p 2222 root@127.0.0.1` / password `alpine`
-- System volume at **`/mnt1`**
-- Data `/dev/disk0s1s2`: `mount_apfs` → **exit 76** (`Program version wrong`)
-- Newer System `mount_apfs` on 15.1: dyld missing **`_malloc_type_malloc`** (libSystem too old)
+## Current (measured) — Mac / ICH path **WORKS**
+- Boot+SSH: `~/Projects/ICH_A12_plus_Ramdisk` → `n841ap-18.7.5-22H311-ramdisk`
+  - `with_fw`, `kpf_set=ios18`, direct **iBEC** → Recovery → `bootx`
+- SSH: `tools/darwin/iproxy 2222 22` + `sshpass -p alpine ssh -p 2222 root@127.0.0.1`
+- `mount_ich` → System **`/mnt1`**, Data **`/mnt2`** (empty after erase — expected)
+- Prefer Mac/ICH. Windows `usbliter8ctl` iBSS→go **abandoned** for ramdisk use
+
+## Historical / closed negatives
+- **15.1** hsbugss ramdisk: Data exit **76**; no DYLD hacks
+- Windows: iBEC upload OK but `go` never jumped (stayed `05ac:1281`, no new SRTG)
 
 ## Blocked
-1. Data mount on the **15.1** ramdisk (exit 76) — APFS/userspace generation mismatch
-2. Transplanting newer `mount_apfs` onto 15.1 without matching libSystem
-3. **HARD RULE:** no `DYLD_LIBRARY_PATH` (or similar) hacks for Data on 15.1
-4. No A12 / 18.7.5 kernel exploit in this package
+1. No A12 / 18.7.5 **kexploit** / Sileo bootstrap yet
+2. Tethered only — unplug = re-pwn + ICH `boot.sh`
 
 ## Next
-1. Treat 15.1 Data + DYLD paths as **closed negatives**
-2. Build/boot a **newer restore ramdisk** — `ramdisk/NOTES_NEXT.md`
-3. Use `scripts/01`–`05` for re-entry; logs under `logs/`
-4. Agent ops: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md) — human gates DFU; after `pwned, go` run end-to-end
+1. Clean-lab bootstrap / Sileo research **or** pause after documenting SSH success
+2. Agent ops: [`LAB_AGENT_RULES.md`](LAB_AGENT_RULES.md)
+3. Lumina `scripts/01`–`05` remain for host DFU helpers; **live boot = ICH `boot.sh`**
 
 ## Explicit non-goals
-- Working Data mount / Data R/W on the **15.1** ramdisk
-- DYLD hacks for Data
-- Claiming a full jailbreak, Sileo, or kexploit
-- Inventing USB stacks beyond `usbliter8ctl` + `irecovery`
+- Reviving Windows iBEC-go for current ramdisk sessions
+- DYLD hacks on 15.1 Data
+- Claiming a full jailbreak
+
+## Reconnect
+```bash
+~/Projects/ICH_A12_plus_Ramdisk/tools/darwin/iproxy 2222 22
+sshpass -p alpine ssh -p 2222 root@127.0.0.1
+# mount_ich
+```
 
 ## Host paths
-| | Mac | Windows |
-|---|-----|---------|
-| Repo | `~/Projects/lumina` | `%USERPROFILE%\Projects\lumina` |
-| Payloads | `~/Projects/usbliter8-xr-ramdisk/payload` | same under `%USERPROFILE%\Projects\...` |
-| Tool override | `export USBLITER8CTL=...` | `set USBLITER8CTL=...` |
-| Live XR USB | Mac libusb (preferred) | libusb possible; prefer Mac for proven SSH path |
+| Role | Mac |
+|------|-----|
+| Lumina | `~/Projects/lumina` |
+| ICH ramdisk | `~/Projects/ICH_A12_plus_Ramdisk` |
+| Bootchain | `…/bootchain/n841ap-18.7.5-22H311-ramdisk` |

@@ -31,13 +31,19 @@ If the live device is gone (no `05ac:1227` / `05ac:1281`, SSH dead, back to iOS)
 Do **not** ask for re-pwn unless the live device is actually gone.
 If the human has not said otherwise, assume they are still in ramdisk SSH.
 
-## Data mount (15.1)
+## Boot + SSH (preferred)
+- Stay on **Mac** + **`~/Projects/ICH_A12_plus_Ramdisk`** (`boot.sh`, vendored `iproxy`)
+- Windows `usbliter8ctl` iBSS→go is **not** needed for current ramdisk use
+- After erase: empty `/mnt2` user trees are expected — not a mount bug
+
+## Data mount (15.1 legacy only)
 - Never DYLD-hack Data mount on the 15.1 ramdisk
-- Exit **76** on Data remains **expected** (not success, not a reason to re-pwn)
+- Exit **76** on 15.1 Data remains **expected** (closed negative)
 
 ## Paths
 | Role | Path |
 |------|------|
 | Lumina root | `~/Projects/lumina` |
 | Status | `PROJECT_STATUS.md` + `docs/STATUS.md` |
-| Experiment runner | `scripts/05_run_experiment.sh` |
+| Live boot+SSH | `~/Projects/ICH_A12_plus_Ramdisk` |
+| Experiment runner | `scripts/05_run_experiment.sh` (host DFU helpers; ICH for full boot) |
