@@ -145,7 +145,9 @@ export IBEC="$HOME/Projects/usbliter8-xr-ramdisk/payload/iBEC.raw"
 ## usbliter8ctl
 
 `usbliter8ctl` is a `pyusb` host utility for an Apple device already placed
-in Pwned DFU by usbliter8.
+in Pwned DFU by usbliter8. For `1227` vs `1281`, `boot` vs `send`, Windows vs
+Mac host setup, and a session-drop re-pwn checklist, see
+[`docs/HOST_USB_HANDOFF.md`](docs/HOST_USB_HANDOFF.md).
 
 On macOS, use the Pico only for the race/pwn step. Disconnect the phone from
 the Pico and connect it directly to the Mac before running `usbliter8ctl`.
@@ -154,7 +156,8 @@ from completing.
 
 For day-to-day XR ramdisk boots, prefer Mac +
 `~/Projects/ICH_A12_plus_Ramdisk/boot.sh` (see
-[`scripts/user/from_dfu_to_ssh.md`](scripts/user/from_dfu_to_ssh.md)).
+[`scripts/user/from_dfu_to_ssh.md`](scripts/user/from_dfu_to_ssh.md)
+and [`docs/HOST_USB_HANDOFF.md`](docs/HOST_USB_HANDOFF.md)).
 Lumina `./boot/lumina-boot.sh` remains the alternate payload-tree wrapper.
 
 ```sh
