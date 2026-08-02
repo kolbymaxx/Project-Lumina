@@ -20,29 +20,21 @@ Still dies on `libzstd` after append (wrong hash/bytes/path), or regress to **13
 
 ---
 
-## Phase 1 — Host append (done; waiting PWND for Phase 2)
+## Phase 1 — Host append
 
 | Field | Value |
 |-------|--------|
-| Source path (device) | `/mnt2/root/jb/usr/lib/libzstd.1.dylib` (= `/var/jb/…`) |
+| Source path (device) | `/mnt2/root/jb/usr/lib/libzstd.1.dylib` |
 | Host copy | `ICH…/work/lumina-b005-libzstd/libzstd.1.dylib` |
 | Size | **546480** bytes |
 | File SHA-256 | `9c4737762397d13d63300c6bd91231a362fad7b0dbf05bec27f0f2d72524c66d` |
-| CDHash sha256 | `09087fa384fbb2ab96f020e785483b2c661dc6ef` (reconfirmed) |
+| CDHash sha256 | `09087fa384fbb2ab96f020e785483b2c661dc6ef` |
 | TC file | `bootchain/n841ap-18.7.5-22H311-ramdisk/trustcache.img4` |
-| Kept | dpkg `f223c262…`, libz-ng `75f20eb6…`, liblzma `50569d20…` |
+| Kept | dpkg + libz-ng + liblzma |
 | Appended | **libzstd only** |
 | Entry count | **472 → 473** |
 | Backup | `work/lumina-b005-libzstd/trustcache.img4.pre-libzstd` |
 | Wrap | bootchain size **17887** |
-| Round-trip | dpkg + libz-ng + liblzma + libzstd present |
-
-### `otool -L` libzstd (notes for *following* pass — not appended)
-
-- `@rpath/libiosexec.1.dylib` (jb)
-- `/usr/lib/libSystem.B.dylib` (system)
-
-**Status:** Phase 1 ready — ping PWND for Phase 2.
 
 ---
 
@@ -50,20 +42,46 @@ Still dies on `libzstd` after append (wrong hash/bytes/path), or regress to **13
 
 | Field | Value |
 |-------|--------|
-| DFU PWND | *(pending)* |
-| Boot | |
-| SSH / remap | |
+| DFU PWND | **yes** — `PWND: usbliter8` · ECID `0x00117540340b002e` |
+| Boot | `boot.sh` → trustcache → `bootx` OK |
+| SSH | **yes** |
+| mount_ich | **yes** |
+| tmpfs `/private/var` | **yes** |
+| `/var/jb` → | `/mnt2/root/jb` |
+| SSH after remap | **yes** |
 
 ---
 
 ## Phase 3 — one shot
 
 ```text
-(pending)
+/var/jb/usr/bin/dpkg --version
+dyld[89]: Library not loaded: @rpath/libmd.0.dylib
+  Referenced from: …/mnt2/root/jb/usr/bin/dpkg
+  Reason: tried: '/var/jb/usr/lib/libmd.0.dylib' (code signature invalid …)
+Abort trap: 6
+exit:134
 ```
 
 | Field | Value |
 |-------|--------|
-| exit code | |
-| New error (if any) | |
-| Verdict | |
+| exit code | **134** |
+| New error | **`libmd.0.dylib` code signature invalid** (libzstd cleared) |
+| Next RO CDHash | `libmd.0.dylib` → `ff08beac17621c17bf5f1dca0ccb1cf696f24fd5` |
+
+---
+
+## Result table
+
+| Field | Value |
+|-------|--------|
+| Hashes appended | dpkg + libz-ng + liblzma + **libzstd** |
+| Rebuild + DFU | **yes** |
+| exit code | **134** |
+| New error | `libmd.0.dylib` CS invalid |
+| Verdict | **Expected next dep** — libzstd TC hit. Stop this session. Still ≠ Sileo. |
+
+## Interpretation
+
+- libzstd authorized; failure mode advanced.
+- Next scoped pass (later): append **`libmd.0.dylib`** CDHash `ff08beac17621c17bf5f1dca0ccb1cf696f24fd5` only.
