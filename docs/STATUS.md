@@ -122,9 +122,10 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Kernel hunt:** T008/T009 **stalled** — no writeup beyond advisory
-   ([`INTAKE_2026-08-02d.md`](../research/kexploit/experiments/INTAKE_2026-08-02d.md));
-   watch for Xint/STAR/Fitzl deep dives; Lab = No
+1. **Kernel hunt:** `T008/T009: citable detail still advisory-only (OOB write /
+   auth→root); no public PoC or named surface; Lab=No; no A12/18.7.5 primitive.`
+   ([`INTAKE_2026-08-02d.md`](../research/kexploit/experiments/INTAKE_2026-08-02d.md))
+   — revisit on Xint/STAR/Fitzl deep dive only
 2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
 3. Parallel OK: bootstrap **B005** TC append; Data ICH `/mnt2` vs exit-76 —
    not substitutes for a kernel PE
