@@ -5,12 +5,12 @@
 set +e
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# dirname(1) may be absent on ramdisk PATH — prefer STAGE-provided env.
+STAGE="${STAGE:-/mnt2/tmp/lumina-bootstrap}"
 # shellcheck source=env.sh
-[[ -f "$SCRIPT_DIR/env.sh" ]] && source "$SCRIPT_DIR/env.sh"
+[[ -f "$STAGE/env.sh" ]] && source "$STAGE/env.sh"
 
 JBROOT="${JBROOT:-/mnt2/root/jb}"
-STAGE="${STAGE:-/mnt2/tmp/lumina-bootstrap}"
 PLIST="${PLIST:-$STAGE/platform.plist}"
 DPKG="$JBROOT/usr/bin/dpkg"
 FAIL=0
@@ -49,7 +49,7 @@ map_var_jb() {
 
   if ! /sbin/mount | grep -q 'tmpfs on /private/var'; then
     if [[ -x /sbin/mount_tmpfs ]]; then
-      /sbin/mount_tmpfs -s 4M /private/var
+      /sbin/mount_tmpfs -s 8M /private/var
       echo "mount_tmpfs /private/var rc=$?"
     else
       /sbin/mount -t tmpfs tmpfs /private/var
@@ -61,6 +61,13 @@ map_var_jb() {
     echo "WARN: could not tmpfs-mount /private/var — /var/jb map skipped"
     return 1
   fi
+
+  # CRITICAL: tmpfs hides ramdisk /private/var — recreate dropbear/SSH dirs
+  # immediately or subsequent SSH sessions return empty/broken.
+  mkdir -p /private/var/empty /private/var/tmp /private/var/root \
+    /private/var/run /private/var/log /private/var/db
+  chmod 755 /private/var/empty /private/var/tmp /private/var/root \
+    /private/var/run /private/var/log 2>/dev/null || true
 
   # Do NOT mkdir jb first — ln into an existing dir nests the link.
   rm -rf /private/var/jb
@@ -121,43 +128,39 @@ sign_one() {
 }
 
 echo "----- batch ldid under $JBROOT -----"
+# Ramdisk PATH has no od/tr — sign by path pattern (skip symlinks/scripts).
 count=0
-is_macho_any() {
-  local f="$1"
-  [[ -f "$f" ]] || return 1
-  local head
-  head="$(dd if="$f" bs=4 count=1 2>/dev/null | od -An -tx4 | tr -d ' ')"
-  case "$head" in
-    cffaedfe|feedfacf|cafebabe|bebafeca) return 0 ;;
-  esac
-  return 1
-}
-
-# Sign bin/sbin first, then dylibs (dpkg @rpath deps)
-for dir in "$JBROOT/usr/bin" "$JBROOT/usr/sbin" "$JBROOT/bin" "$JBROOT/sbin" \
-           "$JBROOT/usr/lib" "$JBROOT/usr/lib/libdpkg" "$JBROOT/usr/libexec"; do
-  [[ -d "$dir" ]] || continue
+sign_tree() {
+  local dir="$1"
+  local f
+  [[ -d "$dir" ]] || return 0
   for f in "$dir"/*; do
-    [[ -e "$f" ]] || continue
+    [[ -f "$f" ]] || continue
     [[ -L "$f" ]] && continue
-    if is_macho_any "$f"; then
-      if sign_one "$f"; then
-        count=$((count + 1))
-      else
-        echo "WARN: ldid failed: $f"
-      fi
+    # skip obvious text scripts
+    case "$f" in
+      *.sh|*.py|*.pl|*.bash) continue ;;
+    esac
+    if sign_one "$f"; then
+      count=$((count + 1))
+    else
+      echo "WARN: ldid failed: $f"
     fi
   done
+}
+
+sign_tree "$JBROOT/usr/bin"
+sign_tree "$JBROOT/usr/sbin"
+sign_tree "$JBROOT/bin"
+sign_tree "$JBROOT/sbin"
+sign_tree "$JBROOT/usr/libexec"
+sign_tree "$JBROOT/usr/lib"
+# Nested dylib dirs (engines-3, bash, …)
+for dir in "$JBROOT"/usr/lib/*/; do
+  [[ -d "$dir" ]] || continue
+  sign_tree "$dir"
 done
-# Nested .dylib in versioned dirs
-if [[ -d "$JBROOT/usr/lib" ]]; then
-  find "$JBROOT/usr/lib" -type f \( -name '*.dylib' -o -name '*.0' -o -name '*.1' -o -name '*.2' -o -name '*.3' -o -name '*.5' -o -name '*.6' -o -name '*.8' \) 2>/dev/null | while read -r f; do
-    is_macho_any "$f" || continue
-    sign_one "$f" && echo -n "." || echo "WARN: ldid failed: $f"
-  done
-fi
-echo
-echo "signed_count~$count (top-level pass; find pass may add more)"
+echo "signed_count=$count"
 
 # --- adapt prep_bootstrap (no /var/jb as package root) ---
 PREP="$JBROOT/prep_bootstrap.sh"

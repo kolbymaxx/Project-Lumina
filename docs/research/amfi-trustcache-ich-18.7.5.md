@@ -90,6 +90,35 @@ Do **not** “just ldid harder.”
 
 `/var/jb` mapping and SSH survival after tmpfs are solved separately; they are **not** the remaining AMFI gate.
 
+### Reconfirm (2026-08-02 PM, ICH SSH)
+Fresh usbliter8 DFU → `ICH_A12_plus_Ramdisk/boot.sh` → `mount_ich`:
+- Identity: **18.7.5 (22H311)** / `N841AP` / `xnu-11417…/RELEASE_ARM64_T8020`
+- `num_loadable: 0`, `launch_constraints_enforced: 1`, `codesigning.monitor: 1`, `developer_mode_status: 0`
+- `/mnt2/root/jb/usr/bin/dpkg --version` → **Killed: 9** (exit 137)
+- `cp /bin/bash /mnt2/tmp/b1` → runs (unchanged CDHash)
+- `/var/jb` absent until tmpfs remap (not remounted this pass)
+
+Local log (gitignored): `artifacts/xr-18.7.5/session-2026-08-02-pm.txt`
+
+---
+
+## 4b. Comparative teacher — Relaxin on A14 / 17.3 (not an XR path)
+
+Live SSH on iPhone 12 mini (`iPhone13,1`, 17.3 / 21D50) with Relaxin **0.3.8** (RootHide):
+
+| Fact | Relaxin 17.3 A14 | ICH XR 18.7.5 |
+|------|------------------|---------------|
+| `dpkg --version` | **runs** | **SIGKILL / 137** |
+| `launch_constraints_enforced` | 1 | 1 |
+| `codesigning.monitor` | 1 | 1 |
+| `developer_mode_status` | 1 | 0 |
+| `security.codesigning.trustcaches.num_*` | **not present** in `sysctl -a` | `num_loadable: 0` |
+| Runtime CDHash API | `jbctl trustcache add <physical-macho>` (**works** with real `.jbroot-*` path) | **none** |
+| `jbctl trustcache info` | exit 0, **0 lines** (this build) | n/a |
+| Aftercare stack | `jailbreakd` + `libjailbreak` + hooks under `.jbroot-4F9D77E378C71AE3` | ICH TC stub + build-time `trustcache.img4` only |
+
+**Teacher lesson (not a port):** a working package manager under LC+CSM correlates with a **live jailbreak trustcache authorizer** (`jbctl`/`libjailbreak`), not with “ldid harder.” ICH still lacks that class of primitive.
+
 ---
 
 ## 5. Next real work (ordered, no fantasy)
