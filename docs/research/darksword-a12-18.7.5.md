@@ -228,6 +228,8 @@ research.”
 
 ## Related
 
+- [`research/kexploit/DARKSWORD_TEACHER.md`](../../research/kexploit/DARKSWORD_TEACHER.md) — kill-chain → Lumina gaps (teacher map)
+- [`docs/research/amfi-trustcache-ich-18.7.5.md`](amfi-trustcache-ich-18.7.5.md) — ICH residual SIGKILL / TC gates
 - [`docs/RESEARCH.md`](../RESEARCH.md)
 - [`research/kexploit/README.md`](../../research/kexploit/README.md)
 - [`research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md`](../../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)
