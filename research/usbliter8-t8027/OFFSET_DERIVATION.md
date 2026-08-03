@@ -125,6 +125,7 @@ Exit for this research phase is **not** PWND. Exit is: documented artifact inven
 - Upstream blog link (`ps.tc` usbliter8 post) may be unavailable; the public write-up PDF describes the **bug class and A12 ROP strategy**, not a dump how-to for 4172.
 - Researchers typically obtain SecureROM images from existing RE corpora / device-specific acquisition methods outside this repo. This note does **not** invent or prescribe an undocumented dump exploit.
 - Until a 4172 image is in hand, **do not fill stub addresses**. Keep `#error` guards.
+- Acquisition pointers (securerom.fun, verify workflow): [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md).
 
 When an image exists (local, gitignored), record provenance in a private lab note: hash, SRTG string match, tool used — do not commit dumps to this repo.
 
@@ -150,7 +151,7 @@ Research-only. Still no claim of pwn. Prefer `~/Projects/lumina`.
    ls upstream/usbliter8/t8020_t8006_shellcode/targets/t8020/offsets.h
    ```
 
-3. **Obtain / verify a SecureROM image** whose embedded version string matches `4172.0.0.100.14` (method is external to this repo). Record SHA-256 locally; do not commit the blob.
+3. **Obtain / verify a SecureROM image** whose embedded version string matches `4172.0.0.100.14` — see [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md). Record SHA-256 locally; do not commit the blob.
 
 4. **Load in your RE tool** and search for stable strings / xrefs used on t8020 (serial construction, USB request handling, demote, memcpy). Build a **scratch symbol table** — do not paste guesses into git stubs yet.
 
@@ -165,6 +166,7 @@ Research-only. Still no claim of pwn. Prefer `~/Projects/lumina`.
 ## See also
 
 - Identity + full t8020 inventory: [docs/research/usbliter8-t8027-bringup.md](../../docs/research/usbliter8-t8027-bringup.md)
+- SecureROM acquisition: [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
 - Stubs: [stubs/](stubs/)
 - XR handler reference (t8020 only): [research/CUSTOM_BOOT_NEXT.md](../CUSTOM_BOOT_NEXT.md)
 - Upstream clone: [upstream/README.md](../../upstream/README.md)
