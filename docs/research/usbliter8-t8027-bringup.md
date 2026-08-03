@@ -3,18 +3,18 @@
 **Date:** 2026-08-02 (identity locked 2026-08-03)  
 **Target:** iPad Pro 12.9" 3rd gen (USB-C), A12X, CPID `0x8027` / t8027, iPadOS 26.5  
 **Closest tree:** t8020 (shared `t8020_t8006_*` exploit path)  
-**Status:** research + empty stubs only — **DFU identity live; exploit not implemented / not claimed working**
+**Status:** research + empty stubs only — **DFU identity captured; SecureROM pwn not implemented**
 
-Nothing here is wired into `boot/`. Do **not** treat this as a working exploit on A12X.
+Nothing here is wired into `boot/`. DFU enum ≠ exploit success.
 
 ---
 
 ## Scope / non-claims
 
-- XR (A12 / CPID `8020` / t8020) already reaches Pwned DFU + ICH lab on iOS 18.7.5.
+- XR (A12 / CPID `8020` / t8020) already reaches Pwned DFU + ICH lab on iOS 18.7.5 (separate device/path).
 - A12X is **PARTIAL**: same DWC2 race *class*, **not** a board-file-only port.
-- Goal of this track: **SecureROM bring-up** → Pwned DFU on A12X.
-- Host tool (`usbliter8ctl`) is mostly fine **after** PWND; the work is Pico firmware offsets/ROP/shellcode/handler.
+- Goal of this track: **SecureROM bring-up** → Pwned DFU on A12X (not achieved here).
+- Host tool (`usbliter8ctl`) needs no CPID table for post-PWND control; the missing work is Pico firmware offsets/ROP/shellcode/handler.
 
 ### Explicit non-claims
 
@@ -59,7 +59,8 @@ XR serial (format / contrast only):
 CPID:8020 CPRV:11 CPFM:03 SCEP:01 BDID:0E ECID:XXXXXXXXXXXXXXXX IBFL:3C SRTG:[iBoot-3865.0.0.4.7] PWND:[usbliter8]
 ```
 
-Bring-up success still means the A12X serial gains `PWND:[usbliter8]` after Pico pwn.
+Bring-up success (not claimed) means the A12X serial gains `PWND:[usbliter8]` after a future Pico pwn.
+
 ---
 
 ## t8020 → t8027 constant inventory
@@ -81,7 +82,7 @@ All SecureROM / SRAM / USB / ROP / handler constants live in the **Pico firmware
 | `cpid` | `0x8020` | `0x8027` |
 | `delay` | RP2350: `10` / RP2040: `5` | Re-tune on hardware (TODO) |
 | `ov_start` | `0x19C02960C` | TODO |
-| `ov_size` | `0xB04` | TODO (may match class; verify) |
+| `ov_size` | `0xB04` | TODO |
 | `shc_base` | `0x19C018000` | TODO |
 | `shc_start` | `0x19C0183EC` | TODO |
 | `shc_size` | `0x400` | TODO |
@@ -162,7 +163,7 @@ t8020 has **no** `WITH_PAC` path (unlike t8030). Confirm SecureROM PAC behavior 
 
 ### 7. Host (post-pwn) — mostly unchanged
 
-Root `./usbliter8ctl` has **no CPID table**. It matches Apple DFU `05ac:1227` / Recovery `05ac:1281` and requires serial marker `PWND:[usbliter8]`. After a correct Pico plant of a t8027 handler, demote/boot protocol should be the same class as XR.
+Root `./usbliter8ctl` has **no CPID table**. It matches Apple DFU `05ac:1227` / Recovery `05ac:1281` and requires serial marker `PWND:[usbliter8]`. Post-PWND demote/boot against a t8027 handler is untested on this device.
 
 **Out of scope for SecureROM bring-up:** `boot/lib-udid.sh`, XR UDID `00008020-…`, `n841ap` DeviceTree/iBSS/ramdisk.
 
@@ -214,7 +215,8 @@ Copy into the local upstream clone when filling; do not commit the nested upstre
 
 | | |
 |--|--|
-| **Success** | Device re-enumerates in DFU with serial containing `PWND:[usbliter8]` (and `CPID:8027`) |
+| **Success (goal, not current state)** | Device re-enumerates in DFU with serial containing `PWND:[usbliter8]` (and `CPID:8027`) |
+| **Current state** | Unpwned DFU identity only (`05ac:1227`, no `PWND`) |
 | **Non-goals** | iPadOS 26.5 PE; Sileo/dpkg/bootstrap; ramdisk/SSH; wiring into `boot/`; claiming “jailbreak” |
 
 ---
