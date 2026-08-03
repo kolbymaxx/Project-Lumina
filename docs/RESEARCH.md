@@ -45,6 +45,12 @@ Notes dirs:
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
 | [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
+| [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md) | A12X / t8027 SecureROM bring-up — DFU identity live; pwn **not implemented** (stubs TODO-only) |
+| [../research/usbliter8-t8027/OFFSET_DERIVATION.md](../research/usbliter8-t8027/OFFSET_DERIVATION.md) | t8027 offset derivation plan — what differs vs t8020, RE order, artifacts needed (**research only**) |
+| [../research/usbliter8-t8027/SECUREROM_ACQUISITION.md](../research/usbliter8-t8027/SECUREROM_ACQUISITION.md) | How to seek/verify t8027 SecureROM `4172.0.0.100.14` (securerom.fun et al.; **no blobs**) |
+| [../research/usbliter8-t8027/SYMBOL_WORKSHEET.md](../research/usbliter8-t8027/SYMBOL_WORKSHEET.md) | t8027 symbolization worksheet — verified ROM hash; empty candidate tables (**no invented offsets**) |
+| [../research/usbliter8-t8027/FIRST_RE_PASS.md](../research/usbliter8-t8027/FIRST_RE_PASS.md) | t8027 first RE pass — strings/PAC/SRAM findings; THEORY labeled (**stubs untouched**) |
+| [../research/usbliter8-t8027/PAC_AND_CONTROL_FLOW.md](../research/usbliter8-t8027/PAC_AND_CONTROL_FLOW.md) | t8027 PAC vs t8020 ROP — strategies (THEORY), site plans, Pico go/no-go bar |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
