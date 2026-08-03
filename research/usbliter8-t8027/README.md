@@ -22,6 +22,10 @@ First RE pass (strings, SRAM/PAC findings, ranked targets):
 
 → [FIRST_RE_PASS.md](FIRST_RE_PASS.md)
 
+PAC + control-flow problem (why t8020 ROP assumptions fail; analysis plan):
+
+→ [PAC_AND_CONTROL_FLOW.md](PAC_AND_CONTROL_FLOW.md)
+
 Local ROM blobs (gitignored): `artifacts/*.bin` — never commit.
 
 ## What this directory is
