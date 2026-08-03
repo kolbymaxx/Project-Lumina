@@ -242,6 +242,7 @@ Identity already locked (see Live DFU capture above). Only after a future Pico p
 ## See also
 
 - Tracked stubs: [research/usbliter8-t8027/](../../research/usbliter8-t8027/)
+- Next phase (derivation plan): [research/usbliter8-t8027/OFFSET_DERIVATION.md](../../research/usbliter8-t8027/OFFSET_DERIVATION.md)
 - XR live status: [docs/STATUS.md](../STATUS.md)
 - Upstream clone howto: [upstream/README.md](../../upstream/README.md)
 - t8020 handler reference: [research/CUSTOM_BOOT_NEXT.md](../../research/CUSTOM_BOOT_NEXT.md)
