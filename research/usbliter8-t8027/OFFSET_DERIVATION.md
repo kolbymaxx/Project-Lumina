@@ -125,6 +125,7 @@ Exit for this research phase is **not** PWND. Exit is: documented artifact inven
 - Upstream blog link (`ps.tc` usbliter8 post) may be unavailable; the public write-up PDF describes the **bug class and A12 ROP strategy**, not a dump how-to for 4172.
 - Researchers typically obtain SecureROM images from existing RE corpora / device-specific acquisition methods outside this repo. This note does **not** invent or prescribe an undocumented dump exploit.
 - Until a 4172 image is in hand, **do not fill stub addresses**. Keep `#error` guards.
+- Acquisition pointers (securerom.fun, verify workflow): [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md).
 
 When an image exists (local, gitignored), record provenance in a private lab note: hash, SRTG string match, tool used — do not commit dumps to this repo.
 
