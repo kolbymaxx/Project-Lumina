@@ -10,6 +10,10 @@ Offset derivation plan (next research phase — no invented addresses):
 
 → [OFFSET_DERIVATION.md](OFFSET_DERIVATION.md)
 
+SecureROM acquisition notes (where to seek `4172.0.0.100.14`, verify, feed stubs):
+
+→ [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
+
 ## What this directory is
 
 Empty **TODO-offset stubs** mirroring the upstream usbliter8 per-target layout for CPID `0x8027` / t8027. Closest implemented tree is t8020.

@@ -150,7 +150,7 @@ Research-only. Still no claim of pwn. Prefer `~/Projects/lumina`.
    ls upstream/usbliter8/t8020_t8006_shellcode/targets/t8020/offsets.h
    ```
 
-3. **Obtain / verify a SecureROM image** whose embedded version string matches `4172.0.0.100.14` (method is external to this repo). Record SHA-256 locally; do not commit the blob.
+3. **Obtain / verify a SecureROM image** whose embedded version string matches `4172.0.0.100.14` — see [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md). Record SHA-256 locally; do not commit the blob.
 
 4. **Load in your RE tool** and search for stable strings / xrefs used on t8020 (serial construction, USB request handling, demote, memcpy). Build a **scratch symbol table** — do not paste guesses into git stubs yet.
 
@@ -165,6 +165,7 @@ Research-only. Still no claim of pwn. Prefer `~/Projects/lumina`.
 ## See also
 
 - Identity + full t8020 inventory: [docs/research/usbliter8-t8027-bringup.md](../../docs/research/usbliter8-t8027-bringup.md)
+- SecureROM acquisition: [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
 - Stubs: [stubs/](stubs/)
 - XR handler reference (t8020 only): [research/CUSTOM_BOOT_NEXT.md](../CUSTOM_BOOT_NEXT.md)
 - Upstream clone: [upstream/README.md](../../upstream/README.md)
