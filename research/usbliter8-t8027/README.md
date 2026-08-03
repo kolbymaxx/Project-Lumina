@@ -14,6 +14,12 @@ SecureROM acquisition notes (where to seek `4172.0.0.100.14`, verify, feed stubs
 
 → [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
 
+Symbolization worksheet (t8020 baseline + empty t8027 candidate tables):
+
+→ [SYMBOL_WORKSHEET.md](SYMBOL_WORKSHEET.md)
+
+Local ROM blobs (gitignored): `artifacts/*.bin` — never commit.
+
 ## What this directory is
 
 Empty **TODO-offset stubs** mirroring the upstream usbliter8 per-target layout for CPID `0x8027` / t8027. Closest implemented tree is t8020.
