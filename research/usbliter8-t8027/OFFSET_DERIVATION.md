@@ -167,6 +167,7 @@ Research-only. Still no claim of pwn. Prefer `~/Projects/lumina`.
 
 - Identity + full t8020 inventory: [docs/research/usbliter8-t8027-bringup.md](../../docs/research/usbliter8-t8027-bringup.md)
 - SecureROM acquisition: [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
+- Symbolization worksheet: [SYMBOL_WORKSHEET.md](SYMBOL_WORKSHEET.md)
 - Stubs: [stubs/](stubs/)
 - XR handler reference (t8020 only): [research/CUSTOM_BOOT_NEXT.md](../CUSTOM_BOOT_NEXT.md)
 - Upstream clone: [upstream/README.md](../../upstream/README.md)

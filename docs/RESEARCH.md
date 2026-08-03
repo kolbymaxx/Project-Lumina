@@ -48,6 +48,7 @@ Notes dirs:
 | [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md) | A12X / t8027 SecureROM bring-up — DFU identity live; pwn **not implemented** (stubs TODO-only) |
 | [../research/usbliter8-t8027/OFFSET_DERIVATION.md](../research/usbliter8-t8027/OFFSET_DERIVATION.md) | t8027 offset derivation plan — what differs vs t8020, RE order, artifacts needed (**research only**) |
 | [../research/usbliter8-t8027/SECUREROM_ACQUISITION.md](../research/usbliter8-t8027/SECUREROM_ACQUISITION.md) | How to seek/verify t8027 SecureROM `4172.0.0.100.14` (securerom.fun et al.; **no blobs**) |
+| [../research/usbliter8-t8027/SYMBOL_WORKSHEET.md](../research/usbliter8-t8027/SYMBOL_WORKSHEET.md) | t8027 symbolization worksheet — verified ROM hash; empty candidate tables (**no invented offsets**) |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
