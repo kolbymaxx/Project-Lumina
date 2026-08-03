@@ -179,6 +179,7 @@ Suggested worksheet discipline: when promoting a row, append evidence like `FIRS
 
 ## See also
 
+- [PAC_AND_CONTROL_FLOW.md](PAC_AND_CONTROL_FLOW.md) — deepened PAC / hijack planning
 - [SYMBOL_WORKSHEET.md](SYMBOL_WORKSHEET.md)
 - [OFFSET_DERIVATION.md](OFFSET_DERIVATION.md)
 - [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md)
