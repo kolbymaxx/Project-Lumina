@@ -115,19 +115,18 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - Open **candidate watches** (docs only): **primary** T008 CVE-2026-28972 +
   T009 CVE-2026-28951; secondary/side T005–T007 — see
   [`INTAKE_2026-08-02c.md`](../research/kexploit/experiments/INTAKE_2026-08-02c.md)
-- Pre-lab theory pack: **T010–T012** — checklist
-  [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
+- Pre-lab theory pack: **T010–T012** — **Supported** (Session 01 RO;
+  [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md))
+- Session 01: ICH ramdisk confirmed **18.7.5 / 22H311** / T8020; Data at
+  `/mnt2` on ICH path (roles match Phase A; separate from hsbugss exit-76)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Device session 01 (RO):** T011 → T010 → T012 per
-   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
-2. **Kernel hunt:** citable writeups for **T008/T009**; continue
-   [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
-   (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
+1. **Kernel hunt:** `T008/T009: citable detail still advisory-only (OOB write /
+   auth→root); no public PoC or named surface; Lab=No; no A12/18.7.5 primitive.`
+   ([`INTAKE_2026-08-02d.md`](../research/kexploit/experiments/INTAKE_2026-08-02d.md))
+   — revisit on Xint/STAR/Fitzl deep dive only
 2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
-   then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
-   SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
-   mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
+3. Parallel OK: bootstrap **B005** TC append; Data ICH `/mnt2` vs exit-76 —
+   not substitutes for a kernel PE
 4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
