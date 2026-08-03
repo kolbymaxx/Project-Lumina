@@ -1,0 +1,96 @@
+================================================================
+t8027 experiment C001
+================================================================
+timestamp:   2026-08-02 20:54 EDT
+host:        iMac
+repo:        /Users/kolby/Projects/lumina
+candidate:   /Users/kolby/Projects/lumina/research/usbliter8-t8027/experiments/candidates/C001-dry-run-harness-smoke.md
+title:       C001 — dry-run harness smoke
+status:      READY (gate passed)
+action:      dry-run
+cable:       direct Mac USB; harness smoke (no Pico)
+hypothesis:  Harness pre/post USB checks see stable unpwned t8027 DFU (CPID 8027, ECID 0019052A1413002E, SRTG iBoot-4172.0.0.100.14) with no serial change.
+expected:    Classification NO_EFFECT; pre/post serial identical; no PWND tag.
+log:         /Users/kolby/Projects/lumina/research/usbliter8-t8027/experiments/logs/20260802-205442-C001.log
+
+================================================================
+PRE-CHECK
+================================================================
+$ python3 /Users/kolby/Projects/lumina/usbliter8ctl info
+05ac:1227 DFU
+serial: CPID:8027 CPRV:01 CPFM:03 SCEP:01 BDID:0A ECID:0019052A1413002E IBFL:3C SRTG:[iBoot-4172.0.0.100.14]
+(rc=0)
+
+$ irecovery -q
+CPID: 0x8027
+CPRV: 0x01
+BDID: 0x0a
+ECID: 0x0019052a1413002e
+CPFM: 0x03
+SCEP: 0x01
+IBFL: 0x3c
+SRTG: iBoot-4172.0.0.100.14
+SRNM: N/A
+IMEI: N/A
+NONC: 2b19954bdc76cdbe71492219848e7eae73fdfaf3da38fab2e0cc5675d9f9e440
+SNON: f8156dffa405a2d3e6cc004ba29152457785d359
+MODE: DFU
+PRODUCT: iPad8,7
+MODEL: j321ap
+NAME: iPad Pro 12.9-inch (3rd gen, Cellular)
+(rc=0)
+
+parsed pre serial: CPID:8027 CPRV:01 CPFM:03 SCEP:01 BDID:0A ECID:0019052A1413002E IBFL:3C SRTG:[iBoot-4172.0.0.100.14]
+parsed pre MODE:   DFU
+parsed pre PRODUCT:iPad8,7
+
+================================================================
+ACTION (dry-run)
+================================================================
+dry-run: no Pico step, no host payload send.
+pre/post checks only.
+
+================================================================
+POST-CHECK
+================================================================
+$ python3 /Users/kolby/Projects/lumina/usbliter8ctl info
+05ac:1227 DFU
+serial: CPID:8027 CPRV:01 CPFM:03 SCEP:01 BDID:0A ECID:0019052A1413002E IBFL:3C SRTG:[iBoot-4172.0.0.100.14]
+(rc=0)
+
+$ irecovery -q
+CPID: 0x8027
+CPRV: 0x01
+BDID: 0x0a
+ECID: 0x0019052a1413002e
+CPFM: 0x03
+SCEP: 0x01
+IBFL: 0x3c
+SRTG: iBoot-4172.0.0.100.14
+SRNM: N/A
+IMEI: N/A
+NONC: 2b19954bdc76cdbe71492219848e7eae73fdfaf3da38fab2e0cc5675d9f9e440
+SNON: f8156dffa405a2d3e6cc004ba29152457785d359
+MODE: DFU
+PRODUCT: iPad8,7
+MODEL: j321ap
+NAME: iPad Pro 12.9-inch (3rd gen, Cellular)
+(rc=0)
+
+parsed post serial: CPID:8027 CPRV:01 CPFM:03 SCEP:01 BDID:0A ECID:0019052A1413002E IBFL:3C SRTG:[iBoot-4172.0.0.100.14]
+parsed post MODE:   DFU
+parsed post PRODUCT:iPad8,7
+
+================================================================
+RESULT
+================================================================
+classification: NO_EFFECT
+reason:         still DFU; serial/identity unchanged; no PWND
+
+================================================================
+DONE
+================================================================
+candidate → Status DONE, Live result updated
+LIVE_SESSION appended: /Users/kolby/Projects/lumina/research/usbliter8-t8027/LIVE_SESSION.md
+full log: /Users/kolby/Projects/lumina/research/usbliter8-t8027/experiments/logs/20260802-205442-C001.log
+classification: NO_EFFECT
