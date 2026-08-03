@@ -233,7 +233,7 @@ Copy into the local upstream clone when filling; do not commit the nested upstre
 python3 usbliter8ctl info
 ```
 
-Expect a DFU device and a serial that includes `CPID:8027` (plus BDID/SRTG/ECID). Record those fields. After a future successful Pico pwn (not claimed here), the same command should show `PWND:[usbliter8]`.
+Identity already locked (see Live DFU capture above). After a future successful Pico pwn (not claimed here), the same command should show `PWND:[usbliter8]`.
 
 ---
 
