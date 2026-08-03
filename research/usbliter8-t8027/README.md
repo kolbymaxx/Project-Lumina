@@ -18,6 +18,10 @@ Symbolization worksheet (t8020 baseline + empty t8027 candidate tables):
 
 → [SYMBOL_WORKSHEET.md](SYMBOL_WORKSHEET.md)
 
+First RE pass (strings, SRAM/PAC findings, ranked targets):
+
+→ [FIRST_RE_PASS.md](FIRST_RE_PASS.md)
+
 Local ROM blobs (gitignored): `artifacts/*.bin` — never commit.
 
 ## What this directory is

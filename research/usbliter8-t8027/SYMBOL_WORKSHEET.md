@@ -3,7 +3,8 @@
 **Date:** 2026-08-03  
 **Phase:** after [SECUREROM_ACQUISITION.md](SECUREROM_ACQUISITION.md) + [OFFSET_DERIVATION.md](OFFSET_DERIVATION.md)  
 **Teacher:** upstream `t8020` (shared `t8020_t8006_*` path)  
-**Status:** worksheet only — **t8027 candidate column empty; stubs still TODO / `#error`; pwn not claimed**
+**Status:** worksheet + first RE pass — **stubs still TODO / `#error`; pwn not claimed**  
+**First pass notes:** [FIRST_RE_PASS.md](FIRST_RE_PASS.md) (THEORY vs confirmed)
 
 Nothing here is wired into `boot/`. Do not paste guessed addresses into [`stubs/`](stubs/).
 
@@ -171,7 +172,7 @@ Fill **t8027 candidate** only with evidence-backed VAs. Until then: `TODO — de
 | `delay` (RP2350 / RP2040) | `10` / `5` | TODO — derive | Hardware retune last |
 | `ov_start` | `0x19C02960C` | TODO — derive | SRAM — needs DFU map |
 | `ov_size` | `0xB04` | TODO — derive | Family hypothesis only |
-| `shc_base` | `0x19C018000` | TODO — derive | SRAM |
+| `shc_base` | `0x19C018000` | plausible `0x19C018000` — needs validation | See FIRST_RE_PASS §2 (region table / BSS clear end); not stub-ready |
 | `shc_start` | `0x19C0183EC` | TODO — derive | SRAM |
 | `shc_size` | `0x400` | TODO — derive | Family hypothesis only |
 
@@ -205,14 +206,14 @@ Fill **t8027 candidate** only with evidence-backed VAs. Until then: `TODO — de
 | `MEMCPY` | `0x100010BD0` | TODO — derive | ROM — early target |
 | `STRLCAT` | `0x100010B60` | TODO — derive | ROM — early target |
 | `CALCULATE_HEAP_BLOCK_SUM` | `0x10000F664` | TODO — derive | ROM |
-| `TRAMP_BASE` | `0x19C018000` | TODO — derive | SRAM |
+| `TRAMP_BASE` | `0x19C018000` | plausible `0x19C018000` — needs validation | Same evidence as `shc_base`; FIRST_RE_PASS §2 |
 | `ROM_TRAMP` | `0x100007640` | TODO — derive | ROM |
 | `ROM_TRAMP_LEN` | `0x480` | TODO — derive | length; verify |
 | `BOOT_TRAMP_PTEP` | `0x19C004030` | TODO — derive | SRAM / PT |
 | `BOOT_TRAMP_PTE` | `0x19C0186E3` | TODO — derive | SRAM |
 | `DMA_BUF_LO` | `0x9C029600` | TODO — derive | DMA (truncated form on t8020) |
-| `USB_DMA_DEST` | `0x239100B14` | TODO — derive | USB MMIO |
-| `JUMP_STATE` | `0x19C014030` | TODO — derive | SRAM |
+| `USB_DMA_DEST` | `0x239100B14` | TODO — derive (no `0x2391` evidence yet) | FIRST_RE_PASS: do not assume t8020 USB base |
+| `JUMP_STATE` | `0x19C014030` | **Confirmed** `0x19C014030` | ADRP+ADD @ `0x100001944` (FIRST_RE_PASS §2); still do not edit stubs in this phase |
 | `HEAP_BLOCK_TO_REPAIR_DMA` | `0x19C0295C0` | TODO — derive | SRAM |
 | `HEAP_BLOCK_TO_REPAIR_IO_BUF` | `0x19C028BC0` | TODO — derive | SRAM |
 | `HEAP_WHATEVER_THAT_IS` | `0x19C011468` | TODO — derive | SRAM |
@@ -253,7 +254,7 @@ Fill **t8027 candidate** only with evidence-backed VAs. Until then: `TODO — de
 | `PLATFORM_SET_REMOTE_BOOT` | `0x100006850` | TODO — derive | ROM — early target |
 | `MAIN_TASK_STACK_LR` | `0x19C01DF08` | TODO — derive | SRAM |
 | `JUMP_AWAY` | `0x100001C8C` | TODO — derive | ROM |
-| PAC / `WITH_PAC` | none on t8020 | TODO — confirm | Expect non-PAC like t8020; confirm on 4172 |
+| PAC / `WITH_PAC` | none on t8020 | **Confirmed PAC-heavy** (`pacibsp`/`retab` abundant) | t8020 non-PAC assumption likely wrong for t8027; FIRST_RE_PASS §1 |
 
 ---
 
