@@ -1,9 +1,9 @@
 # usbliter8 → t8027 (A12X) SecureROM bring-up
 
-**Date:** 2026-08-02  
+**Date:** 2026-08-02 (identity locked 2026-08-03)  
 **Target:** iPad Pro 12.9" 3rd gen (USB-C), A12X, CPID `0x8027` / t8027, iPadOS 26.5  
 **Closest tree:** t8020 (shared `t8020_t8006_*` exploit path)  
-**Status:** research + empty stubs only — **not implemented, not claimed working**
+**Status:** research + empty stubs only — **DFU identity live; exploit not implemented / not claimed working**
 
 Nothing here is wired into `boot/`. Do **not** treat this as a working exploit on A12X.
 
@@ -28,25 +28,38 @@ Nothing here is wired into `boot/`. Do **not** treat this as a working exploit o
 
 ## Required identity fields
 
-Capture from a **live** DFU USB serial string before inventing any board config. Do not hardcode guessed BDID/SRTG/ECID.
+### Live DFU capture (Mac, `~/Projects/lumina`, 2026-08-03)
 
-| Field | Role | Expected / notes |
-|-------|------|------------------|
-| **CPID** | SecureROM chip id; Pico `exploit_run` switch key | Expect `8027` (`0x8027`) |
-| **BDID** | Board id in DFU serial | Capture live (Wi‑Fi vs Cellular boards differ) |
-| **SRTG** | SecureROM / iBoot build tag in serial | e.g. `SRTG:[iBoot-…]` — capture live |
-| **ECID** | Unique chip id | From serial; later UDID suffix |
-| **CPRV** / **CPFM** / **IBFL** | Revision / fuse / flags | Log for RE notes; do not invent |
-| **UDID** (host later) | `idevice_id` / boot wrappers | Shape `00008027-…` — **out of scope** for this session (no `boot/` wiring) |
+```bash
+python3 ./usbliter8ctl info
+```
 
-Example serial shape (XR, for format only — **not** A12X values):
+```text
+05ac:1227 DFU
+serial: CPID:8027 CPRV:01 CPFM:03 SCEP:01 BDID:0A ECID:0019052A1413002E IBFL:3C SRTG:[iBoot-4172.0.0.100.14]
+```
+
+No `PWND:[usbliter8]` — expected until a t8027 Pico port exists. Prefer root `./usbliter8ctl` under the Lumina clone (not other packaging trees).
+
+| Field | Live value | Notes |
+|-------|------------|-------|
+| **CPID** | `8027` (`0x8027`) | Confirmed — Pico switch key |
+| **CPRV** | `01` | Differs from XR lab sample (`11`) |
+| **CPFM** | `03` | |
+| **SCEP** | `01` | |
+| **BDID** | `0A` | Board id (this unit); Wi‑Fi vs Cellular may differ across units |
+| **ECID** | `0019052A1413002E` | Unique to this iPad |
+| **IBFL** | `3C` | |
+| **SRTG** | `[iBoot-4172.0.0.100.14]` | **Not** XR’s `iBoot-3865.0.0.4.7` — offsets must be re-derived against this SecureROM |
+| **UDID** (host later) | `00008027-0019052A1413002E` | Derived shape only — **not** wired into `boot/` |
+
+XR serial (format / contrast only):
 
 ```text
 CPID:8020 CPRV:11 CPFM:03 SCEP:01 BDID:0E ECID:XXXXXXXXXXXXXXXX IBFL:3C SRTG:[iBoot-3865.0.0.4.7] PWND:[usbliter8]
 ```
 
-For A12X bring-up success, the same string must show `CPID:8027` … and eventually `PWND:[usbliter8]`.
-
+Bring-up success still means the A12X serial gains `PWND:[usbliter8]` after Pico pwn.
 ---
 
 ## t8020 → t8027 constant inventory
