@@ -45,6 +45,7 @@ Notes dirs:
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
 | [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
+| [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md) | A12X / t8027 SecureROM bring-up — DFU identity live; pwn **not implemented** (stubs TODO-only) |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
