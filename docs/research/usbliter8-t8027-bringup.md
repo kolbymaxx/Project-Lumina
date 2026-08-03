@@ -235,7 +235,7 @@ Copy into the local upstream clone when filling; do not commit the nested upstre
 python3 usbliter8ctl info
 ```
 
-Identity already locked (see Live DFU capture above). After a future successful Pico pwn (not claimed here), the same command should show `PWND:[usbliter8]`.
+Identity already locked (see Live DFU capture above). Only after a future Pico pwn (not implemented) would `info` show `PWND:[usbliter8]`.
 
 ---
 

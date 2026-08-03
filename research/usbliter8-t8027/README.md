@@ -1,6 +1,6 @@
 # t8027 (A12X) usbliter8 stubs
 
-**Not wired into `boot/`.** **No claim** that the exploit works on A12X.
+**Not wired into `boot/`.** SecureROM pwn on A12X is **not implemented**.
 
 Bring-up memo (identity fields, full t8020 constant inventory, USB-C note, checklist):
 
