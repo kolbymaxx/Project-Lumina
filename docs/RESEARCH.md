@@ -46,6 +46,7 @@ Notes dirs:
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
 | [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
 | [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md) | A12X / t8027 SecureROM bring-up — DFU identity live; pwn **not implemented** (stubs TODO-only) |
+| [../research/usbliter8-t8027/OFFSET_DERIVATION.md](../research/usbliter8-t8027/OFFSET_DERIVATION.md) | t8027 offset derivation plan — what differs vs t8020, RE order, artifacts needed (**research only**) |
 
 Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 

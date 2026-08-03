@@ -6,6 +6,10 @@ Bring-up memo (identity fields, full t8020 constant inventory, USB-C note, check
 
 → [docs/research/usbliter8-t8027-bringup.md](../../docs/research/usbliter8-t8027-bringup.md)
 
+Offset derivation plan (next research phase — no invented addresses):
+
+→ [OFFSET_DERIVATION.md](OFFSET_DERIVATION.md)
+
 ## What this directory is
 
 Empty **TODO-offset stubs** mirroring the upstream usbliter8 per-target layout for CPID `0x8027` / t8027. Closest implemented tree is t8020.
