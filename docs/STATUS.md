@@ -48,7 +48,8 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 ### Blockers (hard gates for later work)
 1. **Data volume** — 15.1 ramdisk `mount_apfs` cannot mount iOS 18 Data/`s8` (exit 76)
 2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
-3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
+3. **Userspace bootstrap / AMFI** — staged `dpkg` still **SIGKILL (137)**; TC-membership
+   vs post-TC gate under test — see [`research/bootstrap/`](../research/bootstrap/)
 
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
@@ -119,15 +120,20 @@ Full index: [RESEARCH.md](RESEARCH.md)
   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
 - **No kexploit implementation wired into boot**
 
+### D — Bootstrap / AMFI–trustcache (ramdisk track — isolated)
+- [x] Local session closed cards recorded: remap OK; remap≠dpkg; ents≠cause;
+  `num_loadable` stays 0; fakesign skip — [`research/bootstrap/`](../research/bootstrap/)
+- [ ] **B005** build-time TC append of `dpkg` CDHash → rebuild → re-pwn → one exec
+- [ ] B006 stub-hit / B007 counters / B008 bootargs (after or beside B005)
+- **Still:** `dpkg` **137**; not a package-manager bootstrap
+
 ## Next
-1. **Device session 01 (RO):** T011 → T010 → T012 per
-   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
-2. **Kernel hunt:** citable writeups for **T008/T009**; continue
+1. **DFU — B005:** append `dpkg` CDHash → rebuild TC → boot → one
+   `dpkg --version` — [`DFU_SESSION_TC_APPEND.md`](../research/bootstrap/DFU_SESSION_TC_APPEND.md)
+2. **Kernel hunt (parallel):** citable writeups for **T008/T009**;
    [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
-   (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
-2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
-   then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
-   SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
-   mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
-4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
+3. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`);
+   pair with B006 if TC append still dies
+4. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`) — still exit 76
+   on `s2`/`s8` with 15.1 tools
+5. Keep bootstrap + kexploit notes isolated from silent `boot/` wiring
