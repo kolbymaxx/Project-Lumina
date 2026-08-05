@@ -1,47 +1,45 @@
 /*
- * DS-K backend adapter — calls into a *local* opa334/darksword-kexploit tree.
+ * DS-K backend — real link to local third_party via darksword_lib.
  *
- * Default builds do NOT enable this file's success path.
- * Compile with -DKRW_BACKEND_DARKSWORD=1 only on a lab Mac that has:
- *   third_party/darksword-kexploit/  (gitignored clone — see third_party/README.md)
+ * Build the Lumina app target with:
+ *   -DKRW_BACKEND_DARKSWORD=1 -DDARKSWORD_EXPLOIT_LINKED=1 -DLUMINA_DSK_LIBRARY=1
+ * and compile third_party/darksword-kexploit/src/main.m + darksword_lib.m.
  *
- * Upstream today ships a monolithic src/main.m (binary target darksword-pe),
- * not a stable library ABI. Until callable init/kread symbols are extracted
- * in the local tree, this adapter returns KRW_ERR_NOT_LINKED — it must NOT
- * fabricate kread/kwrite success.
- *
- * Do not reimplement exploit logic from public writeups here.
+ * Never fabricates successful kread/kwrite.
  */
 
 #include "krw.h"
 
+#if KRW_BACKEND_DARKSWORD && DARKSWORD_EXPLOIT_LINKED
+
+#include "darksword_lib.h"
+
+#include <stdio.h>
 #include <string.h>
-
-#ifndef KRW_BACKEND_DARKSWORD
-#define KRW_BACKEND_DARKSWORD 0
-#endif
-
-/* Set by lab Makefile only after a real link against extracted upstream APIs. */
-#ifndef DARKSWORD_EXPLOIT_LINKED
-#define DARKSWORD_EXPLOIT_LINKED 0
-#endif
-
-#if KRW_BACKEND_DARKSWORD
-
-#if DARKSWORD_EXPLOIT_LINKED
-/* Declarations would match symbols extracted from the local third_party tree.
- * Intentionally empty until that extraction exists — do not invent prototypes
- * that pretend to wrap news-article pseudocode. */
-#error "DARKSWORD_EXPLOIT_LINKED set but no upstream symbols wired — extract from local clone first"
-#else
 
 static int g_inited;
 
 int krw_init(void)
 {
-    /* Tree present or not: without a linked exploit ABI we cannot init. */
-    g_inited = 0;
-    return KRW_ERR_NOT_LINKED;
+    printf("[*] krw_init: starting DS-K (darksword)…\n");
+    fflush(stdout);
+    int rc = dsk_exploit_run();
+    if (rc != 0) {
+        g_inited = 0;
+        printf("[-] krw_init: dsk_exploit_run => %d\n", rc);
+        fflush(stdout);
+        return KRW_ERR_IO;
+    }
+    if (!dsk_is_ready() || dsk_kernel_base() == 0) {
+        g_inited = 0;
+        return KRW_ERR_IO;
+    }
+    g_inited = 1;
+    printf("[+] krw_init: ready base=%#llx slide=%#llx\n",
+           (unsigned long long)dsk_kernel_base(),
+           (unsigned long long)dsk_kernel_slide());
+    fflush(stdout);
+    return KRW_OK;
 }
 
 void krw_deinit(void)
@@ -51,35 +49,63 @@ void krw_deinit(void)
 
 int kread(uint64_t kaddr, void *out, size_t len)
 {
-    (void)kaddr;
     if (out == NULL || len == 0) {
         return KRW_ERR_ARGS;
     }
-    memset(out, 0, len);
-    return g_inited ? KRW_ERR_IO : KRW_ERR_NOT_LINKED;
+    if (!g_inited) {
+        memset(out, 0, len);
+        return KRW_ERR_NOT_INIT;
+    }
+    if (dsk_early_kread(kaddr, out, len) != 0) {
+        return KRW_ERR_IO;
+    }
+    return KRW_OK;
 }
 
 int kwrite(uint64_t kaddr, const void *in, size_t len)
 {
-    (void)kaddr;
-    (void)in;
     if (in == NULL || len == 0) {
         return KRW_ERR_ARGS;
     }
-    /* Never fabricate writes. */
-    return KRW_ERR_NOT_LINKED;
+    if (!g_inited) {
+        return KRW_ERR_NOT_INIT;
+    }
+    if (dsk_early_kwrite(kaddr, in, len) != 0) {
+        return KRW_ERR_IO;
+    }
+    return KRW_OK;
 }
 
 uint64_t kbase(void)
 {
-    return 0;
+    return g_inited ? dsk_kernel_base() : 0;
 }
 
 uint64_t kslide(void)
 {
-    return 0;
+    return g_inited ? dsk_kernel_slide() : 0;
 }
 
-#endif /* !DARKSWORD_EXPLOIT_LINKED */
+#elif KRW_BACKEND_DARKSWORD && !DARKSWORD_EXPLOIT_LINKED
 
-#endif /* KRW_BACKEND_DARKSWORD */
+#include <string.h>
+
+int krw_init(void) { return KRW_ERR_NOT_LINKED; }
+void krw_deinit(void) {}
+int kread(uint64_t kaddr, void *out, size_t len)
+{
+    (void)kaddr;
+    if (out && len) memset(out, 0, len);
+    return KRW_ERR_NOT_LINKED;
+}
+int kwrite(uint64_t kaddr, const void *in, size_t len)
+{
+    (void)kaddr;
+    (void)in;
+    (void)len;
+    return KRW_ERR_NOT_LINKED;
+}
+uint64_t kbase(void) { return 0; }
+uint64_t kslide(void) { return 0; }
+
+#endif

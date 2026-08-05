@@ -1,0 +1,32 @@
+diff --git a/src/main.m b/src/main.m
+index fed0d23..0c26e00 100644
+--- a/src/main.m
++++ b/src/main.m
+@@ -12,7 +12,18 @@
+ #include <sys/uio.h>
+ void IOSurfacePrefetchPages(IOSurfaceRef surface);
+ 
++#ifndef LUMINA_DSK_LIBRARY
+ #define FAILURE(c) {fflush(stdout); sleep(2); exit(c);}
++#else
++#include <setjmp.h>
++extern jmp_buf g_lumina_dsk_jmp;
++extern int g_lumina_dsk_fail;
++#define FAILURE(c) do { \
++    fflush(stdout); \
++    g_lumina_dsk_fail = ((c) != 0 ? (int)(c) : -1); \
++    longjmp(g_lumina_dsk_jmp, 1); \
++} while (0)
++#endif
+ #define PRINT_VAR(var) {printf(#var ": %#llx\n", var); fflush(stdout); sleep(2);}
+ 
+ #define OFFSET_PCB_SOCKET 0x40
+@@ -678,7 +689,7 @@ void krw_sockets_leak_forever(void)
+ uint64_t kernel_base;
+ uint64_t kernel_slide;
+ 
+-int main(int argc, char* argv[])
++int darksword_cli_main(int argc, char* argv[])
+ {
+ 	init_globals();
+ 	struct utsname name;

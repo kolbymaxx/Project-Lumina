@@ -59,7 +59,9 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 - [docs/PPL.md](docs/PPL.md) — blocked until SUCCESS_KRW
 - [docs/ATTRACT_DEVS.md](docs/ATTRACT_DEVS.md)
 - [third_party/README.md](third_party/README.md) — local DS-K clone (no LICENSE → not vendored in git)
-- [src/krw/](src/krw/) / [src/host/](src/host/)
+- [Lumina/](Lumina/) — sideloadable **Lumina** DS-K test host (XcodeGen → IPA)
+- [scripts/clone_darksword_kexploit.sh](scripts/clone_darksword_kexploit.sh) / [scripts/export_ipa.md](scripts/export_ipa.md)
+- [src/krw/](src/krw/)
 - [docs/RESEARCH.md](docs/RESEARCH.md) — broader index (historical BootROM notes remain)
 
 ## Hard gates

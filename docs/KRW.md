@@ -35,7 +35,8 @@ void     krw_deinit(void);
 | File | Role |
 |------|------|
 | [`krw.h`](../src/krw/krw.h) / [`krw.c`](../src/krw/krw.c) | Dispatch + default none backend |
-| [`krw_backend_darksword.c`](../src/krw/krw_backend_darksword.c) | Calls into **local** third_party tree when linked |
+| [`krw_backend_darksword.c`](../src/krw/krw_backend_darksword.c) | Real link via [`darksword_lib`](../src/krw/darksword_lib.m) when third_party cloned |
+| [`../Lumina/`](../Lumina/) | Sideloadable host UI + XcodeGen project |
 | [`offsets_n841_22H311.h`](../src/krw/offsets_n841_22H311.h) | All `/* TODO verify */` — no invented numbers |
 | [`test_plan.md`](../src/krw/test_plan.md) | Read-known-stable before any write |
 

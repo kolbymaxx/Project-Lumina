@@ -4,14 +4,14 @@
 |-------|--------|
 | Project | opa334/darksword-kexploit |
 | Upstream URL | https://github.com/opa334/darksword-kexploit |
-| Commit / tag | `/* TODO — fill after local clone */` |
+| Commit / tag | fill after `./scripts/clone_darksword_kexploit.sh` (example seen: `0ee563282e7235f8355ffc1fbf23ac6fd0f98040`) |
 | License | **None published** — do not redistribute in this git repo |
 | Local path | `third_party/darksword-kexploit/` (gitignored) |
-| What we use | Kernel PE / KRW path (**DS-K**) |
-| What we do **not** ship | DS-Full WebKit stages, spyware payloads |
-| 22H311 viability | literature: PE fixed 18.7.2; lab: pending — see docs/STATUS.md |
+| Lumina patch | `third_party/patches/darksword-library.patch` (FAILURE/longjmp + rename main) |
+| What we use | Kernel PE / KRW path (**DS-K**) via `darksword_lib` + `krw_*` |
+| What we do **not** ship | DS-Full WebKit stages, spyware payloads, upstream sources in git |
 
-Secondary reference (not default integrate target):
+Secondary reference:
 
 | Field | Value |
 |-------|--------|
@@ -19,5 +19,3 @@ Secondary reference (not default integrate target):
 | URL | https://github.com/htimesnine/DarkSword-RCE |
 | License | **None published** |
 | Role | Leak provenance / teacher |
-
-When ClearSword or other public forks are evaluated, add a row with LICENSE.

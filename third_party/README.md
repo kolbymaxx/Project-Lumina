@@ -5,59 +5,38 @@
 | Field | Value |
 |-------|--------|
 | URL | https://github.com/opa334/darksword-kexploit |
-| Role | Primary **DS-K** implementation (ObjC, `src/main.m`) |
-| LICENSE | **None published** (GitHub API `license: null` as of 2026-08-05) |
-| Build product | `darksword-pe` (`Makefile`: arm64 + arm64e, `ldid -Sentitlements.plist`) |
+| Role | Primary **DS-K** implementation |
+| LICENSE | **None published** — do **not** commit sources |
+| Clone script | [`../scripts/clone_darksword_kexploit.sh`](../scripts/clone_darksword_kexploit.sh) |
+| Library patch | [`patches/darksword-library.patch`](patches/darksword-library.patch) |
 
-Attribution / leak provenance (upstream note):  
-https://github.com/htimesnine/DarkSword-RCE — also **no LICENSE**; teacher only.
+Pinned clone observed at script authoring: `0ee563282e7235f8355ffc1fbf23ac6fd0f98040` (record your HEAD in `src/krw/ATTRIBUTION.md`).
 
-## Vendor method: **local gitignored clone** (not submodule)
-
-Because there is **no LICENSE**, we **must not** commit or redistribute the
-exploit sources inside Lumina’s git history.
-
-Prefer:
+## One command
 
 ```bash
-# From repo root (Mac lab machine):
-mkdir -p third_party
-git clone --depth 1 https://github.com/opa334/darksword-kexploit.git \
-  third_party/darksword-kexploit
-
-# Record for ATTRIBUTION (do not commit the tree):
-git -C third_party/darksword-kexploit rev-parse HEAD
+./scripts/clone_darksword_kexploit.sh
 ```
 
-`third_party/darksword-kexploit/` is listed in `.gitignore`.
+This:
 
-### Why not submodule / subtree?
+1. `git clone --depth 1` into `third_party/darksword-kexploit/` (gitignored)  
+2. Applies `patches/darksword-library.patch`:
+   - `FAILURE` → `longjmp` when `LUMINA_DSK_LIBRARY`  
+   - `main` → `darksword_cli_main` (app provides `UIApplicationMain`)
 
-| Method | Problem here |
-|--------|----------------|
-| Submodule | Propagates no-license sources to every clone with `--recursive` |
-| Subtree / vendor copy in git | Same redistribution issue |
-| **Local clone (gitignored)** | Operator obtains sources themselves; Lumina keeps adapters + docs only |
+## Why not submodule?
 
-If upstream later adds an OSI license, revisit submodule.
+No LICENSE → we do not redistribute upstream in Lumina’s git history.  
+Operator clones locally; Lumina keeps adapters + patch + app only.
 
-## How Lumina calls it
+## Consumed by
 
-1. **Binary-first lab (recommended for attempt #1):** build upstream `darksword-pe` on Mac with iphoneos SDK; embed/run via `src/host` under entry E1/E2.  
-2. **Library adapter (later):** compile `src/krw/krw_backend_darksword.c` with `-DKRW_BACKEND_DARKSWORD=1` and `-DDARKSWORD_ROOT=...` once callable symbols are extracted from upstream (today the tree is a monolithic `main.m` — do not invent a fake API).
-
-Never reimplement PE logic from news articles inside Lumina.
-
-## LICENSE gate checklist
-
-- [x] Confirmed no LICENSE file on opa334/darksword-kexploit  
-- [x] Do not `git add` third_party/darksword-kexploit  
-- [ ] Operator clone + record commit hash in `src/krw/ATTRIBUTION.md`  
-- [ ] Entry E1–E4 chosen before signing experiments  
+- **Lumina** Xcode target (`Lumina/project.yml`) — fails build if clone/patch missing  
+- `src/krw/darksword_lib.m` + `krw_backend_darksword.c`
 
 ## Related
 
-- [../docs/DARKSWORD.md](../docs/DARKSWORD.md)
-- [../docs/KRW.md](../docs/KRW.md)
-- [../src/krw/krw_backend_darksword.c](../src/krw/krw_backend_darksword.c)
-- [../src/host/README.md](../src/host/README.md)
+- [../Lumina/README.md](../Lumina/README.md)
+- [../docs/ENTRY.md](../docs/ENTRY.md)
+- [../scripts/export_ipa.md](../scripts/export_ipa.md)

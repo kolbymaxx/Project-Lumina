@@ -1,0 +1,66 @@
+name: Lumina
+options:
+  bundleIdPrefix: com.kolbymaxx
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+settings:
+  base:
+    CLANG_ENABLE_OBJC_ARC: YES
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    SUPPORTS_MACCATALYST: NO
+    ENABLE_BITCODE: NO
+targets:
+  Lumina:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: ../src/krw
+        excludes:
+          - "*.md"
+          - krw.c
+          - offsets_n841_22H311.h
+      - path: ../third_party/darksword-kexploit/src/main.m
+        optional: true
+    settings:
+      base:
+        PRODUCT_NAME: Lumina
+        PRODUCT_BUNDLE_IDENTIFIER: com.kolbymaxx.lumina
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: Lumina.entitlements
+        CODE_SIGN_STYLE: Automatic
+        ARCHS: "arm64 arm64e"
+        VALID_ARCHS: "arm64 arm64e"
+        ONLY_ACTIVE_ARCH: NO
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/../src/krw"
+        OTHER_CFLAGS: "$(inherited) -DKRW_BACKEND_DARKSWORD=1 -DDARKSWORD_EXPLOIT_LINKED=1 -DLUMINA_DSK_LIBRARY=1 -Wno-availability"
+        OTHER_CPLUSPLUSFLAGS: "$(inherited) -DKRW_BACKEND_DARKSWORD=1 -DDARKSWORD_EXPLOIT_LINKED=1 -DLUMINA_DSK_LIBRARY=1"
+        GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) KRW_BACKEND_DARKSWORD=1 DARKSWORD_EXPLOIT_LINKED=1 LUMINA_DSK_LIBRARY=1"
+    dependencies: []
+    preBuildScripts:
+      - name: Require third_party darksword-kexploit
+        basedOnDependencyAnalysis: false
+        script: |
+          set -e
+          ROOT="${SRCROOT}/.."
+          MAIN="${ROOT}/third_party/darksword-kexploit/src/main.m"
+          if [ ! -f "${MAIN}" ]; then
+            echo "error: missing ${MAIN}"
+            echo "error: run ./scripts/clone_darksword_kexploit.sh from the repo root before building"
+            exit 1
+          fi
+          if ! grep -q "LUMINA_DSK_LIBRARY" "${MAIN}"; then
+            echo "error: ${MAIN} is not library-patched"
+            echo "error: re-run ./scripts/clone_darksword_kexploit.sh"
+            exit 1
+          fi
+          echo "note: darksword-kexploit present and patched"
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Lumina
+        UILaunchScreen: {}

@@ -50,7 +50,8 @@ Dossier: [DARKSWORD.md](DARKSWORD.md).
 | KRW on 22H311 | **Open** — literature negative; **lab not yet attempted** |
 | PPL | Literature map only until `SUCCESS_KRW` on any build ([PPL.md](PPL.md)) |
 | Entry | **Open decision** E1–E4 — see [ENTRY.md](ENTRY.md) |
-| Harness | `src/krw/` API + `krw_backend_darksword` adapter (unlinked until third_party present) |
+| Harness | **Lumina** app (`Lumina/`) + `src/krw` + real DS-K link when `third_party` cloned |
+| Bundle ID | `com.kolbymaxx.lumina` |
 | Fake backends | **Forbidden** — no pretend `kread`/`kwrite` success |
 
 ### Open questions (must answer with lab or operator choice)
@@ -61,7 +62,9 @@ Dossier: [DARKSWORD.md](DARKSWORD.md).
 
 ### Single next human action
 
-**Choose entry path for first DS-K attempt** (reply with one):
+**On a Mac:** `./scripts/clone_darksword_kexploit.sh` → `cd Lumina && xcodegen generate` → sign/sideload **Lumina** (`com.kolbymaxx.lumina`) → **Run DS-K** → paste log + pick LAB result code.
+
+Also reply with entry choice if not already decided:
 
 | Code | Choice |
 |------|--------|
@@ -83,6 +86,8 @@ Dossier: [DARKSWORD.md](DARKSWORD.md).
 | [PPL.md](PPL.md) | Blocked until KRW_SUCCESS |
 | [JB_SHAPE.md](JB_SHAPE.md) | Design-only Dopamine-shaped flow |
 | [ATTRACT_DEVS.md](ATTRACT_DEVS.md) | Repro + ask |
+| [../Lumina/README.md](../Lumina/README.md) | Sideloadable DS-K test host (XcodeGen) |
+| [../scripts/export_ipa.md](../scripts/export_ipa.md) | Archive → IPA on Mac |
 | [../third_party/README.md](../third_party/README.md) | How we vendor DS-K (local clone; no LICENSE) |
 
 ## Lab result log (append only)
