@@ -1,116 +1,64 @@
 # Attracting real JB developers
 
-What a serious reviewer should see in this repo — and what we will **not** spam.
+## One-line ask
+
+Looking for A12 PPL notes or DS-K / PE help applicable to **22H311** `n841` (or a pre-18.7.2 sandbed); we are exhausting public DarkSword kexploit ports with reproducible lab logs — literature patch landmarks acknowledged, on-device proof required.
 
 ## What we are
 
-A **research monorepo** for iPhone XR (A12 / `n841`) on **iOS 18.7.5 (22H311)** with:
+Research toward a **real KRW demonstration** via **DS-K**, then PPL/bootstrap planning on the build where KRW works.
 
-1. Proven **BootROM → ramdisk** track (usbliter8) — separate from SpringBoard KRW  
-2. Honest **KRW + PPL** research track with dead-candidate documentation  
-3. Thin, auditable harness stubs — no “AI complete jailbreak”
+We acknowledge GTIG/Apple landmarks (PE fixed **18.7.2**) and still run structured on-device tests (H1/H2/H3). We do **not** ship DS-Full watering-hole kits, fake APIs, or Sileo-before-KRW.
 
-We are **not** shipping Sileo, not claiming first public JB, and not packaging spyware chains.
+## What reviewers should see
 
-## Repro steps (what works today)
+| Artifact | Why |
+|----------|-----|
+| [STATUS.md](STATUS.md) | Living truth + hypothesis table + result log |
+| [DARKSWORD.md](DARKSWORD.md) | DS-Full vs DS-K + CVE/patch map |
+| [LAB_DSK.md](LAB_DSK.md) | Exact on-device protocol + result codes |
+| [ENTRY.md](ENTRY.md) | Signing reality (no TrollStore on 18.7.5) |
+| `src/krw/` | Auditable API; no fabricated offsets |
+| Panic / session logs | Template below |
 
-### A) Host tooling smoke (any Mac/Linux clone)
+## Repro (host tooling)
 
 ```bash
-python3 usbliter8ctl -h
-python3 usbliter8ctl info   # expect: no DFU/Recovery device on cloud VM
-python3 tools/decode_t8020_handler.py
+python3 -c "import pathlib; print('ok', pathlib.Path('docs/STATUS.md').exists())"
+# Device lab requires Mac + signing — see ENTRY.md / LAB_DSK.md
 ```
 
-### B) Live XR ramdisk (Mac + Pico + phone only)
-
-1. Pico-pwn the XR (usbliter8).  
-2. Connect phone **directly** to the Mac (not through Pico).  
-3. Ensure `boot/config.env` from `boot/config.env.example` + ramdisk payloads.  
-4. `./boot/lumina-boot.sh` then `./boot/lumina-ssh.sh`.  
-5. Confirm SystemVersion **18.7.5 / 22H311** under `/mnt1`.
-
-Details: [../boot/README.md](../boot/README.md), [STATUS.md](STATUS.md).
-
-### C) Offline kernelcache (operator Mac)
-
-Paths and probes: [BUILD_22H311.md](BUILD_22H311.md),  
-[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md).  
-**Do not** commit IPSW/kernelcache blobs.
-
-### D) KRW harness (not yet lab-proven)
+## Panic / session log format
 
 ```text
-src/krw/   — API stubs only; backend = none until a live primitive is integrated
+### DS-K session YYYY-MM-DD
+- Device: iPhone XR n841 / build …
+- Entry: E1|E2|E3|E4
+- Binary / commit:
+- Result code: SUCCESS_KRW|FAIL_PATCHED|FAIL_OFFSETS|FAIL_ENTRY|FAIL_PANIC|UNKNOWN
+- Hypothesis: H1|H2|H3
+- Logs / panic:
 ```
 
-See [KRW.md](KRW.md), [../src/krw/test_plan.md](../src/krw/test_plan.md).
+## Success signals
 
-## Panic / failure log format
-
-When a device session fails or panics, paste using this template (STATUS or
-`research/kexploit/notes/` locally):
-
-```text
-### Session YYYY-MM-DD
-- Device: iPhone XR n841 / 22H311
-- Track: krw | ppl | bootrom | other
-- Build confirmed: yes/no (paste SystemVersion)
-- Action attempted: …
-- Expected: …
-- Observed: …
-- Panic string (if any): …
-- Panic full text / photo: …
-- Aftermath: reboot ok? still 22H311?
-- Claim level: none | literature | partial | demonstrated
-- Will NOT claim: …
-```
-
-## Success looks like (per milestone)
-
-| Milestone | Success signal |
-|-----------|----------------|
-| **M0** Truth doc | STATUS lists target, hypothesis, evidence level, blockers |
-| **M1** Entry | ENTRY states TrollStore blocked; operator picks sideload vs docs-only |
-| **M2** Harness | `krw.h` API + stub + offset policy + read-first test plan in tree |
-| **M3** Kernelcache | BUILD hashes filled; offsets header only TODO or derived |
-| **M4** PPL | PPL.md concludes blocked or cites mechanism + observational plan |
-| **M5** Attract | This file + clear ask (below) |
-| **KRW demonstrated** | Re-runnable `kread` of known kernel value on device — STATUS upgrade |
-| **PPL progress** | Cited mechanism + RO probes; never “essay = bypass” |
-
-## Clear ask — where help matters
-
-Looking for A12 PPL notes or new PE applicable to **22H311** `n841`; we have
-SecureROM PWND via usbliter8 and clean negative results on DarkSword PE.
-
-Lab priority on our side is **usbliter8 post-pwn iBEC jump**; KRW is
-docs/offline until a verified primitive appears (no fake backends, no app-signing
-milestone).
-
-Less useful: “port Dopamine,” YouTube JB claims, or WebKit implant packaging.
+| Milestone | Signal |
+|-----------|--------|
+| Entry chosen | E1–E4 in STATUS |
+| First lab | Result code row (even FAIL_* counts) |
+| KRW | `SUCCESS_KRW` with re-runnable read |
+| PPL | Only after KRW — cited mechanism + tests |
 
 ## What we will not spam
 
-- “First public jailbreak on 18.7.5” marketing before **demonstrated** KRW  
-- Fake offsets / gadgets  
-- Sileo screenshots as progress  
-- Wiring research exploits into `boot/`  
-- Claiming PPL bypass without mechanism + test plan  
-
-## Reviewer checklist
-
-- [ ] STATUS evidence levels honest (`literature` vs `demonstrated`)  
-- [ ] DarkSword PE marked patched on 18.7.2 / dead on 22H311  
-- [ ] Entry gate (no TrollStore) visible  
-- [ ] `src/krw` has no invented immediates  
-- [ ] PPL section can conclude **blocked**  
-- [ ] BootROM track not confused with SpringBoard KRW  
+- “First JB on 18.7.5” before `SUCCESS_KRW`  
+- Fake offsets / pretend backends  
+- usbliter8 as a substitute for this track’s PE work  
+- WebKit implant packaging  
 
 ## Related
 
 - [STATUS.md](STATUS.md)
+- [DARKSWORD.md](DARKSWORD.md)
 - [KRW.md](KRW.md)
-- [PPL.md](PPL.md)
 - [ENTRY.md](ENTRY.md)
-- [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md)

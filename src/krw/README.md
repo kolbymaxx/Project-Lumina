@@ -1,56 +1,27 @@
-# `src/krw` — thin KRW harness
+# `src/krw` — DS-K harness
 
-Auditable API around a **future** public kexploit backend for  
-**iPhone XR / 18.7.5 (22H311)**.
-
-**Not a working exploit.** Default backend returns `KRW_ERR_NO_BACKEND`.  
-Operator decision **B** (2026-08-05): docs/offline only — **do not** add fake
-`kread`/`kwrite` backends or a test host this milestone. KRW is **blocked**
-until a new public primitive is verified on **22H311**.
-
-## Files
+Auditable KRW API for Lumina’s **DarkSword-class** main line.
 
 | File | Role |
 |------|------|
-| `krw.h` | `krw_init`, `kread`, `kwrite`, `kbase`, `kslide`, `krw_deinit` |
-| `krw.c` | Stub implementation |
-| `offsets_n841_22H311.h` | Offset skeleton — all `TODO verify` |
-| `test_plan.md` | Read-known-stable first |
-| `ATTRIBUTION.md` | Where upstream LICENSE/attribution goes |
+| `krw.h` / `krw.c` | Default: `KRW_ERR_NO_BACKEND` |
+| `krw_backend_darksword.c` | DS-K adapter — `KRW_ERR_NOT_LINKED` until upstream ABI wired |
+| `offsets_n841_22H311.h` | All TODO — no invented immediates |
+| `test_plan.md` | Read-first policy |
+| `ATTRIBUTION.md` | Upstream URL + commit (after clone) |
 
-## Integration plan (when a live public primitive exists)
-
-1. Clone or vendor the **public** implementation under  
-   `research/kexploit/<name>/` (often gitignored — see root `.gitignore`).  
-2. Record **LICENSE**, URL, commit hash in `ATTRIBUTION.md`.  
-3. Add a compile-time backend (e.g. `KRW_BACKEND_<NAME>=1`) that calls into  
-   that tree from `krw.c` — do **not** copy exploit sources into `boot/`.  
-4. Fill `offsets_n841_22H311.h` only from public **22H311** tables or our  
-   kernelcache derivation notes (`docs/BUILD_22H311.md`).  
-5. Run `test_plan.md` on device; upgrade `docs/STATUS.md` only with a  
-   re-runnable command + expected output.
-
-## DarkSword note
-
-Public DarkSword kernel PE (`CVE-2025-43510` / `CVE-2025-43520`) is **fixed  
-in iOS 18.7.2**. Do not integrate those PE stages as a live backend for  
-22H311 unless lab evidence contradicts Apple/NVD/GTIG (document the  
-contradiction first).
-
-## Build (host smoke — optional)
-
-There is no Xcode project in-tree yet (`src/app/` is reserved).  
-On a Mac with an iOS toolchain, compile the stub as a static check:
+## Build notes
 
 ```bash
-# Example only — adjust SDK paths on the operator Mac:
-xcrun -sdk iphoneos clang -arch arm64e -c src/krw/krw.c -o /tmp/krw.o
+# Default stub (any host compiler):
+cc -c src/krw/krw.c -o /tmp/krw.o
+
+# DS-K adapter shape check (still returns NOT_LINKED):
+cc -DKRW_BACKEND_DARKSWORD=1 -c src/krw/krw_backend_darksword.c -o /tmp/krw_ds.o
 ```
 
-Cloud VM: docs review is enough; device USB not available.
+Device builds: Mac + iphoneos SDK, **arm64e**, after entry E1/E2 and local
+`third_party/darksword-kexploit` clone.
 
-## Related
-
-- [../../docs/KRW.md](../../docs/KRW.md)
-- [../../docs/ENTRY.md](../../docs/ENTRY.md)
-- [../../docs/STATUS.md](../../docs/STATUS.md)
+**Do not** set `DARKSWORD_EXPLOIT_LINKED=1` until real symbols from the local
+clone are wired — that flag currently `#error`s on purpose.

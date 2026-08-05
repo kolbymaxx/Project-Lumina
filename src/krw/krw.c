@@ -1,32 +1,25 @@
 /*
- * Lumina KRW harness — stub backend
- *
- * Default build has no live exploit. Integrating a public kexploit must:
- *   1) Live under research/kexploit/<name>/ with LICENSE + attribution
- *   2) Provide a real backend behind a compile flag (never invent offsets)
- *   3) Remain out of boot/
- *
- * See README.md and docs/KRW.md.
+ * Default dispatch: no backend.
+ * For DS-K builds, compile krw_backend_darksword.c with
+ * -DKRW_BACKEND_DARKSWORD=1 instead of (or not together with) this file.
  */
 
 #include "krw.h"
 
 #include <string.h>
 
-#ifndef KRW_BACKEND_NONE
-#define KRW_BACKEND_NONE 1
+#ifndef KRW_BACKEND_DARKSWORD
+#define KRW_BACKEND_DARKSWORD 0
 #endif
+
+#if !KRW_BACKEND_DARKSWORD
 
 static int g_inited;
 
 int krw_init(void)
 {
-#if KRW_BACKEND_NONE
     g_inited = 0;
     return KRW_ERR_NO_BACKEND;
-#else
-#error "No non-stub KRW backend is implemented for 22H311 yet."
-#endif
 }
 
 void krw_deinit(void)
@@ -57,7 +50,6 @@ int kwrite(uint64_t kaddr, const void *in, size_t len)
     if (!g_inited) {
         return KRW_ERR_NOT_INIT;
     }
-    /* Policy: stub never writes. */
     return KRW_ERR_NO_BACKEND;
 }
 
@@ -70,3 +62,5 @@ uint64_t kslide(void)
 {
     return 0;
 }
+
+#endif /* !KRW_BACKEND_DARKSWORD */

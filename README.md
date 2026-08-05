@@ -7,10 +7,10 @@ starting from usbliter8 BootROM.
 
 Primary live device: iPhone XR (`n841ap`) on **18.7.5 (22H311)**.
 
-### Honest status (Phase A, 2026-08-01)
-- **Done:** BootROM (usbliter8) → ramdisk SSH → System volume mount (`/mnt1` shows 18.7.5)
-- **Blocked:** Data volume mount (`mount_apfs: Program version wrong` on 15.1 ramdisk tooling)
-- **Not done:** kernel exploit, PPL, userspace bootstrap
+### Honest status (OVERRIDE 2026-08-05)
+- **Main line:** DarkSword **DS-K** → KRW demo → PPL → bootstrap design ([docs/STATUS.md](docs/STATUS.md))
+- **Daily driver:** XR **18.7.5 / 22H311** — literature says PE fixed 18.7.2; **lab not yet run**
+- **Not a jailbreak.** No Sileo. No invented offsets.
 
 ## What works today
 1. usbliter8 Pico → Pwned DFU
@@ -52,19 +52,15 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
 
 ## Docs
-- [docs/STATUS.md](docs/STATUS.md) — living truth (BootROM Phase A + KRW/PPL track)
-- [docs/KRW.md](docs/KRW.md) / [docs/PPL.md](docs/PPL.md) / [docs/ENTRY.md](docs/ENTRY.md) — userspace/kernel research
-- [docs/BUILD_22H311.md](docs/BUILD_22H311.md) — build identity + kernelcache hash placeholders
-- [docs/ATTRACT_DEVS.md](docs/ATTRACT_DEVS.md) — repro, panic logs, help ask
-- [docs/RESEARCH.md](docs/RESEARCH.md)
-- [docs/ROADMAP_THEORY.md](docs/ROADMAP_THEORY.md) — staged RE / JB theory (docs only)
-- [boot/README.md](boot/README.md)
-- [src/krw/](src/krw/) — thin KRW API stubs (no live backend)
-- [research/mitigations/README.md](research/mitigations/README.md)
-- [research/kexploit/THEORY.md](research/kexploit/THEORY.md)
-- [research/ppl/](research/ppl/) — A12 PPL strategy (blocked for public iOS 18 techniques)
-- [research/checkm8/README.md](research/checkm8/README.md)
-- [research/palera1n/README.md](research/palera1n/README.md)
+- [docs/STATUS.md](docs/STATUS.md) — living truth (**DS-K** main line)
+- [docs/DARKSWORD.md](docs/DARKSWORD.md) — DS-Full vs DS-K, CVE/patch map
+- [docs/KRW.md](docs/KRW.md) / [docs/ENTRY.md](docs/ENTRY.md) / [docs/LAB_DSK.md](docs/LAB_DSK.md)
+- [docs/BUILD_22H311.md](docs/BUILD_22H311.md) / [docs/BUILD_vulnerable_target.md](docs/BUILD_vulnerable_target.md)
+- [docs/PPL.md](docs/PPL.md) — blocked until SUCCESS_KRW
+- [docs/ATTRACT_DEVS.md](docs/ATTRACT_DEVS.md)
+- [third_party/README.md](third_party/README.md) — local DS-K clone (no LICENSE → not vendored in git)
+- [src/krw/](src/krw/) / [src/host/](src/host/)
+- [docs/RESEARCH.md](docs/RESEARCH.md) — broader index (historical BootROM notes remain)
 
 ## Hard gates
 - Data mount blocked on current 15.1 ramdisk `mount_apfs`

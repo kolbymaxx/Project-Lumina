@@ -1,6 +1,7 @@
 # Build identity — iPhone XR / 22H311
 
-**Locked target for v0 KRW + PPL research.** Do not widen to other builds here.
+**Daily driver** for Lumina DS-K work. **Not assumed PE-viable** (literature: PE fixed 18.7.2).  
+Lab must classify H1/H2/H3 — see [STATUS.md](STATUS.md). Sandbed plan: [BUILD_vulnerable_target.md](BUILD_vulnerable_target.md).
 
 | Field | Value | Evidence |
 |-------|-------|----------|
@@ -23,11 +24,10 @@
 Workflow: [../scripts/fetch_kernelcache.md](../scripts/fetch_kernelcache.md).  
 Probe list: [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md).
 
-### Hashes (optional archival — leave blank until measured)
+### Hashes (fill when available — archival + offset derivation aid)
 
-**Not a priority this milestone.** If `kernelcache.payload` is available later,
-record SHA-256 here for archival identity only. **No offset fanfiction** from
-hashes alone — do not invent immediates in `offsets_n841_22H311.h`.
+If `kernelcache.payload` is available, record SHA-256 here. Useful if we later
+derive offsets for a DS-K port. **No offset fanfiction** from hashes alone.
 
 | Artifact | Algorithm | Digest | Date | Operator |
 |----------|-----------|--------|------|----------|
