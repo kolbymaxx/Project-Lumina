@@ -55,15 +55,14 @@ usbliter8 ramdisk                         → SEPARATE track (works; not SpringB
 STATUS must keep the stock TrollStore/entry gate visible.  
 Harness code under `src/krw/` assumes a future host; it does not create one.
 
-## Operator decision needed
-
-Pick one and record in STATUS:
+## Operator decision (locked 2026-08-05)
 
 - [ ] **A.** Lab will sideload a developer-signed `src/` test host on the XR  
-- [ ] **B.** No SpringBoard host — KRW track stays docs/offline until entry changes  
-- [ ] **C.** Other (describe) — must still be legal/signing-honest  
+- [x] **B.** No SpringBoard host — KRW track stays **docs/offline** this milestone  
+- [x] **Priority C.** Human time → **usbliter8 post-pwn iBEC jump**, not Lumina app signing  
 
-Default until checked: **B** (docs/offline + BootROM track).
+No fake `kread`/`kwrite` backends. Revisit SpringBoard hosting only if a new
+public PE verified on **22H311** makes a host worth the signing cost.
 
 ## Related
 

@@ -2,7 +2,9 @@
 
 **Goal:** documented, reproducible kernel R/W on **iPhone XR / 18.7.5 (22H311)**  
 if a public (or own-lab) primitive still applies.  
-**Status:** no demonstrated KRW. DarkSword-class public kernel PE is **patched**.
+**Status: blocked** — DarkSword PE **PATCHED** (18.7.2); pending a new public
+primitive **verified on 22H311**. Lab mode **B** (docs/offline; no test host).
+**No fake kread/kwrite backends.**
 
 Evidence levels used here: **none** / **literature** / **partial** / **demonstrated**.
 
@@ -10,14 +12,17 @@ Evidence levels used here: **none** / **literature** / **partial** / **demonstra
 
 | Question | Answer | Level |
 |----------|--------|-------|
-| Public DarkSword **kernel** PE on 22H311? | **Patched** (fixed iOS **18.7.2**) | literature |
-| Public DarkSword **full chain** on 22H311? | **Patched** (kernel 18.7.2; WebKit/ANGLE stages 18.7.3) | literature |
+| Public DarkSword **kernel** PE on 22H311? | **PATCHED** (fixed iOS **18.7.2**) | literature |
+| Public DarkSword **full chain** on 22H311? | **PATCHED** (kernel 18.7.2; WebKit/ANGLE stages 18.7.3) | literature |
 | Public kfd / Dopamine-era KRW? | **Patched** long before 18.7.5 | literature |
 | Any KRW demonstrated on this XR? | **No** | none |
-| Harness in tree? | Thin API stubs under `src/krw/` — **not wired to a live exploit** | partial (code only) |
+| KRW track status | **Blocked** pending new PE verified on 22H311 | — |
+| Harness in tree? | Thin API stubs — backend **none**; will not fake success | partial (code only) |
+| Human-time priority | **usbliter8 post-pwn iBEC jump** (not app signing) | operator decision C |
 
-**Pivot:** treat DarkSword as a **teacher / dead candidate**, not the v0 installer path.  
-Next KRW candidates are **advisory watches** (e.g. CVEs fixed in 18.7.7 / 18.7.9 that may still apply on 18.7.5) — still **literature / unknown**, not demonstrated. See matrix.
+**Pivot:** DarkSword is a **teacher / dead candidate**. KRW stays parked
+docs/offline. Advisory watches remain literature-only until something is
+verified on this build. See matrix.
 
 ## Viability notes (public primitives)
 

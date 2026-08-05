@@ -23,7 +23,11 @@
 Workflow: [../scripts/fetch_kernelcache.md](../scripts/fetch_kernelcache.md).  
 Probe list: [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md).
 
-### Hashes (fill from Mac — leave blank until measured)
+### Hashes (optional archival — leave blank until measured)
+
+**Not a priority this milestone.** If `kernelcache.payload` is available later,
+record SHA-256 here for archival identity only. **No offset fanfiction** from
+hashes alone — do not invent immediates in `offsets_n841_22H311.h`.
 
 | Artifact | Algorithm | Digest | Date | Operator |
 |----------|-----------|--------|------|----------|
@@ -31,7 +35,7 @@ Probe list: [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_N
 | `kernelcache.payload` | SHA-256 | `/* TODO verify */` | — | — |
 
 ```bash
-# On the Mac that holds the artifacts:
+# On the Mac that holds the artifacts (optional):
 shasum -a 256 /Users/kolby/Projects/firmware-22H311/kernelcache.release.iphone11b
 shasum -a 256 /Users/kolby/Projects/firmware-22H311/kernelcache.payload
 ```

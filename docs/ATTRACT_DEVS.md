@@ -81,14 +81,12 @@ When a device session fails or panics, paste using this template (STATUS or
 
 ## Clear ask — where help matters
 
-**We need help with PPL strategy on A12 / 22H311 *after* (or in parallel to) finding a live KRW primitive.**
+Looking for A12 PPL notes or new PE applicable to **22H311** `n841`; we have
+SecureROM PWND via usbliter8 and clean negative results on DarkSword PE.
 
-Specifically valuable:
-
-- Citable writeups for advisory-window kernel bugs still relevant on **18.7.5**  
-- Confirmation that a candidate is triggerable from **developer-signed** sandbox (no TrollStore)  
-- PPL observational checklists against **22H311** kernelcache (A12, not SPTM cargo-cult)  
-- Audit of our offset policy / harness for foot-guns  
+Lab priority on our side is **usbliter8 post-pwn iBEC jump**; KRW is
+docs/offline until a verified primitive appears (no fake backends, no app-signing
+milestone).
 
 Less useful: “port Dopamine,” YouTube JB claims, or WebKit implant packaging.
 

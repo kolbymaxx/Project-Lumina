@@ -26,55 +26,73 @@ Serial (Recovery): `F2LZJAE1KXKQ`
 | Item | State |
 |------|--------|
 | Target | iPhone XR · A12 (`t8020`) · **18.7.5 (22H311)** |
-| KRW evidence level | **literature** (public PE **patched**); lab **none** |
+| DarkSword PE | **PATCHED** (fixed iOS **18.7.2**) — not a path |
+| **KRW status** | **Blocked** — pending a new public primitive **verified on 22H311** |
+| KRW evidence level | **literature** (negative); lab **none** |
 | PPL evidence level | **literature** (present in kernel; **no** public iOS 18 bypass) |
-| Harness | `src/krw/` stubs only — backend **none** |
-| Entry (SpringBoard) | **Blocked on stock for TrollStore-style hosts** (see below) |
+| Harness | `src/krw/` stubs only — backend **none**; **no fake kread/kwrite** |
+| Lab mode (locked) | **B — docs/offline only.** No SpringBoard test host this milestone |
+| Human-time priority (locked) | **C — usbliter8 post-pwn (iBEC jump)**, not Lumina app signing |
+
+### Operator decisions (2026-08-05) — locked
+
+| Decision | Choice | Meaning |
+|----------|--------|---------|
+| KRW entry / lab | **B** | Docs/offline only. No test host. No fake backends. |
+| Human priority | **C** | Spend lab time on **usbliter8 post-pwn iBEC jump**, not app signing |
+
+Optional later (not blocking): if `kernelcache.payload` is handy, record SHA-256 in
+[BUILD_22H311.md](BUILD_22H311.md) for **archival only** — no offset fanfiction.
 
 ### DarkSword viability (literature)
 
 | Piece | Landmark | On 22H311 |
 |-------|----------|-----------|
-| Kernel PE (`CVE-2025-43510`, `CVE-2025-43520`) | Fixed **iOS 18.7.2** (Apple/NVD/GTIG) | **Patched — not a KRW path** |
-| Full chain WebKit/ANGLE stages | Fixed **18.7.3** (GTIG table) | **Patched** |
-| Public kexploit ports claiming broad iOS support | README ≠ advisory | Treat as **dead** until lab contradicts Apple |
+| Kernel PE (`CVE-2025-43510`, `CVE-2025-43520`) | Fixed **iOS 18.7.2** (Apple/NVD/GTIG) | **PATCHED** |
+| Full chain WebKit/ANGLE stages | Fixed **18.7.3** (GTIG table) | **PATCHED** |
+| Public kexploit ports claiming broad iOS support | README ≠ advisory | **Dead** until lab contradicts Apple |
 
 Card: [../research/kexploit/experiments/T004_darksword_kernel_dead_on_1875.md](../research/kexploit/experiments/T004_darksword_kernel_dead_on_1875.md).  
 Write-up: [KRW.md](KRW.md).
 
-**Pivot:** KRW section is **not** “integrate DarkSword and win.” Next candidates are advisory watches (e.g. CVEs fixed in **18.7.7 / 18.7.9** that might still apply on 18.7.5) — still **unknown / not demonstrated**. If no live public kexploit appears, this track stays docs-only and the **usbliter8** track remains the only proven capability.
+**KRW remains blocked** until a new public (or own-lab) primitive is verified on
+**22H311**. Advisory watches stay docs-only. Do **not** implement pretend
+`kread`/`kwrite` backends. Proven capability stays **usbliter8 + ramdisk**;
+human priority is unblocking **post-pwn iBEC jump**.
 
 ### Entry reality (M1)
 
 **On stock iOS 18.7.5 XR, TrollStore (arbitrary-entitlement sideload) is unavailable.**  
-Developer-signed apps are possible with limited entitlements; WebKit full-chain packaging is **not** our product path.
+**Decision B:** no SpringBoard test host this milestone — KRW track is docs/offline.  
+WebKit full-chain packaging is **not** our product path.
 
 Details: [ENTRY.md](ENTRY.md).
 
 ### Blockers (KRW / PPL)
 
-1. **No matching public KRW primitive** proven on A12 / 18.7.5 (DarkSword PE dead; kfd-era dead).  
-2. **Stock entry blocked** for TrollStore-class kexploit hosts.  
+1. **KRW blocked** — DarkSword PE **PATCHED** (18.7.2); no new public primitive verified on 22H311.  
+2. **Stock entry blocked** for TrollStore-class hosts; test host deferred (decision **B**).  
 3. **PPL blocked** for known public techniques on iOS 18 (dmaFail dead since 16.6).  
-4. Kernelcache hashes / filled offsets for 22H311 still **TODO** in [BUILD_22H311.md](BUILD_22H311.md).  
-5. Operator has not yet chosen SpringBoard test-host signing path (default: docs/offline).
+4. Kernelcache SHA-256 archival still optional ([BUILD_22H311.md](BUILD_22H311.md)).  
+5. **Separate track:** usbliter8 post-pwn **iBEC jump** still failing — **human-time priority**.
 
 ### Docs map (this track)
 
 | Doc | Role |
 |-----|------|
-| [BUILD_22H311.md](BUILD_22H311.md) | Build identity + kernelcache hash placeholders |
+| [BUILD_22H311.md](BUILD_22H311.md) | Build identity + optional archival hashes |
 | [KRW.md](KRW.md) | Primitive choice, harness, tests |
-| [ENTRY.md](ENTRY.md) | How a binary can run |
+| [ENTRY.md](ENTRY.md) | How a binary can run (decision B locked) |
 | [PPL.md](PPL.md) | PPL options / blocked conclusion |
-| [ATTRACT_DEVS.md](ATTRACT_DEVS.md) | Repro, panic format, ask for help |
-| [../src/krw/](../src/krw/) | Thin KRW API stubs |
+| [ATTRACT_DEVS.md](ATTRACT_DEVS.md) | Repro, panic format, help ask |
+| [../src/krw/](../src/krw/) | Thin KRW API stubs (no live backend) |
 | [../research/ppl/](../research/ppl/) | Deep PPL notes |
 
 ### Single next human task
 
-**Confirm SpringBoard entry plan on the XR:** reply with **A** (will developer-sign a minimal test host), **B** (no SpringBoard host — KRW stays docs/offline), or **C** (other, described).  
-Until then, maximize offline value: paste **SHA-256** of `kernelcache.payload` into [BUILD_22H311.md](BUILD_22H311.md).
+**usbliter8 post-pwn: diagnose / unblock iBEC jump** on this XR (SecureROM PWND works;
+iBEC still fails to jump). KRW stays parked docs/offline — do not spend this
+milestone on Lumina app signing.
 
 ---
 
@@ -186,11 +204,13 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Human:** entry plan A/B/C + optional kernelcache SHA-256 paste ([BUILD_22H311.md](BUILD_22H311.md))
-2. **Device session 01 (RO):** T011 → T010 → T012 per
-   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
-3. **Kernel hunt:** citable writeups for **T008/T009**; continue
-   [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
-4. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
+1. **Human priority (C):** usbliter8 **post-pwn iBEC jump** — see
+   [`../research/CUSTOM_BOOT_NEXT.md`](../research/CUSTOM_BOOT_NEXT.md) / boot path notes
+2. **KRW track (B):** remain docs/offline; no test host; no fake backends —
+   STATUS stays **blocked** until a new PE is verified on 22H311
+3. Optional archival: SHA-256 of `kernelcache.payload` → [BUILD_22H311.md](BUILD_22H311.md)
+   (no offset inventing)
+4. Docs-only kernel hunt / advisory watches when idle
+   ([`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md))
 5. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`) — still exit 76 on 15.1 tools
 6. Keep checkm8/palera1n/kexploit notes isolated from `boot/`

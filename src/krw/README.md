@@ -3,7 +3,10 @@
 Auditable API around a **future** public kexploit backend for  
 **iPhone XR / 18.7.5 (22H311)**.
 
-**Not a working exploit.** Default backend returns `KRW_ERR_NO_BACKEND`.
+**Not a working exploit.** Default backend returns `KRW_ERR_NO_BACKEND`.  
+Operator decision **B** (2026-08-05): docs/offline only — **do not** add fake
+`kread`/`kwrite` backends or a test host this milestone. KRW is **blocked**
+until a new public primitive is verified on **22H311**.
 
 ## Files
 
