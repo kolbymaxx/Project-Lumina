@@ -326,6 +326,118 @@ MMIO base literal `@0x100021bb8` → **`0x25D100000`**. Per-EP stride **`<<5`**.
 
 **Best software write into fixed USB SRAM before `+0x60`:** **`0x19C010D08`** — 8-byte SETUP mirror (`e32c` then `e334` → `+0x60`). Does not reach `C80`/`E18`. No pre-handler SW write into callback slots.
 
+### USB IRQ routing (`0x10000ccb4` + latch `0x10000d294`)
+
+Two stages:
+
+1. **`0x10000d294`** (HW IRQ registered @ `c3e0`): read MMIO → softctx; may **`bl d90c`/`d5ec`**; set `860+4` bit0; signal worker (`a178`).
+2. **`0x10000ccb4`** (deferred): consume latches; SETUP/`e2f8` → **`C80`**.
+
+| source → latch | |
+|----------------|--|
+| `MMIO+0x14` → `@860+8` (`w23`) | device IRQ word |
+| `MMIO+0x818` → `@860+0xc` (`w27`) | per-EP bitmap (if `w23 & 0xc0000`) |
+| `MMIO+0xB08` → `@860+0xc0` (`w19`) | EP0 OUT status (via `d294`: `x23=MMIO+0x908`, `ldr [x23,#0x200]`) |
+| `@860+4` bit0 | `ccb4` work gate |
+
+#### Bit → path (`ccb4`)
+
+| Path | Site | Exact test | Notes |
+|------|------|------------|-------|
+| no work | `cd20` | `tbz [860+4], #0` | |
+| enum/bring-up | `cd48` | `tbz w23, #0xb` | else `cfa8`/`d110` |
+| bus reset + EP0 re-arm | `cd64` | `tbz w23, #0xc` | wipe `8C0`/`0x3c0`; **`bl d1fc`** |
+| misc | `ce38` | `tbz w23, #0xd` | `MMIO+0x808` |
+| EP IRQs pending | `ce48` | `and w8, w23, #0xc0000`; `cbz` | bits **18\|19** |
+| EP0 IN drain | `ce54` | `tbz w27, #0` | else `d140(0x80)` |
+| EP0 OUT enter | `ce60` | `tbz w27, #0x10` | DAINT bit **16** |
+| **SETUP → `e2f8` → `C80+0x60`** | `ceac`–`ced0` | `(w19 & #8) != 0` and `[860]==1`; `e2f8(,…,w1=1)` | EP0 OUT status **bit 3** |
+| **OUT data → `e2f8`** | `cedc`–`cefc` | SETUP bit clear / `#0x8000` arm; `e2f8(,…,w1=0)` | |
+| EP0 re-arm | `cf10` | after `e2f8`: **`bl d1fc`** | |
+| other EPs | `cf14`+ | bit walk `w27` → `d140` | drain only |
+
+**`d90c`/`d5ec`:** **not in `ccb4`** — only from **`d294`** (`d4f4`/`d528` → `d90c`; `d38c`/`d3c0` → `d5ec`).
+
+#### When is `C80` indexed?
+
+- **Not** every IRQ; **not** from `ccb4`/`d90c`/`d5ec`/reset directly.
+- **Yes** after `ccb4` → **`e2f8`**: SETUP always `bl dc5c` (`+0x60`); std-request arms use other stubs; OUT data path may hit `+0x40` stall.
+
+```text
+d294 (MMIO latch + optional d90c/d5ec) → set +4 bit0
+ccb4: bits 18|19 → DAINT bit16 → DOEP bit3
+   → e2f8: str → D08; bl dc5c; ldr [C80+0x60]; br
+```
+
+#### Ordering
+
+```text
+DMA → heap *880
+ → d294 softctx (+ maybe d90c/d5ec)
+ → ccb4 SETUP: D08 mirror → C80+0x60 → d1fc
+```
+
+Gap before `+0x60`: softctx/queues only — no SW callback-slot write.
+
+### EP0 bring-up order (to first `d1fc`)
+
+Call chain from DFU setup (`0x10000ad30`):
+
+```text
+ad30
+ ├─ da04              install C80 defaults (ROM table @23040)
+ ├─ dda0              serial/desc identity
+ │   └─ da50 → cc40   register worker ccb4 (@9bc4); init softctx events
+ ├─ eccc              DFU iface object @ E18
+ └─ df84              build config descriptors
+     └─ e288 → daac → c2d8     USB softctx + controller init
+          ├─ alloc *880 (0x40), *888 (8); bzero 8C0..C80
+          ├─ cfa8              MMIO bring-up (below) — **no +0xb14 yet**
+          ├─ 2cd0(d294)        register HW IRQ latch
+          └─ d110              tweak MMIO+0x804
+… host issues bus reset …
+d294: MMIO+0x14 bit12 → latch w23 → wake ccb4
+ccb4 bit12 path (cd64):
+ ├─ wipe softctx 8C0 (0x3c0); re-seed EP0 soft fields
+ ├─ MMIO EP/IRQ re-arm (below)
+ └─ **d1fc**           FIRST program +0xb14 ← *880  ← EP0 can accept SETUP DMA
+```
+
+#### `cfa8` MMIO stores @ `0x25D100000` (before any `d1fc`)
+
+| Order | Off | Value / source | Role (from use) |
+|------:|-----|----------------|-----------------|
+| 1 | `+0x10` | `1` | soft-connect / run bit; polled until clear |
+| 2 | `+0x804` | `orr #2` | (after AHB idle wait) |
+| 3 | `+0x8` | `orr #0x21` w/ ROM byte | device config |
+| 4 | `+0xc` | `8 \| (byte<<10)` | device config2 |
+| 5 | `+0x800` | `4` | |
+| 6 | `+0x18` | `0` then later **`0x3000`** | IRQ mask — **`0x3000` = bits 12\|13** (arms bus-reset bit12) |
+| 7 | `+0x814/810/81c` | `0` | clear EP IRQ en masks |
+| 8 | `+0x14` | `-1` | clear device IRQ status |
+| 9 | `+0xba8`‥ (loop ×5, step `-0x20`) + peer `-0x200` | `0xf` / `0x1f` | per-EP FIFO/flush words |
+| — | *(side)* | `6db8(0xb0006,…)` → **`0x203D2B8030`** | **not** `25D1`; PMGR/clk-style window — **not DART** |
+
+`cfa8` also fills softctx `@860+0x10/+0x14` from `MMIO+0x4c` (size caps). **No `+0xb14` / `+0xb10` / `+0x914` here.**
+
+#### Bus-reset bit12 path (`ccb4` `cd64` → first `d1fc`)
+
+| Order | Off | Value | Notes |
+|------:|-----|-------|-------|
+| 1 | `+0x814/810/81c` | `0` | clear |
+| 2 | softctx `8C0` | `bzero 0x3c0` | **rebuild EP soft state**; **not** `C80` |
+| 3 | `+0x24` / `+0x28` | `0x21b` / `0x100021b` | |
+| 4 | `+0xb00` / `+0x900` | `0` | clear EP0 OUT/IN ctl |
+| 5 | `+0x18` | `orr` large mask incl. `#0x800` | re-enable IRQs |
+| 6 | `+0x814/810` | `0xd`; `+0x81c`=`0x10001` | EP IRQ enables |
+| 7 | **`d1fc`** | **`+0xb10`=`0x20080040`, `+0xb14`=`lo32(*880)`** | **first EP0 DMA arm** |
+
+**Bit12 armed by:** `cfa8` final `str 0x3000 → MMIO+0x18` (unmasks bits 12\|13). HW then sets `MMIO+0x14` bit12 on bus reset; `d294` ORs into `@860+8`.
+
+**Reset rebuilds?** softctx `8C0` yes; EP0 soft fields yes; **`C80` no** (left as `da04` install); heap `*880` **reused** if non-null (`c2d8` only allocs once).
+
+**DART / SMMU / IOMMU:** **never** appears in this bring-up (no strings; no stores into a DART-like window). Side window is only `0x203D2B8030` via `6db8`. Next place to look: platform init before DFU (`6e10` / early `b52c` path), not USB EP0.
+
 ### Raw or PAC-signed before `br`?
 
 | Stage | Semantics |
@@ -363,4 +475,4 @@ Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000a
 
 ## 5. Next single RE question
 
-**In `0x10000ccb4`, which USB IRQ status bits select SETUP (`ced0`/`e2f8`/`C80+0x60`) vs OUT data (`cefc`) vs kicking `d90c`/`d5ec`, and on which of those completions is the CB table at `C80` indexed?**
+**After EP0 is armed (`d1fc`), what is the first attacker-visible register surface useful for a usbliter8-style race — among `MMIO+0x14` (status), `+0xB08` (EP0 OUT status), `+0xb14` (buffer ptr), and `+0xb00` (EP arm) — and which is read/written on the SETUP hot path before `C80+0x60`?**
