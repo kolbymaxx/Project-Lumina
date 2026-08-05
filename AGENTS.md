@@ -11,10 +11,12 @@ Project Lumina is a **Mac + USB hardware** research repo (iPhone XR / A12, Pico 
 ### Layout map (FILTER + STATUS)
 | Intent | Path |
 |--------|------|
-| Live status / Phase A | `docs/STATUS.md` |
-| Applicability filter (what applies on XR 18.7.5 vs knowledge-only) | `docs/RESEARCH.md` + `research/{checkm8,palera1n,mitigations,kexploit}/` |
-| Known-good tethered boot | `boot/lumina-boot.sh`, `boot/lumina-ssh.sh` |
-| Host DFU utility (Lumina Mac path) | `./usbliter8ctl` (prefer over nested upstream copy) |
+| Live status (DS-K main line) | `docs/STATUS.md` |
+| DarkSword dossier / lab protocol | `docs/DARKSWORD.md`, `docs/LAB_DSK.md`, `docs/ENTRY.md` |
+| KRW harness + Lumina IPA host | `src/krw/`, `Lumina/`, `scripts/clone_darksword_kexploit.sh`, `third_party/README.md` |
+| PPL (after KRW only) | `docs/PPL.md`, `research/ppl/` |
+| Applicability filter / historical notes | `docs/RESEARCH.md` + `research/*` |
+| Tethered boot helpers (out of scope for DS-K track) | `boot/`, `./usbliter8ctl` |
 
 There is no separate `research/FILTER.md`; the filter is the applicability tables in `docs/RESEARCH.md`.
 

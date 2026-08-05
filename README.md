@@ -7,10 +7,10 @@ starting from usbliter8 BootROM.
 
 Primary live device: iPhone XR (`n841ap`) on **18.7.5 (22H311)**.
 
-### Honest status (Phase A, 2026-08-01)
-- **Done:** BootROM (usbliter8) → ramdisk SSH → System volume mount (`/mnt1` shows 18.7.5)
-- **Blocked:** Data volume mount (`mount_apfs: Program version wrong` on 15.1 ramdisk tooling)
-- **Not done:** kernel exploit, PPL, userspace bootstrap
+### Honest status (OVERRIDE 2026-08-05)
+- **Main line:** DarkSword **DS-K** → KRW demo → PPL → bootstrap design ([docs/STATUS.md](docs/STATUS.md))
+- **Daily driver:** XR **18.7.5 / 22H311** — literature says PE fixed 18.7.2; **lab not yet run**
+- **Not a jailbreak.** No Sileo. No invented offsets.
 
 ## What works today
 1. usbliter8 Pico → Pwned DFU
@@ -36,11 +36,15 @@ UDID used for usbmux wait: `00008020-00117540340B002E`
 ## Layout
 ```text
 boot/                     # one-command ramdisk re-entry (do not regress)
-docs/STATUS.md            # live project status + Phase A paste area
-docs/RESEARCH.md          # Dopamine / DarkSword / LARA index
+docs/STATUS.md            # live project status + Phase A + KRW/PPL truth
+docs/KRW.md PPL.md …      # userspace/kernel research track (not BootROM)
+src/krw/                  # thin KRW harness stubs (no live exploit)
+src/ppl/                  # PPL observational stubs (no bypass)
+scripts/                  # kernelcache workflow notes (no IPSW in git)
 artifacts/xr-18.7.5/      # dumps from the live XR (mostly gitignored)
 research/CUSTOM_BOOT_NEXT.md
 research/kexploit/        # isolated kexploit study (not in boot path)
+research/ppl/             # A12 PPL strategy notes
 research/checkm8/         # A11-and-older knowledge only
 research/palera1n/        # A8–A11 reference only
 tools/                    # host helpers / stubs
@@ -48,14 +52,17 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
 
 ## Docs
-- [docs/STATUS.md](docs/STATUS.md)
-- [docs/RESEARCH.md](docs/RESEARCH.md)
-- [docs/ROADMAP_THEORY.md](docs/ROADMAP_THEORY.md) — staged RE / JB theory (docs only)
-- [boot/README.md](boot/README.md)
-- [research/mitigations/README.md](research/mitigations/README.md)
-- [research/kexploit/THEORY.md](research/kexploit/THEORY.md)
-- [research/checkm8/README.md](research/checkm8/README.md)
-- [research/palera1n/README.md](research/palera1n/README.md)
+- [docs/STATUS.md](docs/STATUS.md) — living truth (**DS-K** main line)
+- [docs/DARKSWORD.md](docs/DARKSWORD.md) — DS-Full vs DS-K, CVE/patch map
+- [docs/KRW.md](docs/KRW.md) / [docs/ENTRY.md](docs/ENTRY.md) / [docs/LAB_DSK.md](docs/LAB_DSK.md)
+- [docs/BUILD_22H311.md](docs/BUILD_22H311.md) / [docs/BUILD_vulnerable_target.md](docs/BUILD_vulnerable_target.md)
+- [docs/PPL.md](docs/PPL.md) — blocked until SUCCESS_KRW
+- [docs/ATTRACT_DEVS.md](docs/ATTRACT_DEVS.md)
+- [third_party/README.md](third_party/README.md) — local DS-K clone (no LICENSE → not vendored in git)
+- [Lumina/](Lumina/) — sideloadable **Lumina** DS-K test host (XcodeGen → IPA)
+- [scripts/clone_darksword_kexploit.sh](scripts/clone_darksword_kexploit.sh) / [scripts/export_ipa.md](scripts/export_ipa.md)
+- [src/krw/](src/krw/)
+- [docs/RESEARCH.md](docs/RESEARCH.md) — broader index (historical BootROM notes remain)
 
 ## Hard gates
 - Data mount blocked on current 15.1 ramdisk `mount_apfs`

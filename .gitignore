@@ -8,6 +8,20 @@ artifacts/xr-18.7.5/kernelcache/
 artifacts/xr-18.7.5/notes.md
 research/kexploit/darksword-kexploit/
 research/kexploit/DarkSword-RCE/
+# No-LICENSE DS-K tree — local clone only (see third_party/README.md)
+third_party/darksword-kexploit/
+third_party/DarkSword-RCE/
+!third_party/patches/
+!third_party/patches/**
+!third_party/README.md
+!third_party/.gitkeep
+
+# Generated Xcode / build products (create via xcodegen on Mac)
+Lumina/Lumina.xcodeproj/
+Lumina/build/
+Lumina/DerivedData/
+*.xcuserstate
+xcuserdata/
 research/kexploit/Dopamine/
 research/kexploit/lara/
 research/kexploit/notes/*

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--
+  Sideload-safe subset for E1/E2 Apple signing.
+  Upstream darksword private entitlements will NOT apply on stock 18.7.5.
+  See docs/ENTRY.md. For research ldid on other builds, see Lumina.research.entitlements.
+-->
+<dict>
+	<key>get-task-allow</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>
