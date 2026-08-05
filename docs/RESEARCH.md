@@ -24,7 +24,7 @@ usbliter8 (BootROM / Pico)          [WORKS — A12 entry]
 | **checkm8** | Historical A11-and-older BootROM knowledge | **No** as exploit on A12 — learning only |
 | **palera1n** | A8–A11 tethered/semi tooling patterns | **No** as drop-in on A12/18.7.5 — learning only |
 | Dopamine | Bootstrap / rootless / jailbreakd architecture | Architecture only after k r/w exists |
-| DarkSword / darksword-kexploit | Kernel r/w research | **Kernel PE patched in 18.7.2** — dead on 18.7.5; viability under `research/kexploit/viability/`; harness stubs in `src/krw/` |
+| DarkSword / darksword-kexploit | **Main line (DS-K)** | literature: PE fixed 18.7.2; **lab exhaustion open** — see [DARKSWORD.md](DARKSWORD.md) / [STATUS.md](STATUS.md) |
 | LARA | Userspace toolbox on DarkSword | Public matrix ends **18.7.1**; 18.7.5 outside |
 
 Notes dirs:
