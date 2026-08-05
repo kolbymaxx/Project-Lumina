@@ -122,6 +122,74 @@ From control parser **`0x10000e2f8`** (called from USB stack `@0x10000ccb4`):
 | Std reject / stall epilogue | **`+0x40`** (`w0=0x80,w1=1`) |
 | **DFU class** (type=class, recip=interface) | **Not via c80** — `blr` **`iface_obj+0x40`** (`list@0x19C010D10+0x60`) |
 
+### USB device ctx `0x19C010D10` + DFU iface object
+
+`0x19C010D10` is the **USB device/config context**, not the iface object itself.
+
+| off | role |
+|-----|------|
+| `+0x00` | device feature / config byte |
+| `+0x08` / `+0x0c` | transfer length / iface index (class path) |
+| `+0x10` | **iface count** (`w32`) |
+| `+0x14` | current configuration value |
+| `+0x18` | data-stage bytes received |
+| `+0x28` | data-stage cursor / buf bookkeeping (`x1` to class cb) |
+| `+0x30` | string/desc helper result |
+| `+0x38` | EP0 scratch buffer ptr |
+| `+0x40` / `+0x48` | built config descriptors |
+| **`+0x60 + i×8`** | **iface object pointer array** (indexed by SETUP `wIndex`) |
+
+**How the DFU iface is found (class SETUP @ `0x10000e4c0`):**
+1. Require recip=interface (`bmRequestType & 0x1f == 1`).
+2. `wIndex` → compare against `d10+0x10` count.
+3. `obj = *(d10 + 0x60 + wIndex×8)`.
+4. `blr *(obj+0x40)` with `x0=SETUP@0x19C010D08`, `x1=d10+0x28`.
+5. **No PAC** on this `blr`.
+
+**DFU object install** (`0x10000eccc`, from DFU setup `ad30 → eccc`):
+- DFU **state blob** fixed at **`0x19C010DD0`** (status/state, `+0x28` recv buffer ptr, etc.).
+- After `str w1, [DD0+0x48]!`, registered iface object base = **`0x19C010E18`** (`DD0+0x48`).
+- `bl 0x10000e2d0` → `*(d10+0x60 + count×8) = obj`; count++. DFU is iface **0**.
+
+**Iface object @ `0x19C010E18` (offsets from registered base):**
+
+| off | default VA | role |
+|-----|------------|------|
+| `+0x00` | `w32=1` | iface present / flags |
+| `+0x08` | `0x100021c3c` | iface descriptor bytes |
+| `+0x10` | `w32=1` | endpoint count-ish |
+| `+0x18` | `0x100021c45` | endpoint descriptor bytes |
+| **`+0x40`** | **`0x10000ede8`** | **shared DFU class SETUP callback** |
+| **`+0x48`** | **`0x10000f004`** | **data-stage complete** (DNLOAD RX done; `blr` from `e480`) |
+| `+0x50` | *(unset in `eccc`)* | SET_CONFIGURATION per-iface (`blr` if non-null) |
+| `+0x70` | `0x10000f0f8` | DFU state helper (manifest/done) |
+| `+0x78` / `+0x80` | *(unset)* | GET/SET_INTERFACE hooks if present |
+
+### DFU class bRequest → field (not separate slots)
+
+All class SETUP goes through **one** field: **`obj+0x40` → `0x10000ede8`**, which switches on `bRequest`:
+
+| bRequest | name | path in `ede8` |
+|----------|------|----------------|
+| **1** | **DNLOAD** | OUT: `ee90` — `wLength==0` → state dnload-idle; else if `<0x801` publish buf to `x1`, else error |
+| **2** | **UPLOAD** | **not implemented** — falls to `eedc` (`w0=-1`) |
+| **3** | **GETSTATUS** | IN: `eee4` — builds 6-byte status from `DD0` into `DD0+0x28` |
+| 4 | CLRSTATUS | OUT with ABORT: `ee10` reset status |
+| 5 | GETSTATE | IN: `ee74` — 1-byte state |
+| 6 | ABORT | OUT with CLRSTATUS: `ee10` |
+
+**Shared / default handler:** `obj+0x40` (`ede8`). DNLOAD payload completion uses sibling **`obj+0x48`** (`f004`), not a separate DNLOAD function pointer.
+
+### Iface callback auth (parallel to c80)
+
+| Stage | Semantics |
+|-------|-----------|
+| Install `eccc` | `adr` + `str`/`stp` of raw code VAs — **no** `pacia`/`paciza` |
+| Class SETUP call | `ldr` `[obj+0x40]` → **plain `blr`** — **no** `blraa`/`autia`/`xpaci` |
+| Data-stage call | `ldr` `[obj+0x48]` → **plain `blr`** |
+
+**Overwrite-with-raw-gadget viable on iface callbacks?** **Yes** — same as c80: raw store, raw `blr`. Caveat: targets entered with `blr` (LR set); real `pacibsp`/`retab` functions OK; object lives at fixed SRAM **`0x19C010E18`**.
+
 ### Raw or PAC-signed before `br`?
 
 | Stage | Semantics |
@@ -147,7 +215,7 @@ Caveat: planted target is entered by `br` (LR still inside the USB caller/`bl` s
 |--------------------|-----------|
 | SRAM handler **table** + stub `br` | Base **`0x19C010C80`** ≠ `0x19C010C68` |
 | Default ROM vector install | Exact slot indices / stub VAs |
-| DFU class via iface object | Object layout under `0x19C010D10` |
+| DFU class via iface object | Object @ **`0x19C010E18`**; list head ctx **`0x19C010D10`** |
 
 ---
 
@@ -159,4 +227,4 @@ Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000a
 
 ## 5. Next single RE question
 
-**For DFU class DNLOAD/UPLOAD/GETSTATUS, which interface-object field(s) under the `0x19C010D10` list (`obj+0x40` and neighbors) hold the callbacks, and are those pointers also raw `blr` targets?**
+**On DFU DNLOAD, where does the data-stage buffer live (VA of `DD0+0x28` allocation / `d10+0x28` cursor), what is the enforced max `wLength`, and can that write window reach the iface object at `0x19C010E18` or the handler table at `0x19C010C80`?**
