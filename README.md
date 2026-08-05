@@ -36,11 +36,15 @@ UDID used for usbmux wait: `00008020-00117540340B002E`
 ## Layout
 ```text
 boot/                     # one-command ramdisk re-entry (do not regress)
-docs/STATUS.md            # live project status + Phase A paste area
-docs/RESEARCH.md          # Dopamine / DarkSword / LARA index
+docs/STATUS.md            # live project status + Phase A + KRW/PPL truth
+docs/KRW.md PPL.md …      # userspace/kernel research track (not BootROM)
+src/krw/                  # thin KRW harness stubs (no live exploit)
+src/ppl/                  # PPL observational stubs (no bypass)
+scripts/                  # kernelcache workflow notes (no IPSW in git)
 artifacts/xr-18.7.5/      # dumps from the live XR (mostly gitignored)
 research/CUSTOM_BOOT_NEXT.md
 research/kexploit/        # isolated kexploit study (not in boot path)
+research/ppl/             # A12 PPL strategy notes
 research/checkm8/         # A11-and-older knowledge only
 research/palera1n/        # A8–A11 reference only
 tools/                    # host helpers / stubs
@@ -48,12 +52,17 @@ usbliter8ctl              # pyusb host utility (DFU / CUSTOM_BOOT)
 ```
 
 ## Docs
-- [docs/STATUS.md](docs/STATUS.md)
+- [docs/STATUS.md](docs/STATUS.md) — living truth (BootROM Phase A + KRW/PPL track)
+- [docs/KRW.md](docs/KRW.md) / [docs/PPL.md](docs/PPL.md) / [docs/ENTRY.md](docs/ENTRY.md) — userspace/kernel research
+- [docs/BUILD_22H311.md](docs/BUILD_22H311.md) — build identity + kernelcache hash placeholders
+- [docs/ATTRACT_DEVS.md](docs/ATTRACT_DEVS.md) — repro, panic logs, help ask
 - [docs/RESEARCH.md](docs/RESEARCH.md)
 - [docs/ROADMAP_THEORY.md](docs/ROADMAP_THEORY.md) — staged RE / JB theory (docs only)
 - [boot/README.md](boot/README.md)
+- [src/krw/](src/krw/) — thin KRW API stubs (no live backend)
 - [research/mitigations/README.md](research/mitigations/README.md)
 - [research/kexploit/THEORY.md](research/kexploit/THEORY.md)
+- [research/ppl/](research/ppl/) — A12 PPL strategy (blocked for public iOS 18 techniques)
 - [research/checkm8/README.md](research/checkm8/README.md)
 - [research/palera1n/README.md](research/palera1n/README.md)
 

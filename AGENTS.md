@@ -12,7 +12,8 @@ Project Lumina is a **Mac + USB hardware** research repo (iPhone XR / A12, Pico 
 | Intent | Path |
 |--------|------|
 | Live status / Phase A | `docs/STATUS.md` |
-| Applicability filter (what applies on XR 18.7.5 vs knowledge-only) | `docs/RESEARCH.md` + `research/{checkm8,palera1n,mitigations,kexploit}/` |
+| KRW + PPL research track (userspace/kernel; not BootROM) | `docs/KRW.md`, `docs/PPL.md`, `docs/ENTRY.md`, `src/krw/`, `research/ppl/` |
+| Applicability filter (what applies on XR 18.7.5 vs knowledge-only) | `docs/RESEARCH.md` + `research/{checkm8,palera1n,mitigations,kexploit,ppl}/` |
 | Known-good tethered boot | `boot/lumina-boot.sh`, `boot/lumina-ssh.sh` |
 | Host DFU utility (Lumina Mac path) | `./usbliter8ctl` (prefer over nested upstream copy) |
 
