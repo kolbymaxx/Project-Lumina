@@ -283,25 +283,48 @@ SETUP IRQ path: `0x10000ccb4` → `0x10000ced0` → `0x10000e2f8`.
 
 Other fixed writes in the same IRQ **before** step 3 (`str`/`strb` to `860+…`) are **controller status / ROM constants**, not packet payload.
 
-**EP0 DMA program site** (`0x10000d1fc`, also from bus reset path):
-```text
-x1 = *(0x19C010880)          ; heap EP0 data buf
-bl  0x100006620              ; cache/DMA prep (w0=3, len=0x40)
-str w1_lo → [MMIO+0xb14]     ; USB EP0 buffer address register
-str ctl   → [MMIO+0xb10]     ; includes length 0x40 (0x20080040)
-```
-Alloc of the two heap bufs: **`0x10000c2d8`** (`0x40` + `8` via `100b8`).
+**EP0 heap buf alloc:** **`0x10000c2d8`** (`0x40` @ `*880` + `8` @ `*888` via `100b8`).
+
+### USB DMA register map (ROM-evidenced)
+
+MMIO base literal `@0x100021bb8` → **`0x25D100000`**. Per-EP stride **`<<5`**. OUT-side regs at `+0xb00/+0xb10/+0xb14`; IN-side at `+0x900/+0x910/+0x914` (see `cb50` / `d5ec`).
+
+| MMIO off (EP0 ⇒ ep<<5=0) | writers | value programmed |
+|--------------------------|---------|-------------------|
+| **`+0xb14`** (OUT DMA addr) | **`d1fc` `d250`**; **`d90c` `d990`**; `cb50` clears to 0 | see below |
+| **`+0xb10`** (OUT DMA ctl/len) | **`d1fc` `d230`** (`0x20080040`); **`d90c` `d9dc`**; `cb50` clears | len/pkt fields |
+| **`+0xb00`** (OUT EP ctl) | `d1fc` / `d90c` / reset path | arm/enable bits |
+| **`+0x914`** (IN DMA addr) | **`d5ec` `d67c`** | `xfer.buf+off` (not `+0xb14`) |
+| `+0xb10` read | `cee4` | status during IRQ |
+
+### All `+0xb14` value sources
+
+| site | when | address written |
+|------|------|-----------------|
+| **`0x10000d1fc`** | EP0 re-arm: bus reset `ce34`; after SETUP/data parse `cf10` | **always** `lo32(*(0x19C010880))` — heap `0x40` EP0 data buf |
+| **`0x10000d90c`** | OUT xfer start/continue (`c7a8`, IRQ `d4f4`/`d528`) | `lo32(*(xfer+8) + xfer.off)` — xfer from softctx queue `@ slot+0x88`; for EP0 still MMIO`+0xb14` |
+| **`0x10000cb50`** | EP teardown | **`0`** (not a buffer VA) |
+
+**Is `+0xb14` always `*(880)`?** **No.**  
+- **SETUP / idle re-arm (`d1fc`):** yes → heap `*880`.  
+- **OUT data (`d90c`):** transfer-object buffer (DNLOAD heap, other request bufs via `eab0`/`dd08` — still **heap / caller VA**, not softctx).  
+- **IN:** uses **`+0x914`**, not `+0xb14`.
+
+**Any path programming a non-heap address into `+0xb14`?** **None found** in ROM `str`s. Fallback EP0 TX scratch is `*(d10+0x38)` (also heap `0x100` from `dda0`).
+
+### Fixed `0x19C0108C0`–`C80` as DMA target?
+
+| check | result |
+|-------|--------|
+| `str` of VA ∈ `[0x19C0108C0, 0x19C010C80)` into `+0xb14` / `+0x914` | **never** (no xref) |
+| `d1fc` length walk from `*880` into `8C0` | **no** — len fixed `0x40` into heap alloc; `*880` only set by `c2d8` heap |
+| Verdict | **never** software-selected as USB DMA target |
+
+**What `0x3c0` EP soft state is:** **CPU-only** per-EP structs (stride `0x50` from softctx `860`; region `860+0x60`‥`C80`). Holds ep addr/maxpacket (`+0x60`‥), active flag (`+0x7c`), **xfer queue head/tail (`+0x88/+0x90`)**, etc. Hardware sees buffer VAs from **xfer objects**, not this abutting slab. Adjacency: `8C0+0x3c0 = C80` exactly — layout contact only.
 
 ### Best candidate (before handler)
 
-**Best software write into fixed USB SRAM before `+0x60`:** **`0x19C010D08`** — 8-byte SETUP mirror, attacker controls all fields, store at `e32c` then `bl +0x60` at `e334`.
-
-- Does **not** reach `C80` (`D08` is **`+0x88` above** `C80`; write is only 8 bytes upward).
-- Does **not** reach `E18` (`D08 → E18 = +0x110` > 8).
-- Payload DMA itself lands in **heap**, not in `C80`/`E18`.
-- Fixed `0x19C0108C0`–`C80` abuts the table but is **software EP state**, not the EP0 DMA target programmed at `MMIO+0xb14`.
-
-**No software path found** that writes attacker bytes into `C80` or `E18` callback fields before those handlers run.
+**Best software write into fixed USB SRAM before `+0x60`:** **`0x19C010D08`** — 8-byte SETUP mirror (`e32c` then `e334` → `+0x60`). Does not reach `C80`/`E18`. No pre-handler SW write into callback slots.
 
 ### Raw or PAC-signed before `br`?
 
@@ -340,4 +363,4 @@ Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000a
 
 ## 5. Next single RE question
 
-**For EP0 SETUP/OUT, is `MMIO+0xb14` (`0x25D100000+0xb14`) always programmed with the heap buf at `*0x19C010880`, and is the fixed abutting region `0x19C0108C0`–`0x19C010C80` ever used as a USB DMA target (any `str` of that VA into `+0xb14` / related EP regs)?**
+**In `0x10000ccb4`, which USB IRQ status bits select SETUP (`ced0`/`e2f8`/`C80+0x60`) vs OUT data (`cefc`) vs kicking `d90c`/`d5ec`, and on which of those completions is the CB table at `C80` indexed?**
