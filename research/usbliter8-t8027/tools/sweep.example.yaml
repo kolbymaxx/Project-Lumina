@@ -1,0 +1,17 @@
+# Example config for module1_timing_sweep.py (research scaffold).
+# Delays are placeholders — do not race until offsets.h is filled.
+#
+# flash_command: optional argv list; `{delay}` substituted if present.
+# Prefer operator-manual flash until UF2 build pipeline is wired.
+
+crazy_delay_candidates:
+  - 5
+  - 10
+  - 15
+  - 20
+
+settle_seconds: 3
+
+# flash_command:
+#   - ./scripts/flash_t8027_uf2.sh
+#   - "{delay}"

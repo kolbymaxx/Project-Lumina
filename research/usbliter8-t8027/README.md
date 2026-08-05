@@ -28,6 +28,24 @@ PAC + control-flow problem (why t8020 ROP assumptions fail; analysis plan):
 
 Local ROM blobs (gitignored): `artifacts/*.bin` — never commit.
 
+## Module 1 framework (engineering co-pilot)
+
+End-to-end port plan (offsets → PAC-aware grooming → flag-gated codebase + automation):
+
+→ [docs/research/jb-framework-module1-t8027.md](../../docs/research/jb-framework-module1-t8027.md)
+
+Helpers under [`tools/`](tools/):
+
+```bash
+python3 research/usbliter8-t8027/tools/module1_offset_audit.py \
+  --serial 'CPID:8027 … SRTG:[iBoot-4172.0.0.100.14]' --emit-csv /tmp/roles.csv
+python3 research/usbliter8-t8027/tools/module1_stub_sync.py --print-copy
+python3 research/usbliter8-t8027/tools/module1_timing_sweep.py \
+  --config research/usbliter8-t8027/tools/sweep.example.yaml --dry-run \
+  --offsets-h research/usbliter8-t8027/stubs/t8020_t8006_shellcode/targets/t8027/offsets.h \
+  --worksheet /tmp/roles.csv   # expect GATE FAIL until worksheet filled
+```
+
 ## What this directory is
 
 Empty **TODO-offset stubs** mirroring the upstream usbliter8 per-target layout for CPID `0x8027` / t8027. Closest implemented tree is t8020.

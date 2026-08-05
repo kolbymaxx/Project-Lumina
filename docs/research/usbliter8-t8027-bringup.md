@@ -241,6 +241,7 @@ Identity already locked (see Live DFU capture above). Only after a future Pico p
 
 ## See also
 
+- **Module 1 framework (start here for port engineering):** [jb-framework-module1-t8027.md](jb-framework-module1-t8027.md)
 - Tracked stubs: [research/usbliter8-t8027/](../../research/usbliter8-t8027/)
 - Next phase (derivation plan): [research/usbliter8-t8027/OFFSET_DERIVATION.md](../../research/usbliter8-t8027/OFFSET_DERIVATION.md)
 - XR live status: [docs/STATUS.md](../STATUS.md)
