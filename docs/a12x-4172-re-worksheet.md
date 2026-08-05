@@ -1,0 +1,162 @@
+# A12X SecureROM RE worksheet — iBoot-4172.0.0.100.14 (t8027)
+
+**Phase:** 1 — RE only toward `PWND:[usbliter8]` on A12X.  
+**Not this phase:** Pico UF2 flash, iBSS/ramdisk, bootstrap/AMFI, XR kernel work.  
+**Do not commit ROM binaries to git.**
+
+Deeper notes already in-repo (structure + PAC):  
+[`research/usbliter8-t8027/FIRST_RE_PASS.md`](../research/usbliter8-t8027/FIRST_RE_PASS.md),  
+[`research/usbliter8-t8027/SYMBOL_WORKSHEET.md`](../research/usbliter8-t8027/SYMBOL_WORKSHEET.md),  
+[`docs/research/usbliter8-a12x-ipad-pro-12.9-3rd.md`](research/usbliter8-a12x-ipad-pro-12.9-3rd.md).
+
+---
+
+## 1. ROM on this Mac
+
+| Field | Value |
+|-------|--------|
+| Path (Downloads) | `/Users/kolby/Downloads/SecureROM for t8027si, iBoot-4172.0.0.100.14` |
+| Lab copy (gitignored) | `research/usbliter8-t8027/artifacts/SecureROM_t8027_4172.bin` |
+| Size | **163840** bytes (`0x28000`) |
+| SHA-256 | `223866855772be24ac57d4ac0033fd6f99012a2e94646b9e2094b3adee7a8baf` |
+| Identity strings | `SecureROM for t8027si…`, `iBoot-4172.0.0.100.14` |
+| Downloads ≡ artifacts | **yes** (same SHA-256) |
+
+Quick re-check:
+
+```bash
+ROM="$HOME/Downloads/SecureROM for t8027si, iBoot-4172.0.0.100.14"
+wc -c < "$ROM"
+shasum -a 256 "$ROM"
+strings -a "$ROM" | grep -E 'iBoot-4172\.0\.0\.100\.14|SecureROM for t8027si'
+```
+
+---
+
+## 2. Open at base `0x100000000`
+
+SecureROM VAs below = **`0x100000000 + file_offset`**.
+
+### Binary Ninja
+1. **File → Open** the ROM path above.  
+2. Architecture: **aarch64** / ARMv8.  
+3. Image base / load address: **`0x100000000`**.  
+4. Do **not** treat as Mach-O/IMG4 — raw binary.  
+5. Optional: create a segment `0x100000000`–`0x100028000` (file size).
+
+### IDA
+1. Open as **Binary file**, processor **ARM Little-endian [ARM64]**.  
+2. Loading address / ROM start: **`0x100000000`**.  
+3. File offset → VA: add `0x100000000`.
+
+### Ghidra
+1. New project → Import File → format **Raw Binary**, language **AARCH64:LE:64:v8A**.  
+2. In options: base address **`0x100000000`**.  
+3. Analyze; jump to the VAs in the worksheet.
+
+Host-side string map (no decompiler needed):
+
+```bash
+strings -a -t x "$ROM" | grep -E 'DFU Mode|SRTG:|CPID:%04X|iBoot-4172|t8027si'
+```
+
+---
+
+## 3. Worksheet
+
+| role | VA | notes | confidence | PAC risk |
+|------|-----|-------|------------|----------|
+| Version string `iBoot-4172…` | `0x100000280` | Identity / SRTG text | **confirmed** | n/a |
+| ` SRTG:[%s]` | `0x10001d4c2` | Used by serial builder | **confirmed** | n/a |
+| DFU name string | `0x10001d45a` | `adr` from DFU setup @ `0x10000ad58` | **confirmed** | n/a |
+| USB serial builder | `0x1000067bc` | Formats CPID + SRTG into SRAM buf @ `0x19C010058`; `pacibsp`/`retab`; **does not** store code ptrs | **confirmed** | **high** (pro/epi) |
+| Format / append helpers | `0x1000115a8` / `0x1000116c8` | Called from serial builder | **high** | check |
+| **Direct caller of serial builder** | `0x10000dda0` | Sole `bl 0x1000067bc` site (`0x10000de24`); fills USB desc fields under `0x19C00C6F0` / `0x19C010D10`; ends with `bl 0x10000da50` | **confirmed** | **high** — `pacibsp`/`retab` |
+| **DFU setup (parent)** | `0x10000ad30` | `adr` DFU string → `bl 0x10000dda0`; gate byte `0x19C010800`; on DFU enum path | **confirmed** | **high** — `pacibsp`/`retab` |
+| DFU setup trampoline | `0x10000adc0` | `bl` helpers → `autibsp` → `b 0x10000ad30` | **confirmed** | **high** — `autibsp` before tail `b` |
+| Serial string SRAM buf | `0x19C010058` | ASCII output of builder (data) | **high** | n/a |
+| DFU-ready flag | `0x19C010800` | `ldrb`/`strb` gate in DFU setup/teardown | **high** | n/a |
+| **USB handler table base** | `0x19C010C80` | **15× u64** (`0x78` bytes); idx = byte_off/8 | **confirmed** | see install/dispatch |
+| Default ROM table (install src) | `0x100023040` | Returned by `0x10000c2cc` (`adr x0,…; ret`); copied wholesale into SRAM table | **confirmed** | raw code VAs in ROM |
+| Handler-table installer | `0x10000da04` | `x0==0` → `bzero` `0x78`; else `memcpy` from `x0`; **no** `pacia`/`paciza` on elements | **confirmed** | prologue `pacibsp`/`retab` only |
+| Handler dispatch stubs | `0x10000da50+` | Per-slot: `ldr xn,[0x19C010C80+#off]; cbz; br xn` — **no** `autia`/`autiza`/`xpaci`/`blraa` before `br` | **confirmed** | **raw `br`** |
+| Control-req parser (SETUP) | `0x10000e2f8` | Copies SETUP to `0x19C010D08`; standard vs class; jump table `@0x10000e8e0` | **confirmed** | `pacibsp`/`retab` |
+| `JUMP_STATE` | `0x19C014030` | Materialized @ `0x100001944` | **confirmed** | n/a |
+| PAC census | — | `pacibsp`×462 / `retab`×364 vs t8020 0/0 | **confirmed** | blocks blind XR ROP |
+
+### Table layout `0x19C010C80`
+
+| idx | slot off | dispatch stub | default ptr (ROM `@0x100023040`) | DFU SETUP relevance |
+|-----|----------|---------------|----------------------------------|---------------------|
+| 0 | `+0x00` | `0x10000da50` | `0x10000cc40` | Init only (`bl` from `dda0` after serial) — **not** SETUP parse |
+| 1 | `+0x08` | `0x10000da7c` | `0x10000d290` | Teardown / secondary |
+| 2 | `+0x10` | `0x10000daac` | `0x10000c2d8` | — |
+| 3 | `+0x18` | `0x10000dadc` | `0x10000c434` | Teardown path (`eb68`) |
+| 4 | `+0x20` | `0x10000db0c` | `0x10000c538` | Std **SET_FEATURE / SET_ADDRESS** (bReq 3/5) |
+| 5 | `+0x28` | `0x10000db3c` | `0x10000c578` | Config-related (`e940`) |
+| 6 | `+0x30` | *(no stub)* | `0x10000c5b8` | Present in table; **no** `da50+` loader found |
+| 7 | `+0x38` | `0x10000db6c` | `0x10000c718` | **Hot IN:** after GET_DESCRIPTOR / EP0 TX prep (`bl db6c`) |
+| 8 | `+0x40` | `0x10000db9c` | `0x10000c7c4` | **Hot:** stall/status (`w0=0x80`) for many std bReqs + errors |
+| 9 | `+0x48` | `0x10000dbcc` | `0x10000c860` | Std **CLEAR_FEATURE** (bReq 1) |
+| 10 | `+0x50` | `0x10000dbfc` | `0x10000c8c4` | Device-to-host feature path |
+| 11 | `+0x58` | `0x10000dc2c` | `0x10000c930` | *(no direct `bl` found)* |
+| 12 | `+0x60` | `0x10000dc5c` | `0x10000c970` | **Every SETUP entry** in `e2f8` (`mov w0,#0x80; bl dc5c`) |
+| 13 | `+0x68` | `0x10000dc8c` | `0x10000cb28` | *(no direct `bl` found)* |
+| 14 | `+0x70` | *(no stub)* | `0x10000cc38` | In table only |
+
+**Index source:** not computed at dispatch — each USB site hardcodes a stub, which hardcodes a slot offset. SETUP packet lives at **`0x19C010D08`**.
+
+### Which slots fire on DFU SETUP?
+
+From control parser **`0x10000e2f8`** (called from USB stack `@0x10000ccb4`):
+
+| When | Slot(s) |
+|------|---------|
+| **Any** SETUP (`w1` bit0 set) before type switch | **`+0x60` first** (`mov w0,#0x80; bl dc5c`) |
+| Std OUT bReq **1** CLEAR_FEATURE (endpoint) | `+0x48` then `+0x40` |
+| Std OUT bReq **5** SET_ADDRESS | `+0x20` |
+| Std OUT bReq **3** SET_FEATURE (device) | no c80 slot (writes `0x19C010D10`); EP feat → `+0x40` |
+| Std OUT bReq **9** SET_CONFIGURATION | iface `obj+0x50` via `blr` (not c80); completion helper |
+| Std IN bReq **0** GET_STATUS (endpoint) | `+0x50` then EP0 TX helper → may `+0x38` |
+| Std IN bReq **6** GET_DESCRIPTOR | desc copy from `0x19C00C6F0+`; EP0 TX → **`+0x38`** |
+| Std reject / stall epilogue | **`+0x40`** (`w0=0x80,w1=1`) |
+| **DFU class** (type=class, recip=interface) | **Not via c80** — `blr` **`iface_obj+0x40`** (`list@0x19C010D10+0x60`) |
+
+### Raw or PAC-signed before `br`?
+
+| Stage | Semantics |
+|-------|-----------|
+| Install `0x10000da04` | **Raw** `memcpy`/`bzero` of 15 pointers — **no** element PAC |
+| Default fill | ROM literals @ `0x100023040` = plain code VAs |
+| Dispatch stub | `ldr` → **`br xn`** with **zero** auth/strip insns |
+
+**Overwrite-with-raw-gadget viable?** **Yes (for slot contents)** — table holds and `br`s raw PCs.  
+Caveat: planted target is entered by `br` (LR still inside the USB caller/`bl` stub path). Handlers that expect `pacibsp`/`retab` pairing can still run if they are real functions; bare XR-style `ret` gadgets are **uncertain/unsafe**. Callers of stubs remain PAC-wrapped (`pacibsp`/`retab`/`autibsp`).
+
+### Call chain (serial — prior)
+
+```text
+0x10000adc0  bl c2cc → x0=0x100023040; autibsp; b ad30
+0x10000ad30  bl da04 (install defaults); bl dda0 (serial/desc); …
+0x10000dda0  bl 67bc; …; bl da50 (slot+0)
+```
+
+### Structure-only vs t8020 — do **not** copy
+
+| Shared *structure* | Divergent |
+|--------------------|-----------|
+| SRAM handler **table** + stub `br` | Base **`0x19C010C80`** ≠ `0x19C010C68` |
+| Default ROM vector install | Exact slot indices / stub VAs |
+| DFU class via iface object | Object layout under `0x19C010D10` |
+
+---
+
+## 4. Prior session (callers of `0x1000067bc`) — unchanged
+
+Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000adc0`.
+
+---
+
+## 5. Next single RE question
+
+**For DFU class DNLOAD/UPLOAD/GETSTATUS, which interface-object field(s) under the `0x19C010D10` list (`obj+0x40` and neighbors) hold the callbacks, and are those pointers also raw `blr` targets?**
