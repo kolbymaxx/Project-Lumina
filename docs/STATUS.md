@@ -55,6 +55,9 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 Deferred: surrealra1n tethered downgrade (cannot reach lower iOS 18 / DarkSword).  
 See [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).
 
+**In flight:** writeup watch ([WRITEUP_WATCHLIST.md](../research/kexploit/WRITEUP_WATCHLIST.md)) — no deep dives yet;  
+Mac RO probes ready ([MAC_RO_RUNBOOK.md](../research/kexploit/MAC_RO_RUNBOOK.md) / `tools/probe_22h311_kernelcache.sh`).
+
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
 - No claim beyond tethered SSH + the RO mounts in the inventory above

@@ -40,6 +40,8 @@ Notes dirs:
 |-----|----------|
 | [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
+| [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md) | **Active:** stay on 18.7.5; defer surrealra1n downgrade |
+| [../research/kexploit/AUDIT_METHOD.md](../research/kexploit/AUDIT_METHOD.md) | Defensive audit framing for candidate surfaces (no weaponized PoCs) |
 | [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md) | **Teachers not installers** — palera1n/Dopamine/Coruna map + RE order |
 | [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md) | Bug → SoC → last iOS → why dead on 18.7.5 (**no public match**) |
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
