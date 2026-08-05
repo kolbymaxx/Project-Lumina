@@ -58,7 +58,8 @@ Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
 1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
 2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; study
-   Dopamine/palera1n/Coruna as teachers ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md))
+   Dopamine/palera1n/Coruna as teachers ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)).
+   **Fork 1 active** (stay on 18.7.5): [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md)
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
 Crossing these gates is future work. Document progress in [STATUS.md](STATUS.md).
