@@ -1,122 +1,134 @@
-# Lumina — Project Status (OVERRIDE 2026-08-05)
+# Lumina — Project Status (Fork 1 locked — 2026-08-05)
 
-## Sole focus
+## Mission (Fork 1)
 
-**DarkSword-class primitives → path toward a jailbreak** on our lab device(s).
+**Stay on iPhone XR A12 / iOS 18.7.5 (22H311).**  
+Use tethered **usbliter8 + ramdisk SSH** as a **read-only lab** to map and verify
+kernel reality. Later (only after a real primitive exists): port into a
+Dopamine-style app/host.  
 
-Primary engineering target = **DS-K** (kernel PE / public kexploit ports).  
-**DS-Full** (WebKit→…→kernel chain) = read-only research reference — not product UX.  
-**Not a jailbreak yet.** No Sileo claim. No invented offsets. No success without command + observed result.
+**We do NOT pursue Fork 2** (surrealra1n / downgrade).
 
-> **OVERRIDE:** Earlier “docs-only KRW / prioritize usbliter8” language is **superseded**.  
-> This track does **not** send lab time to Pico/iBEC work inside this project.
+Source of truth: [`../research/kexploit/FORK1_STRATEGY.md`](../research/kexploit/FORK1_STRATEGY.md) + this file.
 
-## Lab identity
+**Not a jailbreak.** No Sileo. No invented offsets. No “T008/T009 works” without citation.
+
+## Device
 
 | Field | Value |
 |-------|--------|
-| Primary interest | iPhone XR · A12 (`t8020`) · `n841` |
-| Daily driver | iOS **18.7.5 / 22H311** |
-| Role of 18.7.5 | Primary phone — **not assumed PE-viable** |
+| Device | iPhone XR (`n841ap`) |
+| SoC | A12 (`t8020`), CPID 8020 |
+| iOS / build | **18.7.5 / 22H311** |
 | UDID | `00008020-00117540340B002E` |
 | ECID | `00117540340B002E` |
+| Serial (Recovery) | `F2LZJAE1KXKQ` |
 
-## Working hypotheses (track with evidence)
+## Already true
 
-| ID | Hypothesis | Evidence so far |
-|----|------------|-----------------|
-| **H1** | Public DS-K fails cleanly on 22H311 (panic / early return / wrong offsets / entitlement fail) | **literature** leans this way (PE fixed 18.7.2); **lab** = not run yet |
-| **H2** | DS-K still partially works; literature overstated a full kill on our device | **unknown** — needs on-device attempt |
-| **H3** | DS-K only works on **earlier 18.4–18.6.x / pre-18.7.2** → move JB effort to a vulnerable test handset/build | **unknown** — open if H1 confirmed on 22H311 |
+| Fact | State | Dated |
+|------|--------|-------|
+| Pwned DFU (usbliter8) | Yes | 2026-08-01 |
+| iBSS → Recovery | Yes | 2026-08-01 |
+| Ramdisk + root SSH (known-good Mac path) | Yes | 2026-08-01 |
+| System `/mnt1` RO shows 18.7.5 / 22H311 | Yes | 2026-08-01 |
+| Data mount | **FAIL** exit 76 | 2026-08-01 |
+| Public kexploit for A12 / 18.7.5 | **None matching** | 2026-08-01 (matrix) |
+| `research/` wired into `boot/` | **Never** | standing rule |
 
-STATUS will name which hypothesis lab results support. literature ≠ on-device proof; on-device KRW ≠ jailbreak.
+usbliter8 = **lab infrastructure only**, not a product JB path.
 
-## Literature landmarks (acknowledged, not a lab stop)
-
-| Landmark | Scope | Label |
-|----------|-------|-------|
-| **18.7.2** | `CVE-2025-43510`, `CVE-2025-43520` (kernel PE) | **literature:** called fixed |
-| **18.7.3** | JSC / ANGLE (**DS-Full** stages) | **literature:** called fixed |
-| **18.7.7**+ | Broader DarkSword messaging | Does not replace on-device DS-K proof |
-| opa334 README | Claims iOS **15.0–26.0.1**; “offsets hardcoded for 15.x(?)” | **Conflict** with 18.7.2 PE fix — resolve via lab |
-
-Dossier: [DARKSWORD.md](DARKSWORD.md).
-
-## Current program state
+## Program state (2026-08-05)
 
 | Item | State |
 |------|--------|
-| Main line | **DS-K** exhaustion → KRW demo → PPL (on build where KRW works) → bootstrap design |
-| KRW on 22H311 | **Open** — literature negative; **lab not yet attempted** |
-| PPL | Literature map only until `SUCCESS_KRW` on any build ([PPL.md](PPL.md)) |
-| Entry | **Open decision** E1–E4 — see [ENTRY.md](ENTRY.md) |
-| Harness | **Lumina** app (`Lumina/`) + `src/krw` + real DS-K link when `third_party` cloned |
-| Bundle ID | `com.kolbymaxx.lumina` |
-| Fake backends | **Forbidden** — no pretend `kread`/`kwrite` success |
+| Active fork | **Fork 1** |
+| Fork 2 (downgrade) | **Out of scope** |
+| KRW / kexploit on 22H311 | **Missing** — hunt + RO map only |
+| PPL | Blocked on missing KRW |
+| Dopamine-style delivery | **Later** — after real primitive |
+| Lumina IPA / DS-K sideload | Secondary scaffolding only (see `Lumina/`) — not Fork 1 priority |
 
-### Open questions (must answer with lab or operator choice)
+### Evidence levels
 
-1. **Entry method** for first DS-K host (E1 / E2 / E3 / E4)?  
-2. Is PE alive or dead **on-device** for our XR @ 22H311?  
-3. Do we need a **pre-18.7.2** disposable test build/device (H3 sandbed)?
+| Claim | Level |
+|-------|--------|
+| BootROM → ramdisk SSH + System RO | **lab demonstrated** |
+| No public matching kexploit | **literature** + matrix (no lab contradiction) |
+| DarkSword PE fixed 18.7.2 | **literature** |
+| Any live KRW on this XR | **none** |
 
-### Single next human action
+## Phase A — volume inventory (locked 2026-08-01)
 
-**On Mac — one command per line (no comments on `cd` lines). Leave Downloads first.**
+Ramdisk env: iOS **15.1** restore (`19B5042h`), root `/dev/md0` HFS **RO**.  
+SSH: `alpine` via `iproxy 2222`.
 
-```bash
-mkdir -p ~/Projects
-git clone https://github.com/kolbymaxx/Project-Lumina.git ~/Projects/Project-Lumina
-cd ~/Projects/Project-Lumina
-pwd
-git fetch origin
-git checkout cursor/a12-krw-ppl-research-f891
-git pull origin cursor/a12-krw-ppl-research-f891
-./scripts/mac_open_lumina.sh
-```
+| Node | Mount | Result | Notes |
+|------|-------|--------|-------|
+| `disk0s1s1` | `/mnt1` | **OK** RO | System — **18.7.5 / 22H311** |
+| `disk0s1s5` | `/mnt4` | **OK** | Update → 22H311 |
+| `disk0s1s6` | `/mnt6` | **OK** | Cryptex |
+| `disk0s1s3` | `/mnt3` | **OK** RO | Preboot |
+| `disk0s1s4` | `/mnt5` | **OK** RO | bbfs |
+| `disk0s1s7` | `/mnt7` | **OK** RO | FactoryData |
+| `disk0s1s2` | — | **FAIL** 76 | Data |
+| `disk0s1s8` | — | **FAIL** 76 | same class |
 
-`pwd` must show `…/Project-Lumina` before git/scripts. Then Xcode → Team → Run → **Run DS-K**.
+Detail: [`../research/DATA_MOUNT_SSHRD.md`](../research/DATA_MOUNT_SSHRD.md),
+[`../research/kexploit/22H311_NOTES.md`](../research/kexploit/22H311_NOTES.md).
 
-Also reply with entry choice if not already decided:
+## Blockers
 
-| Code | Choice |
-|------|--------|
-| **E1** | Free sideload / personal team provisioning |
-| **E2** | Paid Apple Developer signing |
-| **E3** | Freeze 18.7.5 host work; prepare DS-K against a **pre-18.7.2** test build/device |
-| **E4** | Other (specify) |
+1. **No matching public kernel primitive** for A12 / 18.7.5.  
+2. **Data volume** still exit 76 on 15.1 `mount_apfs`.  
+3. **PPL / bootstrap** blocked until KRW exists.  
+4. Live USB lab requires **Mac + Pico + phone** (cloud = docs only).
 
-## Docs map
+## Docs map (Fork 1)
 
 | Doc | Role |
 |-----|------|
-| [DARKSWORD.md](DARKSWORD.md) | DS-Full vs DS-K, CVE/patch table, public repos |
-| [KRW.md](KRW.md) | Integration + lab result taxonomy |
-| [ENTRY.md](ENTRY.md) | Ranked ways to run a host binary |
-| [LAB_DSK.md](LAB_DSK.md) | On-device experiment protocol |
-| [BUILD_22H311.md](BUILD_22H311.md) | Daily driver build identity |
-| [BUILD_vulnerable_target.md](BUILD_vulnerable_target.md) | Pre-18.7.2 sandbed plan (H3) |
-| [PPL.md](PPL.md) | Blocked until KRW_SUCCESS |
-| [JB_SHAPE.md](JB_SHAPE.md) | Design-only Dopamine-shaped flow |
-| [ATTRACT_DEVS.md](ATTRACT_DEVS.md) | Repro + ask |
-| [../Lumina/README.md](../Lumina/README.md) | Sideloadable DS-K test host (XcodeGen) |
-| [../scripts/export_ipa.md](../scripts/export_ipa.md) | Archive → IPA on Mac |
-| [../third_party/README.md](../third_party/README.md) | How we vendor DS-K (local clone; no LICENSE) |
+| [`../research/kexploit/FORK1_STRATEGY.md`](../research/kexploit/FORK1_STRATEGY.md) | Mission strategy |
+| [`../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md`](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md) | Public primitive status |
+| [`../research/kexploit/HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md) | Candidate intake process |
+| [`../research/kexploit/22H311_NOTES.md`](../research/kexploit/22H311_NOTES.md) | Offline kernelcache probes |
+| [`RESEARCH.md`](RESEARCH.md) | Broader index |
+| [`BUILD_22H311.md`](BUILD_22H311.md) | Build identity |
+| [`PPL.md`](PPL.md) | Blocked until KRW |
+| `boot/lumina-boot.sh` | Known-good ramdisk re-entry (**infra**) |
 
-## Lab result log (append only)
+DS-K / Lumina IPA docs remain in-tree for later delivery experiments; they do
+**not** override Fork 1.
 
-| Date | Build | Entry | Result code | Notes | Hypothesis |
-|------|-------|-------|-------------|-------|------------|
-| — | 22H311 | — | *not run* | Awaiting E1–E4 | — |
+## Evidence log (append-only, dated)
 
-Result codes: `SUCCESS_KRW` / `FAIL_PATCHED` / `FAIL_OFFSETS` / `FAIL_ENTRY` / `FAIL_PANIC` / `UNKNOWN`  
-(see [LAB_DSK.md](LAB_DSK.md)).
+| Date | Kind | Note |
+|------|------|------|
+| 2026-08-01 | lab | Phase A ramdisk inventory locked |
+| 2026-08-05 | docs | **Fork 1 locked** — strategy file + STATUS rewrite; Fork 2 rejected |
 
-## Historical note (out of scope for this track)
+## Single next human action (RO)
 
-Phase A tethered ramdisk inventory (2026-08-01) remains factual under older commits / research notes.  
-**It is not the priority of this override** and must not divert DS-K milestones.
+**Mac + Pico + XR — reconfirm identity over ramdisk SSH (read-only):**
+
+```bash
+# After known-good: Pico-pwn → phone direct to Mac → ./boot/lumina-boot.sh
+./boot/lumina-ssh.sh
+```
+
+On device:
+
+```sh
+cat /mnt1/System/Library/CoreServices/SystemVersion.plist
+```
+
+Expect ProductVersion **18.7.5**, ProductBuildVersion **22H311**.  
+Paste output here → we date it in this log. **No writes. No exploit attempts.**
+
+Optional same session (still RO): offline kernelcache Probe 1–3 from
+[`../research/kexploit/22H311_NOTES.md`](../research/kexploit/22H311_NOTES.md) on the Mac.
 
 ## Attract (one line)
 
-Looking for A12 PPL notes or DS-K / PE help applicable to **22H311** `n841` (or a pre-18.7.2 sandbed); we are exhausting public DarkSword kexploit ports with reproducible lab logs — literature patch landmarks acknowledged, on-device proof required.
+Looking for a **citable** A12 / 18.7.5 kernel primitive (or proof none remains);
+we have usbliter8→ramdisk RO lab on XR **22H311** and clean negative public-matrix results — no downgrade fork.

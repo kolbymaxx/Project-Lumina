@@ -24,7 +24,7 @@ usbliter8 (BootROM / Pico)          [WORKS — A12 entry]
 | **checkm8** | Historical A11-and-older BootROM knowledge | **No** as exploit on A12 — learning only |
 | **palera1n** | A8–A11 tethered/semi tooling patterns | **No** as drop-in on A12/18.7.5 — learning only |
 | Dopamine | Bootstrap / rootless / jailbreakd architecture | Architecture only after k r/w exists |
-| DarkSword / darksword-kexploit | **Main line (DS-K)** | literature: PE fixed 18.7.2; **lab exhaustion open** — see [DARKSWORD.md](DARKSWORD.md) / [STATUS.md](STATUS.md) |
+| DarkSword / darksword-kexploit | Secondary research (Fork 1 = ramdisk RO lab) | literature: PE fixed 18.7.2; see [DARKSWORD.md](DARKSWORD.md); mission: [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md) |
 | LARA | Userspace toolbox on DarkSword | Public matrix ends **18.7.1**; 18.7.5 outside |
 
 Notes dirs:
@@ -44,7 +44,8 @@ Notes dirs:
 | [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md) | Bug → SoC → last iOS → why dead on 18.7.5 (**no public match**) |
 | [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md) | Bug classes, why BootROM ≠ SpringBoard JB, applicability checklist for 22H311 |
 | [../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md) | Offline kernelcache paths + Mac probe list (docs only; no kexploit claim) |
-| [KRW.md](KRW.md) / [PPL.md](PPL.md) / [ENTRY.md](ENTRY.md) | KRW harness plan, PPL blocked conclusion, SpringBoard entry reality |
+| [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md) | **Fork 1 mission** — stay on 22H311; usbliter8 RO lab |
+| [KRW.md](KRW.md) / [PPL.md](PPL.md) / [ENTRY.md](ENTRY.md) | Secondary host/KRW notes; PPL blocked until KRW |
 | [../research/ppl/](../research/ppl/) | Deep A12 PPL strategy + historical map |
 | [../research/kexploit/viability/](../research/kexploit/viability/) | DarkSword / Dopamine viability vs 22H311 |
 | [../research/DATA_MOUNT_SSHRD.md](../research/DATA_MOUNT_SSHRD.md) | Exit-76 theory + SSHRD/restore-ramdisk staging research (**no** working A12/18.7.5 Data mount) |
