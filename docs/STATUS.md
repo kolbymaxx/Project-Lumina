@@ -9,7 +9,8 @@ Dopamine-style app/host.
 
 **We do NOT pursue Fork 2** (surrealra1n / downgrade).
 
-Source of truth: [`../research/kexploit/FORK1_STRATEGY.md`](../research/kexploit/FORK1_STRATEGY.md) + this file.
+Source of truth: [`../research/kexploit/FORK1_STRATEGY.md`](../research/kexploit/FORK1_STRATEGY.md) + this file.  
+Lab snapshot: [`LAB_STATE.md`](LAB_STATE.md).
 
 **Not a jailbreak.** No Sileo. No invented offsets. No “T008/T009 works” without citation.
 
