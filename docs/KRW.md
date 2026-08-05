@@ -42,10 +42,10 @@ void     krw_deinit(void);
 
 ### Backend link rules
 
-1. Clone upstream per [../third_party/README.md](../third_party/README.md) (gitignored; **no LICENSE** → do not commit sources).  
-2. Build with `-DKRW_BACKEND_DARKSWORD=1` only when the local tree exists.  
-3. Adapter must **call into** vendored code (or document binary-runner mode) — not a news-article reimplementation.  
-4. Upstream today is monolithic `src/main.m` (`darksword-pe`). First lab may run that binary directly; library extraction is a follow-up once entry works.
+1. `./scripts/clone_darksword_kexploit.sh` (gitignored clone + library patch).  
+2. Lumina app builds with `KRW_BACKEND_DARKSWORD` + `DARKSWORD_EXPLOIT_LINKED` + `LUMINA_DSK_LIBRARY`.  
+3. `darksword_lib.m` calls patched `darksword_cli_main`; `FAILURE` longjmps (no fake success).  
+4. Missing third_party → Xcode pre-build script errors (intentional).
 
 ## Offset policy
 
