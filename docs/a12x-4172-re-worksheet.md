@@ -438,6 +438,53 @@ ccb4 bit12 path (cd64):
 
 **DART / SMMU / IOMMU:** **never** appears in this bring-up (no strings; no stores into a DART-like window). Side window is only `0x203D2B8030` via `6db8`. Next place to look: platform init before DFU (`6e10` / early `b52c` path), not USB EP0.
 
+### Race surface after `d1fc` → before `C80+0x60` (SETUP)
+
+Timeline under test: return from **first** `d1fc` (post bit12) → host SETUP DMA → `d294` → `ccb4` SETUP → `e2f8` → `br` `[C80+0x60]`.
+
+| Reg | ROM use on SETUP path | Window before `+0x60`? | Race interest |
+|-----|----------------------|-------------------------|---------------|
+| `+0xb00` | **`d1fc`**: `ldr` busy (bit31); `str` arm (`orr` `0x80000000` / `0x84000000`) | only **inside** `d1fc` (before DMA) | EP arm/doorbell — not re-touched until after `+0x60` (`cf10`→`d1fc`) |
+| `+0xb10` | **`d1fc`**: `str 0x20080040` (len `0x40`) | only in `d1fc` | length/ctl; **not read** on SETUP before `+0x60` (`cee4` is OUT-data path only) |
+| `+0xb14` | **`d1fc`**: `str lo32(*880)` | only in `d1fc` | buffer ptr; ROM **never reloads** it before parse — uses softctx `*880` + heap |
+| `+0x14` | **`d294`**: `ldr` + `str` (W1C ack) | **yes** | IRQ status latch → `@860+8`; path select only |
+| `+0x818` | **`d294`**: `ldr` if `+0x14 & 0xc0000` | **yes** | DAINT → `@860+0xc`; EP0 OUT = bit16 |
+| `+0xB08` | **`d294`**: `ldr` + `str` (W1C) via `MMIO+0x908+0x200` | **yes** | EP0 OUT status → `@860+0xc0`; **bit3** ⇒ SETUP |
+| `+0x18` | **`d294`**: `ldr` mask & status → wake worker | **yes** | gate `ccb4` only |
+| `+0xb14` via `d90c` | **skipped for EP0** (`d294`: `cbz x24 →` skip xfer/`d90c`) | n/a on SETUP | cannot retarget EP0 DMA mid-SETUP via that path |
+
+**`ccb4` / `cea0` / `e2f8` before `+0x60`:** softctx + heap only — **zero MMIO** until after handler (`cf10`→`d1fc` re-arm).
+
+#### Gap inventory (MMIO vs softctx)
+
+| Phase | MMIO | Softctx / heap |
+|-------|------|----------------|
+| `d1fc` | `+0xb00/b10/b14` | load `*880` |
+| DMA | *(HW → heap)* | |
+| `d294` | `+0x14`, `+0x818`, `+0xB08`, `+0x18` | latch `@860+8/+0xc/+0xc0`; **no** `d90c` on EP0 |
+| `ccb4` SETUP | — | bit tests; optional `*880→*888`; `e2f8` |
+| `e2f8`→`dc5c` | — | `D08` mirror; `ldr [C80+0x60]; br` |
+
+#### Ranked race candidates
+
+| Rank | Surface | Why |
+|------|---------|-----|
+| **1** | **Heap `*880` (DMA data)** | Only attacker-controlled bytes that SETUP parse consumes; fixed VA from softctx, not from re-reading `+0xb14` |
+| **2** | **`+0xb14` (HW-only race)** | If something outside this CPU path changes the DMA addr **after** `d1fc` `str` and **before** DMA completes, HW could land elsewhere — **not** driven by USB packets alone; ROM does not re-check |
+| — | `+0xB08` / `+0x14` | Select SETUP vs data / wake worker; host influences via **real** USB events, not by forging MMIO; no callback corruption |
+
+**To matter before `ldr [C80+0x60]` a race would need to:** change **heap SETUP bytes** (normal DMA — already owned), or **redirect DMA** (change `+0xb14`/`+0xb10` pre-completion from outside ROM), or **corrupt `C80` itself** (no SW path found). Status-bit games only change control flow, not slot contents.
+
+### Phase-1 exploitability verdict (software + MMIO map)
+
+| Claim | Verdict |
+|-------|---------|
+| Controlled SW write into `C80` / `E18` cbs? | **No** |
+| DMA target fixed to heap (`*880` / xfer heap)? | **Yes** on EP0 SETUP (`d1fc`; EP0 skips `d90c`) |
+| Fixed SRAM SETUP mirror `D08` reaches cbs? | **No** (8 B, wrong side of `C80`) |
+| DNLOAD heap overflow → cbs? | **No** (checked `≤0x800`) |
+| **Best remaining lever** | **HW timing / non-ROM agent** against `+0xb14` pre-DMA, or a **new bug class** outside this USB parse map — not a clean SW callback plant from DFU SETUP alone |
+
 ### Raw or PAC-signed before `br`?
 
 | Stage | Semantics |
@@ -475,4 +522,4 @@ Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000a
 
 ## 5. Next single RE question
 
-**After EP0 is armed (`d1fc`), what is the first attacker-visible register surface useful for a usbliter8-style race — among `MMIO+0x14` (status), `+0xB08` (EP0 OUT status), `+0xb14` (buffer ptr), and `+0xb00` (EP arm) — and which is read/written on the SETUP hot path before `C80+0x60`?**
+**Outside the EP0 SETUP map: does any non-SETUP path (`d90c` on EP≠0, DFU DNLOAD complete `f004`, or image copy @ `DD0+0x20`) ever write a caller-influenced pointer into `C80` / `E18` — or is the callback-plant surface closed for all USB DFU paths in this ROM?**
