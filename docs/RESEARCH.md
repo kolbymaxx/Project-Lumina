@@ -123,3 +123,4 @@ That is documentation / future RE — **not** a claim that a kexploit exists.
 - [../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md)
 - [../research/CUSTOM_BOOT_NEXT.md](../research/CUSTOM_BOOT_NEXT.md)
 - [research/usbliter8-a12x-ipad-pro-12.9-3rd.md](research/usbliter8-a12x-ipad-pro-12.9-3rd.md) — research-only A12X (iPad Pro 12.9" 3rd) usbliter8 bring-up memo (not wired to boot)
+- [research/jb-framework-module1-t8027.md](research/jb-framework-module1-t8027.md) — JB framework Module 1: T8027 usbliter8 port plan (PAC-aware; not wired to boot)
