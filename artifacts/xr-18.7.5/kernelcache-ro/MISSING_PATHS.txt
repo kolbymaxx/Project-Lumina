@@ -1,0 +1,11 @@
+# Generated 2026-08-05T23:56Z — probe aborted; no fabricated P1–P6 content.
+# Place these files, then re-run:
+#   ./tools/probe_22h311_kernelcache.sh
+# Or:
+#   KERNELCACHE_DIR=/path/to/dir ./tools/probe_22h311_kernelcache.sh
+
+REQUIRED:
+  /Users/kolby/Projects/firmware-22H311/kernelcache.release.iphone11b
+  /Users/kolby/Projects/firmware-22H311/kernelcache.payload
+
+Also documented in research/kexploit/22H311_NOTES.md
