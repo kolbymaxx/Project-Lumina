@@ -107,6 +107,7 @@ DS-K / Lumina IPA docs remain in-tree for later delivery experiments; they do
 |------|------|------|
 | 2026-08-01 | lab | Phase A ramdisk inventory locked |
 | 2026-08-05 | docs | **Fork 1 locked** — strategy file + STATUS rewrite; Fork 2 rejected |
+| 2026-08-05 | offline RE | `probe_22h311_kernelcache.sh` dry-run + live abort — kernelcache **MISSING** on agent host; paths listed in `artifacts/xr-18.7.5/kernelcache-ro/MISSING_PATHS.txt`; **no CVE-working claim** |
 
 ## Single next human action (RO)
 
