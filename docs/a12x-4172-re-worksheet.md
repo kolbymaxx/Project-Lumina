@@ -190,6 +190,119 @@ All class SETUP goes through **one** field: **`obj+0x40` → `0x10000ede8`**, wh
 
 **Overwrite-with-raw-gadget viable on iface callbacks?** **Yes** — same as c80: raw store, raw `blr`. Caveat: targets entered with `blr` (LR set); real `pacibsp`/`retab` functions OK; object lives at fixed SRAM **`0x19C010E18`**.
 
+### DFU DNLOAD data-stage buffer (bRequest=1)
+
+**Allocation** (`0x10000eccc`, once at DFU setup):
+```text
+bl 0x100011f60          ; region/tag select (w0=0x200, w1=0x30000)
+mov w0, #0x800
+bl 0x1000100b8          ; heap alloc 0x800
+str x0, [DD0+0x28]      ; buffer base pointer
+bl 0x1000118e0          ; clear 0x800 bytes
+```
+→ Buffer is **heap/dynamic** (arena meta @ `0x19C011728` / `0x19C012148`). **No fixed SRAM VA.**
+
+**DNLOAD SETUP** (`ede8` @ `ee90`):
+| check | effect |
+|-------|--------|
+| `wLength == 0` | state→dnload-idle; **no** data stage |
+| `wLength >= 0x801` | DFU error status; reject |
+| `1 ≤ wLength ≤ 0x800` | `* (d10+0x28) = *(DD0+0x28)` (cursor←base); `DD0+0x10 = wLength`; return `wLength` |
+
+Class path then `stp w0, wIndex, [d10+8]` → **expected total** = `wLength` at `d10+0x08`.
+
+**OUT data copy** (`e2f8` data path @ `e3b4`, `w1` bit0 clear):
+```text
+if received + pkt > d10+8:  stall; reset cursor/len
+else:
+  n = min(pkt, remaining)
+  memcpy(d10+0x28, usb_pkt, n)     ; 0x100011730
+  d10+0x28 += n;  d10+0x18 += n    ; cursor walks upward in heap buf
+when transfer complete → blr obj+0x48 (f004)
+```
+
+**`f004` (data-complete):** verifies `x0 == DD0+0x10` (wLength); copies heap buf into image at `DD0+0x20` with further bounds vs `DD0+4` / `DD0+0xc` — does **not** enlarge the USB write window.
+
+| limit | value |
+|-------|-------|
+| Max `wLength` (SETUP) | **`0x800`** (`cmp #0x801; b.lo accept`) |
+| Allocated buffer | **`0x800`** |
+| Per-packet | `min(pkt, remaining)`; EP0 pkt often ≤ `0x40` (`cmp w20,#0x40` at complete) |
+| Unchecked memcpy? | **No** — cumulative check vs `d10+8` before copy |
+
+**Fixed SRAM distances (for orientation; buffer is not here):**
+
+| from → to | delta |
+|-----------|-------|
+| `0x19C010C80` → `0x19C010E18` | `+0x198` |
+| `0x19C010C80` → `0x19C010DD0` | `+0x150` |
+| `0x19C010DD0` → `0x19C010E18` | `+0x48` (object embedded) |
+| heap buf base → C80 / E18 | **not fixed** (dynamic alloc) |
+
+**Reachability via DNLOAD OUT write:**
+
+| target | verdict | why |
+|--------|---------|-----|
+| `0x19C010C80` (+`0x60`) | **not reachable** | Write lands in heap buf, not USB SRAM; max `0x800` into `0x800` alloc; length-checked |
+| `0x19C010E18` (+`0x40`/`+0x48`) | **not reachable** | Same; object is fixed SRAM **above** `DD0`, not the heap payload |
+| Overflow past heap buf | **not via this path** | `received+pkt ≤ wLength ≤ 0x800` before `memcpy` |
+
+Cursor growth is upward **within the heap buffer only**; it does not walk from `d10` toward `C80`/`E18`.
+
+### Fixed USB SRAM map (`0x19C010000`–`~0x19C011000`)
+
+| VA | size / notes | role |
+|----|--------------|------|
+| `0x19C010058` | ASCII | USB serial / SRTG string (builder `67bc`) |
+| `0x19C010800` | byte | DFU-ready flag |
+| **`0x19C010860`** | softctx | USB device soft-state (IRQ handler `x21`) |
+| `860+0x20` → **`0x19C010880`** | ptr → **heap 0x40** | EP0 **data** buffer pointer |
+| `860+0x28` → **`0x19C010888`** | ptr → **heap 8** | EP0 **SETUP** buffer pointer |
+| `860+0x60` → **`0x19C0108C0`** | **`0x3c0`** | EP soft/TRB-ish region; **ends exactly at `C80`** |
+| **`0x19C010C80`** | `0x78` | CB handler table |
+| **`0x19C010D00`** | byte | USB ready flag (`dda0`) |
+| **`0x19C010D08`** | **8** | **SETUP packet mirror** (software copy) |
+| **`0x19C010D10`** | ctx | device/config ctx + iface ptr array |
+| `d10+0x38` | ptr → heap `0x100` | EP0 descriptor scratch (`dda0`) |
+| **`0x19C010DD0`** | state | DFU state blob |
+| **`0x19C010E18`** | obj | DFU iface object (`DD0+0x48`) |
+
+USB controller MMIO base (literal `0x100021bb8`): **`0x25D100000`**.
+
+### Ordered attacker-influenced writes vs `C80+0x60`
+
+SETUP IRQ path: `0x10000ccb4` → `0x10000ced0` → `0x10000e2f8`.
+
+| # | where | size | who controls | before `+0x60`? |
+|---|-------|------|--------------|-----------------|
+| 1 | **heap** `*0x19C010880` (EP0 data) | ≤`0x40` | USB **DMA** (host SETUP/OUT) | **yes** (HW, before software parse) |
+| 2 | **heap** `*0x19C010888` (SETUP buf) | 8 | software `cea0`: `*setup = *ep0_data` (when IRQ flags set); else prior contents | **yes** |
+| 3 | **fixed `0x19C010D08`** | **8** | software `e32c`: `str` first qword from SETUP buf — full SETUP fields | **yes — immediately before** |
+| 4 | `br` `C80+0x60` | — | `e334: bl 0x10000dc5c` | *(handler runs)* |
+| 5 | later `blr obj+0x40` | — | class path `e504` | after `+0x60` |
+
+Other fixed writes in the same IRQ **before** step 3 (`str`/`strb` to `860+…`) are **controller status / ROM constants**, not packet payload.
+
+**EP0 DMA program site** (`0x10000d1fc`, also from bus reset path):
+```text
+x1 = *(0x19C010880)          ; heap EP0 data buf
+bl  0x100006620              ; cache/DMA prep (w0=3, len=0x40)
+str w1_lo → [MMIO+0xb14]     ; USB EP0 buffer address register
+str ctl   → [MMIO+0xb10]     ; includes length 0x40 (0x20080040)
+```
+Alloc of the two heap bufs: **`0x10000c2d8`** (`0x40` + `8` via `100b8`).
+
+### Best candidate (before handler)
+
+**Best software write into fixed USB SRAM before `+0x60`:** **`0x19C010D08`** — 8-byte SETUP mirror, attacker controls all fields, store at `e32c` then `bl +0x60` at `e334`.
+
+- Does **not** reach `C80` (`D08` is **`+0x88` above** `C80`; write is only 8 bytes upward).
+- Does **not** reach `E18` (`D08 → E18 = +0x110` > 8).
+- Payload DMA itself lands in **heap**, not in `C80`/`E18`.
+- Fixed `0x19C0108C0`–`C80` abuts the table but is **software EP state**, not the EP0 DMA target programmed at `MMIO+0xb14`.
+
+**No software path found** that writes attacker bytes into `C80` or `E18` callback fields before those handlers run.
+
 ### Raw or PAC-signed before `br`?
 
 | Stage | Semantics |
@@ -227,4 +340,4 @@ Sole `bl`: `0x10000de24` in `0x10000dda0`; parent `0x10000ad30`; outer `0x10000a
 
 ## 5. Next single RE question
 
-**On DFU DNLOAD, where does the data-stage buffer live (VA of `DD0+0x28` allocation / `d10+0x28` cursor), what is the enforced max `wLength`, and can that write window reach the iface object at `0x19C010E18` or the handler table at `0x19C010C80`?**
+**For EP0 SETUP/OUT, is `MMIO+0xb14` (`0x25D100000+0xb14`) always programmed with the heap buf at `*0x19C010880`, and is the fixed abutting region `0x19C0108C0`–`0x19C010C80` ever used as a USB DMA target (any `str` of that VA into `+0xb14` / related EP regs)?**
