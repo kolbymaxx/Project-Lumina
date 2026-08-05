@@ -62,15 +62,20 @@ Dossier: [DARKSWORD.md](DARKSWORD.md).
 
 ### Single next human action
 
-**On a Mac (inside Project-Lumina clone, not Downloads):**
+**On Mac — one command per line (no comments on `cd` lines). Leave Downloads first.**
 
 ```bash
-cd /path/to/Project-Lumina
-git fetch origin && git checkout cursor/a12-krw-ppl-research-f891 && git pull
+mkdir -p ~/Projects
+git clone https://github.com/kolbymaxx/Project-Lumina.git ~/Projects/Project-Lumina
+cd ~/Projects/Project-Lumina
+pwd
+git fetch origin
+git checkout cursor/a12-krw-ppl-research-f891
+git pull origin cursor/a12-krw-ppl-research-f891
 ./scripts/mac_open_lumina.sh
 ```
 
-Then Xcode → Team → Run on XR → **Run DS-K** → paste log + LAB result code.
+`pwd` must show `…/Project-Lumina` before git/scripts. Then Xcode → Team → Run → **Run DS-K**.
 
 Also reply with entry choice if not already decided:
 
