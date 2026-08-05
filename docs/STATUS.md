@@ -62,7 +62,15 @@ Dossier: [DARKSWORD.md](DARKSWORD.md).
 
 ### Single next human action
 
-**On a Mac:** `./scripts/clone_darksword_kexploit.sh` → `cd Lumina && xcodegen generate` → sign/sideload **Lumina** (`com.kolbymaxx.lumina`) → **Run DS-K** → paste log + pick LAB result code.
+**On a Mac (inside Project-Lumina clone, not Downloads):**
+
+```bash
+cd /path/to/Project-Lumina
+git fetch origin && git checkout cursor/a12-krw-ppl-research-f891 && git pull
+./scripts/mac_open_lumina.sh
+```
+
+Then Xcode → Team → Run on XR → **Run DS-K** → paste log + LAB result code.
 
 Also reply with entry choice if not already decided:
 

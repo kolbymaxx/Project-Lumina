@@ -4,12 +4,15 @@ Cloud/Linux cannot produce a signed IPA. Run these on a **Mac** with Xcode.
 
 ## Prerequisites
 
+Work in the **Project Lumina** git clone (branch `cursor/a12-krw-ppl-research-f891`).  
+Do not run these from `~/Downloads` or other repos.
+
 ```bash
-# From repo root
-./scripts/clone_darksword_kexploit.sh
-brew install xcodegen   # once
-cd Lumina && xcodegen generate
-open Lumina.xcodeproj
+cd /path/to/Project-Lumina
+./scripts/mac_open_lumina.sh
+# or manually:
+# ./scripts/clone_darksword_kexploit.sh
+# brew install xcodegen && cd Lumina && xcodegen generate && open Lumina.xcodeproj
 ```
 
 - Apple ID (E1 free) or paid Developer account (E2) selected in Xcode signing
