@@ -50,6 +50,11 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
 3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
 
+### Strategy lock (2026-08-05) — Fork 1
+**Stay on 18.7.5.** Active hunt: still-live kernel/auth watches (T008/T009 lead).  
+Deferred: surrealra1n tethered downgrade (cannot reach lower iOS 18 / DarkSword).  
+See [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).
+
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
 - No claim beyond tethered SSH + the RO mounts in the inventory above
