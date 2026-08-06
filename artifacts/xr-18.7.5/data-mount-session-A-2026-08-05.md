@@ -1,6 +1,15 @@
 # Data mount Session A — 2026-08-05
 
+**Status:** **CLOSED** (2026-08-05, Prompt C)  
 **Not** a successful Data mount. **Not** exit-76 reconfirm.
+
+## Closed verdict (Prompt C)
+
+- SSH worked; System path usable (`disk1s1` → `/mnt1`, **18.7.5 / 22H311**).
+- Data mount **hung** (no `DATA_RC`); interrupted (Ctrl-C).
+- On-device `disk1s8` check **skipped** — session closed; Mac host commands are invalid for this probe.
+- **Not** exit **76**. Data = **block / SEP-keybag class**, not “retry `mount_apfs`.”
+- **No more mounts this pass.** No `seputil` / RW / 16.0 tonight.
 
 ## Observed (ramdisk SSH)
 
@@ -53,6 +62,6 @@ Missing nodes `disk0s1s2`/`s8` → RC66 explained. Next: mount **`disk1s1` → `
 - `disk1s8` mount **not observed** (blocked behind hung `s2` command)
 - Distinct from Phase A **exit 76** (`Program version wrong` on `disk0s1s*` / 15.1 tools)
 
-Interpretation: on this ramdisk/`disk1s*` map, Data RO did not fail-fast with version skew; it **blocked** (SEP/keybag/unlock class is plausible — **unproven**). System RO still OK.
+Interpretation: on this ramdisk/`disk1s*` map, Data RO did not fail-fast with version skew; it **blocked**. Closed as **SEP/keybag-class blocker** (not tool-version retry). System RO still OK.
 
-Next (optional, short timeout): probe `disk1s8` alone; confirm SSH still alive; **no** `seputil` yet.
+**Session closed** — s8 deferred; no further mounts / seputil / RW / 16.0 in this pass.
