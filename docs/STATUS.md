@@ -55,6 +55,11 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 Deferred: surrealra1n tethered downgrade (cannot reach lower iOS 18 / DarkSword).  
 See [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).
 
+**Social intakes (2026-08-06):** weezerOSINT XR→17 + SEP ([T014](../research/kexploit/experiments/T014_weezerosint_xr17_sep_claim.md));
+Lakr233 phkrw+PPL claim ([T015](../research/kexploit/experiments/T015_lakr233_phkrw_ppl_claim.md)).
+**Claim watches only** — status line unchanged until public/repro evidence.
+Intake: [INTAKE_2026-08-06.md](../research/kexploit/experiments/INTAKE_2026-08-06.md).
+
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
 - No claim beyond tethered SSH + the RO mounts in the inventory above
