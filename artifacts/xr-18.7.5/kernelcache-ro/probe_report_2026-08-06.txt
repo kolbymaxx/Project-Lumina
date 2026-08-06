@@ -1,0 +1,113 @@
+=== probe_22h311_kernelcache.sh @ 2026-08-06T0116Z ===
+KERNEL=/Users/kolby/Projects/firmware-22H311/kernelcache.payload
+
+--- file / size ---
+/Users/kolby/Projects/firmware-22H311/kernelcache.payload: Mach-O 64-bit arm64e
+-rw-r--r--  1 kolby  staff  56590336 Aug  2 03:34 /Users/kolby/Projects/firmware-22H311/kernelcache.payload
+
+--- mach-o header (otool -hv) ---
+/Users/kolby/Projects/firmware-22H311/kernelcache.payload:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+MH_MAGIC_64    ARM64          E  0x00     FILESET   235      16744 0x00000000
+llvm-objdump: not found (skipped)
+
+--- identity strings (sample) ---
+@(#)VERSION: Darwin Kernel Version 24.6.0: Mon Jan 19 22:05:19 PST 2026; root:xnu-11417.140.69.706.3~1/RELEASE_ARM64_T8020
+Darwin Kernel Version 24.6.0: Mon Jan 19 22:05:19 PST 2026; root:xnu-11417.140.69.706.3~1/RELEASE_ARM64_T8020
+
+--- surface presence (hit/miss) ---
+AppleImage4                  HIT  (string_lines≈44)
+AppleMobileFileIntegrity     HIT  (string_lines≈48)
+AMFI                         HIT  (string_lines≈245)
+amfid                        HIT  (string_lines≈12)
+sandbox                      HIT  (string_lines≈106)
+Seatbelt                     HIT  (string_lines≈2)
+necp                         HIT  (string_lines≈315)
+NECP                         HIT  (string_lines≈122)
+bpf                          HIT  (string_lines≈82)
+BPF                          HIT  (string_lines≈9)
+IOSurface                    HIT  (string_lines≈768)
+packet                       HIT  (string_lines≈515)
+Packet                       HIT  (string_lines≈367)
+out-of-bounds                HIT  (string_lines≈7)
+out of bounds                HIT  (string_lines≈40)
+authorization                HIT  (string_lines≈24)
+Authorization                HIT  (string_lines≈30)
+CVE-2026-28972               MISS  (string_lines≈0)
+CVE-2026-28951               MISS  (string_lines≈0)
+28972                        MISS  (string_lines≈0)
+28951                        MISS  (string_lines≈0)
+totals: HIT=17 MISS=4 (presence only)
+
+--- sample hits (truncated) ---
+## AppleImage4
+%s() Requesting AppleImage4 Validation
+%s:%d: waitForService (AppleImage4) failed
+/Library/Caches/com.apple.xbs/Binaries/AppleImage4/install/Symbols/Image4
+<key>AppleImage4</key>
+<key>com.apple.security.AppleImage4</key>
+<string>/System/Library/Extensions/AppleImage4.kext</string>
+<string>AppleImage4</string>
+<string>AppleImage4UserClient</string>
+
+## AMFI
+"%s: failed to look up AMFI service\n" @%s:%d
+"AMFI failed to initialize. This would compromise system security." @%s:%d
+"AMFI mac policy could not be registered!" @%s:%d
+"AMFI: %s: Anomaly, code directory is NULL" @%s:%d
+"AMFI: %s: unable to obtain local signing public key at early boot" @%s:%d
+"AMFI: '%s': Invalid first Code Directory should have been caught by xnu.\n" @%s:%d
+"AMFI: No PMGR?\n" @%s:%d
+"AMFI: Unable to create a name matching for SCRD" @%s:%d
+
+## sandbox
+"%s: allocation header marked as not sandbox tracked (%p)" @%s:%d
+"%s: allocation header marked as sandbox tracked (%p)" @%s:%d
+"%s: null sandbox pointer for tracked allocation (%p)" @%s:%d
+"%s: tracked deallocation caused sandbox size to underflow (%p)" @%s:%d
+"failed to initialize platform sandbox: %d" @%s:%d
+"platform sandbox invalid (%s)" @%s:%d
+"sandbox %p leaked %llu bytes" @%s:%d
+"sandbox mask count overflow" @%s:%d
+
+## necp
+%s - %lx: necp_client_register_socket_flow failed with error %d
+%s: necp_client_action find fd error (%d)
+%s: necp_client_action unknown action (%u)
+%s: necp_client_add client_id copyout error (%d)
+%s: necp_client_add listener invalid address family (%d)
+%s: necp_client_add netns_reserve error (%d)
+%s: necp_client_add netns_reserve_ephemeral error (%d)
+%s: necp_client_add parameters copyin error (%d)
+
+## IOSurface
+"Bad IOSurfaceClient" @%s:%d
+"IOSurface does not support release with when != 1" @%s:%d
+"IOSurface does not support taggedRelease with when != 1" @%s:%d
+"IOSurface in slot %08x has a mismatched surface ID of %08x\n" @%s:%d
+"IOSurface released with non-zero client retain count: %p" @%s:%d
+"IOSurfaceMemoryPool does not support taggedRelease with when != 1" @%s:%d
+"IOSurfaceRoot::removeEventNotifierClient() invoked with bad client notifier %p" @%s:%d
+"IOSurfaceRoot::terminateDeviceCachesWithAccelerator() timeout." @%s:%d
+
+## out of bounds
+  %s(%s): Attempting to synthesize %u EtE timestamps between {0x%llx.%016llx (%llu), %llu} and {0x%llx.%016llx (%llu), %llu} but intervals are out of bounds lower limit %llu upper limit %llu remote %llu local %llu, resetting
+  %s(%s): Filter reset counts: %u exceeded drop limit, %u out of bounds
+  %s(%s): Measurement discard reasons: %u exceeded PPM limit, %u exceeded delay limit, %u out of bounds, %u timestamps out of order
+"IOGPUResidentMemorySet::repack() out of bounds" @%s:%d
+"IOMFB: panel charge out of bounds [0x%x]" @%s:%d
+"[%s] " "SDR offset/size out of bounds (off=%08X, size=%08x).  Is firmware loaded?\n" @%s:%d
+"write request out of bounds of register map\n" @%s:%d
+%s(): seg->page_count out of bounds @%s:%d
+
+## authorization
+%s:%d: %s directory has a child that failed authorization (dir: %lld ; child ino %lld): %d (%s)
+%s::%s(): Setting authorization status... (target: %s, newAuthorizationStatus: %d [%s])
+%s::%s(): Setting user authorization status... (target: %s, newUserAuthorizationStatus: %d [%s])
+%s::%s(): [%s%s%s] Updating authorization state...
+%s::%s(): [%s%s%s] authorizationRequired: %s -> %s, authorizationPending: %s -> %s, userAuthorizationPending: %s -> %s, supervisedTransportActive: %s -> %s
+%s::%s(): [%s@%s: %s%s%s] Calculating authorization state...
+%s::%s(): [%s@%s: %s%s%s] authorizationStatus: %d [%s]
+%s::%s(): [%s@%s: %s%s%s] m_trmInfo.identificationRestricted: [%s -> %s], m_trmInfo.transportRestricted: [%s -> %s], m_trmInfo.state: %d [%s], m_authorizationStatus: %d [%s], m_active: %s
+
