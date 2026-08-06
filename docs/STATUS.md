@@ -50,15 +50,20 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
 3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
 
-### Strategy lock (2026-08-05) — Fork 1
-**Stay on 18.7.5.** Active hunt: still-live kernel/auth watches (T008/T009 lead).  
-Deferred: surrealra1n tethered downgrade (cannot reach lower iOS 18 / DarkSword).  
-See [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).
+### Strategy lock — Path A/B/C (2026-08-06)
+Canonical plan: [RESEARCH_PLAN.md](RESEARCH_PLAN.md).
 
-**Social intakes (2026-08-06):** weezerOSINT XR→17 + SEP ([T014](../research/kexploit/experiments/T014_weezerosint_xr17_sep_claim.md));
-Lakr233 phkrw+PPL claim ([T015](../research/kexploit/experiments/T015_lakr233_phkrw_ppl_claim.md)).
-**Claim watches only** — status line unchanged until public/repro evidence.
-Intake: [INTAKE_2026-08-06.md](../research/kexploit/experiments/INTAKE_2026-08-06.md).
+| Path | Status |
+|------|--------|
+| **B** Stay 18.7.5 tethered boot-chain (iBEC execute → stage2) | **48h primary** |
+| **A** Stay 18.7.5 Dopamine-style | Blocked (no public A12 PPL bypass) |
+| **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only; version change |
+
+Former Fork 1 notes: [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).  
+Writeup criteria: [../research/kexploit/WRITEUP_WATCHLIST.md](../research/kexploit/WRITEUP_WATCHLIST.md).
+
+**Social intakes (2026-08-06):** T014 XR→17 · T015 Lakr phkrw+PPL — claim watches only.
+[INTAKE_2026-08-06.md](../research/kexploit/experiments/INTAKE_2026-08-06.md).
 
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
