@@ -6,6 +6,13 @@ starting from usbliter8 BootROM. Codename: **Lumina**.
 
 **Not a jailbreak.** No Sileo / package-manager claim on 18.7.5.
 
+## Active fork (2026-08-05)
+**Fork 1** — stay on XR A12 / **18.7.5 (22H311)**; usbliter8 + ramdisk SSH as
+read-only lab; Dopamine-style delivery only after a real primitive exists.
+**Not pursuing Fork 2** (surrealra1n downgrade).
+Strategy: [`../research/kexploit/FORK1_STRATEGY.md`](../research/kexploit/FORK1_STRATEGY.md).  
+Lab snapshot (verified / blockers / next 3 cmds): [`LAB_STATE.md`](LAB_STATE.md).
+
 ## Devices
 | Device | SoC | iOS | Role |
 |--------|-----|-----|------|

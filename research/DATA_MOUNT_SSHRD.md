@@ -113,6 +113,11 @@ Preboot (as some copy-paste recipes do) is wrong for this layout.
 | iOS 17+ SSHRD Data mount | Frequently broken in upstream issues; not a ready recipe |
 | Passcode / keybag hard limits | Real on modern iOS forensic literature; orthogonal until exit 76 clears |
 
+## Live test plan (minimal)
+
+Executable session checklist (Session A on known-good 15.1 first, then gated
+16.0): [`DATA_MOUNT_LIVE_PLAN.md`](DATA_MOUNT_LIVE_PLAN.md).
+
 ## Ordered next experiments (human / future session)
 
 Do **not** wire into `boot/` until a session proves mounts.

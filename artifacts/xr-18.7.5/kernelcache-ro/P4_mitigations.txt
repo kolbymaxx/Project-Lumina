@@ -1,0 +1,80 @@
+"%s: allocation header marked as not sandbox tracked (%p)" @%s:%d
+"%s: allocation header marked as sandbox tracked (%p)" @%s:%d
+"%s: failed to look up AMFI service\n" @%s:%d
+"%s: null sandbox pointer for tracked allocation (%p)" @%s:%d
+"%s: tracked deallocation caused sandbox size to underflow (%p)" @%s:%d
+"AMFI failed to initialize. This would compromise system security." @%s:%d
+"AMFI mac policy could not be registered!" @%s:%d
+"AMFI: %s: Anomaly, code directory is NULL" @%s:%d
+"AMFI: %s: unable to obtain local signing public key at early boot" @%s:%d
+"AMFI: '%s': Invalid first Code Directory should have been caught by xnu.\n" @%s:%d
+"AMFI: No PMGR?\n" @%s:%d
+"AMFI: Unable to create a name matching for SCRD" @%s:%d
+"AMFI: Unable to match on SCRD endpoint" @%s:%d
+"AMFI: amfi-only-platform-code has unexpected size (%u)!" @%s:%d
+"AMFI: attempted to free OSEntitlements without invalidation" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly ceCtx: %p" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly data: %p" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly identity: %p" @%s:%d
+"AMFI: calling %s without xART storage support" @%s:%d
+"AMFI: failed OSEntitlements back-reference: %p | %p" @%s:%d
+"AMFI: failed to acquire UUID element from profile: %u" @%s:%d
+"AMFI: failed to acquire UUID string from profile: %u" @%s:%d
+"AMFI: failed to acquire entitlements buffer from profile: %u" @%s:%d
+"AMFI: failed to acquire entitlements element from profile: %u" @%s:%d
+"AMFI: failed to compute size for XML: %s\n" @%s:%d
+"AMFI: failed to compute size for deserialization: %s\n" @%s:%d
+"AMFI: failed to create OSDictionary copy: %u\n" @%s:%d
+"AMFI: failed to create profile context: %u" @%s:%d
+"AMFI: failed to deserialize legacy context: %s\n" @%s:%d
+"AMFI: failed to evaluate provisioning profile: %d" @%s:%d
+"AMFI: failed to serialize as XML: %s\n" @%s:%d
+"AMFI: failed to validate entitlements from profile: %u" @%s:%d
+"AMFI: inconsistency between instance and csBlob context" @%s:%d
+"AMFI: inconsistency between instance and monitor context: %u | %u" @%s:%d
+"AMFI: inconsistency in DER entitlements length: %u | %lu" @%s:%d
+"AMFI: no /model device tree node!" @%s:%d
+"AMFI: no amfi-only-platform-code device tree node!" @%s:%d
+"AMFI: no chosen device tree node!" @%s:%d
+"AMFI: no protected-data-access device tree node!" @%s:%d
+"AMFI: no root device tree node!" @%s:%d
+"AMFI: not booted with security-mode-change-enabled\n" @%s:%d
+"AMFI: not capturing mobile obliteration state" @%s:%d
+"AMFI: protected-data-access has unexpected size (%u)!" @%s:%d
+"AMFI: unable to adjust without monitor: %u" @%s:%d
+"AMFI: unable to update legacy context: %u" @%s:%d
+"AMFI: unexpected OSEntitlements adjustment with monitor" @%s:%d
+"AMFI: unexpected OSEntitlements adjustment without monitor" @%s:%d
+"AMFI: unexpectedly failed to obtain AKS services" @%s:%d
+"Cannot unload AMFI - policy is not dynamic\n" @%s:%d
+"IOMFB: failed to cast AMFI service!" @%s:%d
+"IOMFB: failed to look up AMFI service!" @%s:%d
+"TXM channel shared page unexpected: 0x%llX | %lu" @%s:%d
+"amfid is broken. (%s) (%d) (%d) (%d)" @%s:%d
+"failed to initialize platform sandbox: %d" @%s:%d
+"platform sandbox invalid (%s)" @%s:%d
+"sandbox %p leaked %llu bytes" @%s:%d
+"sandbox mask count overflow" @%s:%d
+"sandbox mask count underflow" @%s:%d
+"sandbox state %p points back to %p instead of %p" @%s:%d
+"unable to acquire TXM channel shared page: %d" @%s:%d
+"unexpected persistent refcount (%u) on sandbox %p" @%s:%d
+%s (pid %u) not allowed for Restricted Execution Mode state (%s): code is not present in any trustcache
+%s exhausted sandbox memory capacity; may be leaking extensions
+%s failed: %s[%d] not sandboxed
+%s not allowed for Restricted Execution Mode state (%s): code is not present in any trustcache
+%s: copying private key from AMFI not supported on this platform
+%s: ppl_iommu_state %p crosses page boundary @%s:%d
+%s: ppl_trampoline_end is not page aligned, vstart=%#lx @%s:%d
+%s: ppl_trampoline_start is not page aligned, vstart=%#lx @%s:%d
+%s: unable to get amfid daemon port: %d
+/System/Developer/usr/libexec/dtfilesandboxd
+/usr/libexec/amfid
+<string>Seatbelt sandbox policy</string>
+<string>com.apple.security.sandbox</string>
+AMFI
+AMFI Trust Cache Interface
+AMFI booted with research mode
+AMFI: %s
+AMFI: %s linkage size is too small
+AMFI: %s not allowed to map OOP-JIT %s

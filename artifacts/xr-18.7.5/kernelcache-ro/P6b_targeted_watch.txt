@@ -1,0 +1,75 @@
+=== PPL / PAC / launch_constraints / trustcache (sample) ===
+%s: ppl_trampoline_end is not page aligned, vstart=%#lx @%s:%d
+%s: ppl_trampoline_start is not page aligned, vstart=%#lx @%s:%d
+FEAT_PACIMP
+LaunchConstraintPolicy.cpp
+LaunchConstraints.cpp
+__PPLDATA
+__PPLDATA_CONST
+__PPLTEXT
+__PPLTRAMP
+amfi_allow_3p_launch_constraints
+amfi_enforce_launch_constraints
+com.apple.private.amfi.can-check-trust-cache
+com.apple.private.amfi.can-execute-cdhash
+com.apple.private.amfi.can-load-cdhash
+com.apple.private.amfi.can-load-trust-cache
+com.apple.private.amfi.can-set-denylist
+com.apple.private.amfi.developer-mode-control
+com.apple.private.amfi.garbage-collect-profiles
+com.apple.xnu.pac_exception_event
+launch_constraints_3rd_party_allowed
+launch_constraints_cc_types_enforced
+launch_constraints_enforced
+loadTrustCacheWithExternalManifest
+loadTrustCacheWithType
+mac_proc_check_launch_constraints
+pac_exception_triage
+pmap_ppl_interface.c
+pmap_ppl_lockdown_page_with_prot
+pmap_ppl_unlockdown_page_locked
+static IOReturn AppleMobileFileIntegrityUserClient::isCdhashInTrustCache(OSObject *, void *, IOExternalMethodArguments *)
+static IOReturn AppleMobileFileIntegrityUserClient::loadTrustCache(OSObject *, void *, IOExternalMethodArguments *)
+trust_cache_init
+
+=== auth / IOUserClient / copyin-copyout (sample) ===
+  %s(%s): Attempting to synthesize %u EtE timestamps between {0x%llx.%016llx (%llu), %llu} and {0x%llx.%016llx (%llu), %llu} but intervals are out of bounds lower limit %llu upper limit %llu remote %llu local %llu, resetting
+  %s(%s): Filter reset counts: %u exceeded drop limit, %u out of bounds
+  %s(%s): Measurement discard reasons: %u exceeded PPM limit, %u exceeded delay limit, %u out of bounds, %u timestamps out of order
+"%s: IOUserClient::registerFilterCallbacks failed: %d" @%s:%d
+"IOGPUResidentMemorySet::repack() out of bounds" @%s:%d
+"IOMFB: panel charge out of bounds [0x%x]" @%s:%d
+"[%s] " "SDR offset/size out of bounds (off=%08X, size=%08x).  Is firmware loaded?\n" @%s:%d
+"write request out of bounds of register map\n" @%s:%d
+%s - %lx: copyout failed: %d
+%s(): seg->page_count out of bounds @%s:%d
+%s(): seg->size out of bounds @%s:%d
+%s(): seg_info out of bounds @%s:%d
+%s: %s copyin() error %d
+%s: %s copyout() error %d
+%s: Copy client update copyout client id error (%d)
+%s: Copy client update copyout error (%d)
+%s: Entry index out of bounds.
+%s: Entry index(%d) out of bounds(%d).
+%s: Parameters copyin error (%d)
+%s: Parameters copyout error (%d)
+%s: Requested safety offset (%d) out of bounds (%d, %d).
+%s: ane_seg_thread_state_64 out of bounds
+%s: ane_thread_state_64 out of bounds
+%s: copyin error (%d)
+%s: copyin failed: %d
+%s: copyin failed: error %d
+%s: copying private key from AMFI not supported on this platform
+%s: error copying in UUID: %d
+%s: error copying in args %d
+%s: error copying in args: %d
+%s: error copying in img4_aux_manifest_addr: %d
+%s: error copying in img4_manifest_addr: %d
+%s: error copying in img4_object_addr: %d
+%s: error copying in public key %d
+%s: if_redirect_request_copyin failed: error %d
+%s: m_data out of bounds
+%s: message out of bounds (offset:0x%x length:%d)
+%s: necp_client_add client_id copyout error (%d)
+%s: necp_client_add parameters copyin error (%d)
+%s: necp_client_add_flow copyin client_id error (%d)

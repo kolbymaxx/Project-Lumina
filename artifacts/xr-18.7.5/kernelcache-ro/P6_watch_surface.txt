@@ -1,0 +1,80 @@
+  %s(%s): Attempting to synthesize %u EtE timestamps between {0x%llx.%016llx (%llu), %llu} and {0x%llx.%016llx (%llu), %llu} but intervals are out of bounds lower limit %llu upper limit %llu remote %llu local %llu, resetting
+  %s(%s): Filter reset counts: %u exceeded drop limit, %u out of bounds
+  %s(%s): Measurement discard reasons: %u exceeded PPM limit, %u exceeded delay limit, %u out of bounds, %u timestamps out of order
+"%s: IOUserClient::registerFilterCallbacks failed: %d" @%s:%d
+"IOGPUResidentMemorySet::repack() out of bounds" @%s:%d
+"IOMFB: panel charge out of bounds [0x%x]" @%s:%d
+"[%s] " "SDR offset/size out of bounds (off=%08X, size=%08x).  Is firmware loaded?\n" @%s:%d
+"write request out of bounds of register map\n" @%s:%d
+%s - %lx: copyout failed: %d
+%s(): seg->page_count out of bounds @%s:%d
+%s(): seg->size out of bounds @%s:%d
+%s(): seg_info out of bounds @%s:%d
+%s: %s copyin() error %d
+%s: %s copyout() error %d
+%s: %s kalloc_data() failed
+%s: Copy client update copyout client id error (%d)
+%s: Copy client update copyout error (%d)
+%s: Entry index out of bounds.
+%s: Entry index(%d) out of bounds(%d).
+%s: Parameters copyin error (%d)
+%s: Parameters copyout error (%d)
+%s: Requested safety offset (%d) out of bounds (%d, %d).
+%s: ane_seg_thread_state_64 out of bounds
+%s: ane_thread_state_64 out of bounds
+%s: copyin error (%d)
+%s: copyin failed: %d
+%s: copyin failed: error %d
+%s: copying private key from AMFI not supported on this platform
+%s: error copying in UUID: %d
+%s: error copying in args %d
+%s: error copying in args: %d
+%s: error copying in img4_aux_manifest_addr: %d
+%s: error copying in img4_manifest_addr: %d
+%s: error copying in img4_object_addr: %d
+%s: error copying in public key %d
+%s: if_redirect_request_copyin failed: error %d
+%s: m_data out of bounds
+%s: message out of bounds (offset:0x%x length:%d)
+%s: necp_client_add client_id copyout error (%d)
+%s: necp_client_add parameters copyin error (%d)
+%s: necp_client_add_flow copyin client_id error (%d)
+%s: necp_client_add_flow copyin default_add_request error (%d)
+%s: necp_client_add_flow copyout add_request error (%d)
+%s: necp_client_agent_action copyin client_id error (%d)
+%s: necp_client_agent_action parameters copyin error (%d)
+%s: necp_client_claim copyin client_id error (%d)
+%s: necp_client_copy assigned results copyout error (%d)
+%s: necp_client_copy assigned results tlv_header copyout error (%d)
+%s: necp_client_copy client_id copyin error (%d)
+%s: necp_client_copy group members copyout error (%d)
+%s: necp_client_copy parameters copyout error (%d)
+%s: necp_client_copy protocol control event results tlv_header copyout error (%d)
+%s: necp_client_copy request flow divert TLV copyout error (%d)
+%s: necp_client_copy result copyout error (%d)
+%s: necp_client_copy_agent copyin agent_uuid error (%d)
+%s: necp_client_copy_interface copyin interface_index error (%d)
+%s: necp_client_copy_interface copyout error (%d)
+%s: necp_client_copy_route_statistics copyin client_id error (%d)
+%s: necp_client_copy_route_statistics copyout error (%d)
+%s: necp_client_get_interface_address copyin address error (%d)
+%s: necp_client_get_interface_address copyin interface_index error (%d)
+%s: necp_client_get_interface_address copyout error (%d)
+%s: necp_client_get_signed_client_id copyin request_type error (%d)
+%s: necp_client_get_signed_client_id copyout error (%d)
+%s: necp_client_list buffer copyout error (%d)
+%s: necp_client_list client count copyout error (%d)
+%s: necp_client_remove copyin client_id error (%d)
+%s: necp_client_remove flow_ifnet_stats copyin error (%d)
+%s: necp_client_remove_flow copyin client_id error (%d)
+%s: necp_client_request_nexus copyin bufreq error (%d)
+%s: necp_client_request_nexus copyin client_id error (%d)
+%s: necp_client_request_nexus copyout bufreq error (%d)
+%s: necp_client_set_signed_client_id copyin request error (%d)
+%s: necp_client_set_signed_client_id copyin request_type error (%d)
+%s: necp_client_sign copyin signable error (%d)
+%s: necp_client_sign copyout error (%d)
+%s: necp_client_update_cache copyin cache buffer error (%d)
+%s: necp_client_update_cache copyin client_id error (%d)
+%s: necp_client_update_cache copyin ecn cache buffer error (%d)
+%s: necp_client_update_cache copyin tfo cache buffer error (%d)
