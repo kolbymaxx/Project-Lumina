@@ -65,3 +65,5 @@ Missing nodes `disk0s1s2`/`s8` → RC66 explained. Next: mount **`disk1s1` → `
 Interpretation: on this ramdisk/`disk1s*` map, Data RO did not fail-fast with version skew; it **blocked**. Closed as **SEP/keybag-class blocker** (not tool-version retry). System RO still OK.
 
 **Session closed** — s8 deferred; no further mounts / seputil / RW / 16.0 in this pass.
+
+Follow-on plan (not executed): [`../../research/DATA_MOUNT_SEP_KEYBAG_PLAN.md`](../../research/DATA_MOUNT_SEP_KEYBAG_PLAN.md).

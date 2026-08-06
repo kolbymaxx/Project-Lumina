@@ -118,6 +118,9 @@ Preboot (as some copy-paste recipes do) is wrong for this layout.
 Executable session checklist (Session A on known-good 15.1 first, then gated
 16.0): [`DATA_MOUNT_LIVE_PLAN.md`](DATA_MOUNT_LIVE_PLAN.md).
 
+After Session A hang (not exit 76): SEP/keybag A/B design —
+[`DATA_MOUNT_SEP_KEYBAG_PLAN.md`](DATA_MOUNT_SEP_KEYBAG_PLAN.md).
+
 ## Ordered next experiments (human / future session)
 
 Do **not** wire into `boot/` until a session proves mounts.

@@ -198,3 +198,5 @@ Still **no** `seputil`. RO only.
 - Data `disk1s2` → `/mnt2` **hung** until Ctrl-C; no `DATA_RC`.
 - Not the Phase A fail-fast **76**. Treat as a **different** failure class pending short `s8` probe + later SEP/keybag plan.
 - **Do not** leave `mount_apfs` on Data running indefinitely.
+
+**Next design (docs only):** [`DATA_MOUNT_SEP_KEYBAG_PLAN.md`](DATA_MOUNT_SEP_KEYBAG_PLAN.md) — unlock A/B, short timeout, no seputil until errno leaves hang.
