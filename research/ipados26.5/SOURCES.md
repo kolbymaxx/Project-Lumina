@@ -8,5 +8,7 @@
 | [docs/RESEARCH_PLAN_26.5.md](../../docs/RESEARCH_PLAN_26.5.md) | Canonical path matrix |
 | [docs/research/usbliter8-t8027-bringup.md](../../docs/research/usbliter8-t8027-bringup.md) | Path C DFU identity only |
 | [research/kexploit/](../kexploit/) | XR 18.7.5 methodology **teacher** — different device/OS |
+| [opa334/Dopamine 3.0](https://github.com/opa334/Dopamine/releases/tag/3.0) | Public JB window through **26.0.1** — not 26.5 |
+| [staturnzz/momentarius](https://github.com/staturnzz/momentarius) | Public A12/A13 PPL teacher; confirm A12X in code |
 
 Do not cite Discord/YouTube as matrix evidence.
