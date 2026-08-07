@@ -29,6 +29,7 @@ Nothing here is wired into `boot/`. This tree is **separate** from XR 18.7.5 [`.
 | File | Role |
 |------|------|
 | [NEXT.md](NEXT.md) | **Single next action** (update after each step/fail) |
+| [STEP4_REACHABILITY.md](STEP4_REACHABILITY.md) | Concrete checklist for AppleAVE2UserClient reachability |
 | [CONTINUITY.md](CONTINUITY.md) | Prefer try N+1; no plan rewrites unless facts change |
 | [FILTER.md](FILTER.md) | Hard ACCEPT / REJECT before cards or lab |
 | [HUNT_LOOP.md](HUNT_LOOP.md) | INTAKE → FILTER → CARD → LAB → MATRIX |

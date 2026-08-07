@@ -5,26 +5,24 @@ Rule: [CONTINUITY.md](CONTINUITY.md).
 
 ## Current
 
-**Try Step 4 (P001 lead):** Reachability of **`AppleAVE2UserClient`** on iPadOS 26.5 /
-A12X — entitlements / VideoToolbox / public API cite.  
-Dopamine 3.0 does **not** replace this (ClearSword ends **26.0.1**).
+**Try Step 4:** Follow the checklist in
+[`STEP4_REACHABILITY.md`](STEP4_REACHABILITY.md) — decide **yes / no / unknown**
+for third-party reachability of **`AppleAVE2UserClient`** on **26.5**.
 
 | | Signal |
 |---|--------|
-| **Success** | Cited path or explicit entitlement gate → Step 5 hyp **or** demote if entitled-only |
-| **Fail** | No public surface → try **P002** kernel write cluster |
+| **Success** | Answer + citation recorded on P001 / REACHABILITY note |
+| **Fail / unknown** | Demote AVE for lab; **try P002** next |
+
+## Also useful (not instead of Step 4)
+
+- Dopamine 3.0 / momentarius / ClearSword = **teachers ≤26.0.1** ([P007](experiments/P007_dopamine3_teacher_not_installer.md))
+- Watchlist PPL line updated: [WRITEUP_WATCHLIST.md](WRITEUP_WATCHLIST.md)
 
 ## Device lock
 
-- ProductVersion **26.5** · Model **MTHN2LL/A** (`iPad8,7`) · Serial **DLXYF04EKC48**
-- IPSW delta: **23F77 ↔ 23G71**
-
-## Backup
-
-If AVE reachability hard-blocked: **P002** offline cluster (no triggers).
+- **26.5** · **MTHN2LL/A** (`iPad8,7`) · **DLXYF04EKC48** · IPSW **23F77↔23G71**
 
 ## Done / parked
 
-- Step 1–3: IPSW + extract + AppleAVE2 diff
-- **P007:** Dopamine 3.0 IPA+source ingested — **teacher / not 26.5 installer**
-  ([experiments/P007_dopamine3_teacher_not_installer.md](experiments/P007_dopamine3_teacher_not_installer.md))
+- Steps 1–3 + P007 Dopamine intake
