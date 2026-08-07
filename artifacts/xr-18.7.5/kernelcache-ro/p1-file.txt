@@ -1,0 +1,1 @@
+/workspace/artifacts/xr-18.7.5/firmware-22H311/kernelcache.payload: Mach-O 64-bit arm64e 00) filetype=12

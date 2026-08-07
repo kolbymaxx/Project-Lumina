@@ -1,0 +1,40 @@
+1139:@(#)VERSION: Darwin Kernel Version 24.6.0: Mon Jan 19 22:05:19 PST 2026; root:xnu-11417.140.69.706.3~1/RELEASE_ARM64_T8020
+1140:Darwin Kernel Version 24.6.0: Mon Jan 19 22:05:19 PST 2026; root:xnu-11417.140.69.706.3~1/RELEASE_ARM64_T8020
+136:com.apple.driver.AppleT8020
+137:com.apple.driver.AppleT8020CLPCv3
+138:com.apple.driver.AppleT8020DART
+139:com.apple.driver.AppleT8020PCIe
+140:com.apple.driver.AppleT8020PMGR
+141:com.apple.driver.AppleT8020PMPFirmware
+142:com.apple.driver.AppleT8020PPM
+143:com.apple.driver.AppleT8020SOCTuner
+144:com.apple.driver.AppleT8020USB
+146082:LAppleT8020PPM
+160:com.apple.driver.usb.AppleUSBHostT8020
+20246:AppleT8020PMGR
+231896:				<key>AppleT8020MTRTempSensor</key>
+231901:					<string>AppleT8020MTRTempSensor</string>
+238061:			<string>AppleMCA2_T8020</string>
+238063:			<string>com.apple.driver.AppleMCA2-T8020</string>
+238067:			<string>AppleMCA2_T8020</string>
+238100:				<key>AppleLEAPController_T8020</key>
+238103:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238111:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238115:				<key>AppleMCA2Cluster_T8020</key>
+238118:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238120:					<string>AppleMCA2Cluster_T8020</string>
+238126:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238130:				<key>AppleMCA2Switch_T8020</key>
+238133:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238141:					<string>com.apple.driver.AppleMCA2-T8020</string>
+238188:			<string>/System/Library/Extensions/AppleMCA2_T8020.kext</string>
+238192:			<string>AppleMCA2_T8020</string>
+246443:			<string>AppleT8020</string>
+246445:			<string>com.apple.driver.AppleT8020</string>
+246449:			<string>AppleT8020</string>
+246482:				<key>AppleT8020MemCacheController</key>
+246485:					<string>com.apple.driver.AppleT8020</string>
+246487:					<string>AppleT8020MemCacheController</string>
+246491:					<string>com.apple.driver.AppleT8020</string>
+246501:				<key>AppleT8020PlatformErrorHandler</key>
+246504:					<string>com.apple.driver.AppleT8020</string>

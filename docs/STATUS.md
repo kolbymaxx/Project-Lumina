@@ -100,10 +100,11 @@ Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
 `research/` (mitigations, kexploit theory, checkm8/palera1n notes). **No new
 live capability** — docs only; boot path unchanged.
 
-Offline Stage C artifact noted (Mac only): see
-[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md)
-(`kernelcache.release.iphone11b` / `kernelcache.payload`). **Not** a kexploit
-claim — documentation of an extract for later RE probes.
+Offline Stage C: **22H311 kernelcache pinned** (2026-08-07 cloud RO session).
+Hashes + teacher-marker inventory in
+[../artifacts/xr-18.7.5/kernelcache-ro/SESSION_2026-08-07.md](../artifacts/xr-18.7.5/kernelcache-ro/SESSION_2026-08-07.md).
+Fetch helper: [`../tools/fetch_22h311_kernelcache.py`](../tools/fetch_22h311_kernelcache.py).
+**Not** a kexploit claim.
 
 Public tool applicability (2026-08-01): only **usbliter8 + ramdisk** applies as
 a real public capability on A12/18.7.5; Dopamine/palera1n are not drop-in for
