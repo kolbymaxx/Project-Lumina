@@ -18,7 +18,7 @@ Fork matrix for advancing capability ourselves. Not a single exploit claim.
 
 **Binding scene constraints:**
 - A12 is a **PPL** device. Dopamine-style needs **KRW + A12 PPL defeat** on the **target build**.
-- **2026-08-07:** public **momentarius** A12/A13 PPL (Dopamine **3.0**) covers **16.6–18.7.1** and **26.0–26.0.1** — **not 18.7.5**. See [T016](../research/kexploit/experiments/T016_dopamine3_momentarius_window.md).
+- **2026-08-07:** public **momentarius** A12/A13/A12X PPL (Dopamine **3.0**) covers through **18.7.1** / **26.0.1** — **not 18.7.5**. Delta: [T017](../research/kexploit/experiments/T017_1871_to_1875_delta.md) — **KRW** is the citable 18.7.5 kill; momentarius viability on 18.7.5 still **unproven**.
 - `pattern_F_` remains a separate private bypass; do not conflate with momentarius. Recovering private demos is still **out**.
 - **Path A on 18.7.5** = study public Dopamine/momentarius/ClearSword as **teachers** + **18.7.1→18.7.5** delta; original KRW track still required for 22H311: [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).
 - **Relaxin** marketed window: A12 on **17.0–17.3.1** only — **not** 18.7.5 (superseded as “only public PPL path” by momentarius for ≤18.7.1).

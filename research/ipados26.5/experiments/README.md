@@ -11,5 +11,6 @@
 | P004 | [P004_kernel_cve_2026_64749_corrupt_watch.md](P004_kernel_cve_2026_64749_corrupt_watch.md) | Kernel corrupt cluster |
 | P005 | [P005_kernel_cve_2026_64709_disclose_watch.md](P005_kernel_cve_2026_64709_disclose_watch.md) | Kernel disclose companion |
 | P006 | [P006_mediaremote_cve_2026_43723_watch.md](P006_mediaremote_cve_2026_43723_watch.md) | MediaRemote root staging |
+| P007 | [P007_2601_to_265_delta.md](P007_2601_to_265_delta.md) | **26.0.1→26.5** — A12X yes; KRW+PPL gated |
 
 All Lab = No until binary evidence + hypothesis (1)(2)(3).

@@ -83,8 +83,9 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 | **A** Stay 18.7.5 Dopamine-style — teachers + **18.7.1→18.7.5** delta | **Parked / secondary** |
 | **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only |
 
-**2026-08-07 scene:** Dopamine **3.0** + public [momentarius](https://github.com/staturnzz/momentarius) A12/A13 PPL through **18.7.1** / **26.0.1** — **not** XR **18.7.5**, **not** iPad **26.5**.  
-Intake: [T016](../research/kexploit/experiments/T016_dopamine3_momentarius_window.md) · [INTAKE_2026-08-07_dopamine3.md](../research/kexploit/experiments/INTAKE_2026-08-07_dopamine3.md).
+**2026-08-07 scene:** Dopamine **3.0** + [momentarius](https://github.com/staturnzz/momentarius) through **18.7.1** / **26.0.1**.  
+Delta answers: XR [T017](../research/kexploit/experiments/T017_1871_to_1875_delta.md) — **KRW dead** (ClearSword end 18.7.1 / CVE-2025-43520 @ 18.7.2); momentarius on 18.7.5 **unproven**.  
+iPad [P007](../research/ipados26.5/experiments/P007_2601_to_265_delta.md) — **A12X yes**; both KRW and PPL gated by **26.1 / 26.0.1**.
 
 XR Path A method:
 [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).

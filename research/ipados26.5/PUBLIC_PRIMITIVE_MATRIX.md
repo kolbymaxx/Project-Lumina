@@ -11,7 +11,7 @@ Docs only. Not wired into `boot/`. Filter: [FILTER.md](FILTER.md).
 | XR ramdisk / `boot/` | Lab | **No** | Different board (`n841ap`); do not reuse |
 | checkm8 / palera1n | BootROM tooling | **No** as drop-in | A8–A11 teachers |
 | Dopamine installer | Userspace JB | **No** on **26.5** | Dopamine 3.0 + momentarius public through **26.0.1** only — teacher/delta, not drop-in |
-| momentarius (public A12/A13 PPL) | PPL bypass | **No** on **26.5** | Window **26.0–26.0.1**; A12X needs code confirm — [INTAKE_dopamine3_momentarius.md](experiments/INTAKE_dopamine3_momentarius.md) |
+| momentarius (public A12/A13 PPL) | PPL bypass | **No** on **26.5** | End **26.0.1**; **A12X confirmed** (same A12 init) — [P007](experiments/P007_2601_to_265_delta.md) |
 | DarkSword / ClearSword / LARA | Third-party KRW | **Outside / unproven** on 26.5 | Do not port without 26.5 evidence |
 | CVE-2026-64747 AVE | Advisory watch | **Watch** | Kernel privileges language; no PoC here |
 | CVE-2026-64751 Kernel write | Advisory watch | **Watch** | UAF → write language; no PoC here |

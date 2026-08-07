@@ -8,7 +8,7 @@ Canonical hunt tree: [`../research/ipados26.5/`](../research/ipados26.5/).
 XR 18.7.5 / usbliter8 track stays under [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) + [`../research/kexploit/`](../research/kexploit/) — **do not mix** without labeling a device/OS change.
 
 **Status line:** no matching public primitive for **A12X / iPadOS 26.5**.  
-**(2026-08-07)** Public Dopamine 3.0 / momentarius PPL covers **26.0–26.0.1** (A12/A13; A12X verify in code) — **not 26.5**. Intake: [`../research/ipados26.5/experiments/INTAKE_dopamine3_momentarius.md`](../research/ipados26.5/experiments/INTAKE_dopamine3_momentarius.md).
+**(2026-08-07)** Dopamine 3.0 / momentarius through **26.0.1**; **A12X confirmed** in source. On **26.5** both KRW and PPL plugins are version-gated ([P007](../research/ipados26.5/experiments/P007_2601_to_265_delta.md)).
 
 ---
 
