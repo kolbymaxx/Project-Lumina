@@ -19,10 +19,15 @@ Nothing here is wired into `boot/`. DFU enum ≠ exploit success.
 ### Explicit non-claims
 
 - No claim that usbliter8 pwns t8027 / A12X today.
-- No claim of iPadOS 26.5 process exploit, kernel r/w, or untether.
+- No claim of iPadOS 26.5 process exploit, kernel r/w, or untether **from this SecureROM track**.
 - No Sileo / dpkg / bootstrap goal on 26.5.
 - No DarkSword / kexploit port for this device in this memo.
 - Do not reuse XR `n841ap` ramdisk / DeviceTree / UDID as if they were A12X.
+
+**Cross-link (Path A/B PE hunt — separate tree):** iPadOS **26.5** delta research from
+**26.6** patches lives under [`../../research/ipados26.5/`](../../research/ipados26.5/)
+and [`../RESEARCH_PLAN_26.5.md`](../RESEARCH_PLAN_26.5.md). That track does **not**
+wait on Pico/PWND. This bring-up doc remains **Path C only**.
 
 ---
 

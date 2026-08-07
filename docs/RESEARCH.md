@@ -1,48 +1,65 @@
 # Lumina research index
 
-Study-only index. **Nothing here is a working jailbreak on 18.7.5.**
+Study-only index. **Nothing here is a working jailbreak** on XR 18.7.5 or iPad 26.5.
 Nothing under `research/` is wired into `boot/lumina-boot.sh`.
 
-## Intended stack (aspirational)
+## Active track (2026-08-07) — A12X / iPadOS 26.5
+
+| Item | Path |
+|------|------|
+| Canonical plan | [RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md) |
+| Hunt tree (P00N) | [../research/ipados26.5/](../research/ipados26.5/) |
+| FILTER | [../research/ipados26.5/FILTER.md](../research/ipados26.5/FILTER.md) |
+| 26.6 intake | [../research/ipados26.5/experiments/INTAKE_26.6.md](../research/ipados26.5/experiments/INTAKE_26.6.md) |
+| SecureROM Path C | [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md) |
+
+**Status:** no matching public primitive for **A12X / iPadOS 26.5**.  
+usbliter8 A12X **not** required for Path A/B.
+
+## XR stack (parked Path A — still live BootROM lab)
 
 ```text
-usbliter8 (BootROM / Pico)          [WORKS — A12 entry]
+usbliter8 (BootROM / Pico)          [WORKS — A12 XR entry]
   → iBSS / Recovery                 [WORKS]
   → ramdisk + SSH                   [WORKS — 15.1 restore env]
   → mount System / Data             [System OK; Data BLOCKED]
-  → (research) kernel r/w           [NOT DONE — isolated]
+  → (research) kernel r/w           [NOT DONE — parked]
   → (hard) PPL / SPTM               [NOT DONE]
   → Dopamine-like bootstrap         [NOT DONE]
 ```
 
 ## Roles
 
-| Project | Role for Lumina | Applies on XR 18.7.5 / A12? |
-|---------|-----------------|------------------------------|
-| **usbliter8** | BootROM entry; pwned DFU + CUSTOM_BOOT | **Yes** — live entry |
-| **XR ramdisk** (hsbugss) | Tethered ramdisk + SSH; volume mounts | **Yes** for boot/SSH; Data mount tooling is 15.1-limited |
-| **checkm8** | Historical A11-and-older BootROM knowledge | **No** as exploit on A12 — learning only |
-| **palera1n** | A8–A11 tethered/semi tooling patterns | **No** as drop-in on A12/18.7.5 — learning only |
-| Dopamine | Bootstrap / rootless / jailbreakd architecture | Architecture only after k r/w exists |
-| DarkSword / darksword-kexploit | Kernel r/w research | Study only; isolated under `research/kexploit/` |
-| LARA | Userspace toolbox on DarkSword | Public matrix ends **18.7.1**; 18.7.5 outside |
+| Project | Role for Lumina | XR 18.7.5 / A12? | A12X / 26.5? |
+|---------|-----------------|------------------|--------------|
+| **usbliter8** | BootROM entry | **Yes** — live | **Not implemented** (Path C) |
+| **XR ramdisk** | Tethered SSH | **Yes** | **No** — wrong board |
+| **ipados26.5 hunt** | 26.6 delta → PE/KRW watches | N/A | **Yes** — docs/RE primary |
+| **checkm8** | ≤A11 BootROM knowledge | Learning only | Learning only |
+| **palera1n** | A8–A11 patterns | Learning only | Learning only |
+| Dopamine | Bootstrap architecture | After k r/w | After k r/w + PPL |
+| DarkSword / LARA | Kernel study | Study only (`kexploit/`) | Do not port without FILTER |
 
 Notes dirs:
+- [../research/ipados26.5/README.md](../research/ipados26.5/README.md)
 - [../research/checkm8/README.md](../research/checkm8/README.md)
 - [../research/palera1n/README.md](../research/palera1n/README.md)
 - [../research/kexploit/README.md](../research/kexploit/README.md)
 - [../research/kexploit/THEORY.md](../research/kexploit/THEORY.md)
 - [../research/mitigations/README.md](../research/mitigations/README.md)
+- [../research/usbliter8-t8027/](../research/usbliter8-t8027/)
 
 ## Theory / RE roadmap (docs only — not wired to boot)
 
 | Doc | Contents |
 |-----|----------|
-| [RESEARCH_PLAN.md](RESEARCH_PLAN.md) | **Path A/B/C matrix** — lab primary (B) + original KRW+PPL discovery (A) |
-| [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md) | Path A method: KRW first, PPL second; fail-closed; not `pattern_F_` recovery |
-| [../research/kexploit/ANTI_PATTERNS.md](../research/kexploit/ANTI_PATTERNS.md) | Explicit anti-goals for the Dopamine-style ambition |
-| [../research/kexploit/HYPOTHESIS_TEMPLATE.md](../research/kexploit/HYPOTHESIS_TEMPLATE.md) | Fail-closed hypothesis cards |
-| [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
+| [RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md) | **Active:** A12X / 26.5 Path A/B/C + 26.6 delta scoreboard |
+| [../research/ipados26.5/](../research/ipados26.5/) | FILTER / HUNT_LOOP / P00N watches (P001–P006) |
+| [RESEARCH_PLAN.md](RESEARCH_PLAN.md) | XR 18.7.5 Path A/B/C — **Path A parked** |
+| [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md) | XR Path A method: KRW first, PPL second; not `pattern_F_` recovery |
+| [../research/kexploit/ANTI_PATTERNS.md](../research/kexploit/ANTI_PATTERNS.md) | XR anti-goals |
+| [../research/kexploit/HYPOTHESIS_TEMPLATE.md](../research/kexploit/HYPOTHESIS_TEMPLATE.md) | Fail-closed hypothesis cards (XR) |
+| [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan (XR-oriented; label OS when citing) |
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
 | [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md) | **Teachers not installers** — palera1n/Dopamine/Coruna map + RE order |
 | [../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md](../research/kexploit/PUBLIC_PRIMITIVE_MATRIX.md) | Bug → SoC → last iOS → why dead on 18.7.5 (**no public match**) |
@@ -60,15 +77,17 @@ Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
 ## Hard gates (current)
 
+### A12X / 26.5 (active)
+1. **Exact build lock** — ProductBuildVersion on lab iPad still TBD
+2. **Offline 26.5↔26.6 artifacts** — kernel/kext extract before any trigger claims
+3. **Kernel/PE primitive** — no matching public primitive; watches P001–P006 only
+4. **PPL** — separate after KRW; `pattern_F_` recovery rejected
+
+### XR / 18.7.5 (parked Path A)
 1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
 2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; Path A
-   discovery is the **original KRW+PPL track**
-   ([kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md)),
-   not `pattern_F_` recovery. Study Dopamine/palera1n/Coruna as teachers
-   ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)).
-   **Fork 1 / Path A∪B active** (stay on 18.7.5):
-   [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md) ·
-   [RESEARCH_PLAN.md](RESEARCH_PLAN.md)
+   discovery parked — see
+   ([kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md))
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
 Crossing these gates is future work. Document progress in [STATUS.md](STATUS.md).

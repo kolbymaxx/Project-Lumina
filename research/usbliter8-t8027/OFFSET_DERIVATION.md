@@ -24,7 +24,9 @@ Nothing here is wired into `boot/`. Empty stubs remain TODO / `#error` until add
 - Filling stub `#define`s with guessed numbers
 - Wiring `case 0x8027` into a buildable firmware claim
 - `boot/` / UDID / ramdisk / DeviceTree
-- DarkSword, kexploit, bootstrap, Sileo/dpkg, iPadOS 26.5 PE
+- DarkSword / XR `kexploit` port, bootstrap, Sileo/dpkg
+- Claiming iPadOS 26.5 PE from SecureROM work (PE/KRW hunt is a **separate** tree:
+  [`../ipados26.5/`](../ipados26.5/) — does not block on these offsets)
 
 ### Goal
 
