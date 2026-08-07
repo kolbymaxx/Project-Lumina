@@ -4,6 +4,12 @@
 **Entry:** usbliter8 → Pwned DFU `05ac:1227`  
 **Updated:** 2026-08-07  
 
+**Track status:** Path A on this device/OS is **parked / secondary** while the
+**A12X / iPadOS 26.5** delta hunt is active. See
+[RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md) and
+[`../research/ipados26.5/`](../research/ipados26.5/). Do not mix notes without
+labeling a device/OS change.
+
 Fork matrix for advancing capability ourselves. Not a single exploit claim.
 
 **Goal tension (honest):**

@@ -1,16 +1,24 @@
 # Project Lumina
 
-Research monorepo for a **tethered → (eventual) semi-untethered** A12/A13 path
-starting from usbliter8 BootROM.
+Research monorepo for **tethered → (eventual) semi-untethered** paths on A12/A12X/A13,
+starting from usbliter8 BootROM where available.
 
-**This is not a jailbreak.** No Sileo / package-manager claim on iOS **18.7.5**.
+**This is not a jailbreak.** No Sileo / package-manager claim on iOS **18.7.5** or
+iPadOS **26.5**.
 
-Primary live device: iPhone XR (`n841ap`) on **18.7.5 (22H311)**.
+### Active focus (2026-08-07)
+**iPad Pro 12.9" 3rd gen (A12X) / iPadOS 26.5.x** — delta hunt from **26.6** patches.
+Plan: [`docs/RESEARCH_PLAN_26.5.md`](docs/RESEARCH_PLAN_26.5.md) · tree:
+[`research/ipados26.5/`](research/ipados26.5/).
 
-### Honest status (Phase A, 2026-08-01)
-- **Done:** BootROM (usbliter8) → ramdisk SSH → System volume mount (`/mnt1` shows 18.7.5)
-- **Blocked:** Data volume mount (`mount_apfs: Program version wrong` on 15.1 ramdisk tooling)
-- **Not done:** kernel exploit, PPL, userspace bootstrap
+### XR lab (parked Path A)
+Primary live BootROM device: iPhone XR (`n841ap`) on **18.7.5 (22H311)** —
+usbliter8 → ramdisk SSH still works; kernel Path A **parked**.
+
+### Honest status
+- **A12X 26.5:** docs/RE + advisory intake (P001–P006); no public primitive; no PWND
+- **XR Phase A:** BootROM → ramdisk SSH → System mount OK; Data mount blocked
+- **Not done:** kernel exploit, PPL, userspace bootstrap on either track
 
 ## What works today
 1. usbliter8 Pico → Pwned DFU

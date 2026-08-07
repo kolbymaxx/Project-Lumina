@@ -1,16 +1,31 @@
-# Lumina Jailbreak — Project Status (2026-08-01)
+# Lumina Jailbreak — Project Status (2026-08-07)
 
 ## Goal
-Research tethered → semi-untethered style jailbreak path for A12/A13 on modern iOS,
-starting from usbliter8 BootROM. Codename: **Lumina**.
+Research tethered → semi-untethered style paths for A12/A12X/A13 on modern iOS/iPadOS.
+Codename: **Lumina**.
 
-**Not a jailbreak.** No Sileo / package-manager claim on 18.7.5.
+**Not a jailbreak.** No Sileo / package-manager claim on XR **18.7.5** or iPad **26.5**.
+
+### Active focus (2026-08-07)
+**Path D / A12X 26.5 delta hunt** — stay on iPadOS **26.5.x**, intake from **26.6** patches
+(2026-07-27). Canonical plan: [RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md).  
+Hunt tree: [`../research/ipados26.5/`](../research/ipados26.5/).  
+**Status line:** no matching public primitive for **A12X / iPadOS 26.5**.
+
+XR **18.7.5** Path A (KRW→PPL) is **parked / secondary**. XR Path B boot-chain remains
+Mac-only optional. Do not mix tracks without labeling device + OS.
 
 ## Devices
-| Device | SoC | iOS | Role |
+| Device | SoC | OS | Role |
 |--------|-----|-----|------|
-| iPhone XR (n841ap) | A12 | **18.7.5 (22H311)** | Primary research — **LIVE** |
+| iPad Pro 12.9" 3rd gen | A12X (t8027) | **iPadOS 26.5.x** (pre-26.6) | **Primary research focus** — PE/kernel delta hunt; build string TBD on-device |
+| iPhone XR (n841ap) | A12 | **18.7.5 (22H311)** | Live usbliter8 → ramdisk lab — **parked** for Path A; Path B optional |
 | iPhone 11 Pro Max | A13 | TBD | Second target (usbliter8 supports A13) |
+
+**iPad (A12X) DFU identity (locked 2026-08-03):** CPID `8027`, BDID `0A`,
+ECID `0019052A1413002E`, SRTG `[iBoot-4172.0.0.100.14]`, UDID shape
+`00008027-0019052A1413002E` — see [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md).  
+usbliter8 **PWND not achieved** on t8027 (Path C deferred).
 
 XR UDID: `00008020-00117540340B002E`  
 ECID: `00117540340B002E`  
@@ -50,20 +65,26 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 2. **Kernel exploit for 18.7.5 / A12** — not present; study only under `research/kexploit/`
 3. **Userspace bootstrap** — no Dopamine-like install path until (2) and related primitives exist
 
-### Strategy lock — Path A/B/C (2026-08-07)
-Canonical plan: [RESEARCH_PLAN.md](RESEARCH_PLAN.md).
+### Strategy lock — dual track (2026-08-07)
+
+**A12X / 26.5 (active):** [RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md)
 
 | Path | Status |
 |------|--------|
-| **B** Stay 18.7.5 tethered boot-chain (iBEC execute → stage2) | **Lab primary** |
-| **A** Stay 18.7.5 Dopamine-style — original KRW→PPL track | **Docs/RE active**; product JB gated on owned KRW+PPL |
-| **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only; version change |
+| **A** Stay 26.5 — KRW→PPL discovery from 26.6 delta | **Docs/RE primary** |
+| **B** Lab signals only (crash / corruption / temp root) | Open when binary reachability exists |
+| **C** usbliter8/A12X boot-chain | **Deferred** — t8027 SecureROM PAC; no PWND |
 
-Path A method (not `pattern_F_` recovery):
-[../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).  
-Anti-patterns: [../research/kexploit/ANTI_PATTERNS.md](../research/kexploit/ANTI_PATTERNS.md).  
-Former Fork 1 notes: [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md).  
-Writeup watch: [../research/kexploit/WRITEUP_WATCHLIST.md](../research/kexploit/WRITEUP_WATCHLIST.md).
+**XR / 18.7.5 (parked):** [RESEARCH_PLAN.md](RESEARCH_PLAN.md)
+
+| Path | Status |
+|------|--------|
+| **B** Stay 18.7.5 tethered boot-chain (iBEC execute → stage2) | Mac lab optional |
+| **A** Stay 18.7.5 Dopamine-style — original KRW→PPL track | **Parked / secondary** |
+| **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only |
+
+XR Path A method (not `pattern_F_` recovery):
+[../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).
 
 ### Not claimed
 - Not a working jailbreak; no kexploit; no Data R/W; no Sileo
@@ -136,14 +157,11 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Device session 01 (RO):** T011 → T010 → T012 per
-   [`DEVICE_SESSION_01.md`](../research/kexploit/experiments/DEVICE_SESSION_01.md)
-2. **Kernel hunt:** citable writeups for **T008/T009**; continue
-   [`HUNT_LOOP.md`](../research/kexploit/HUNT_LOOP.md)
-   (see [`RE_PRIORITY.md`](../research/kexploit/RE_PRIORITY.md))
-2. Offline Stage C probes on `kernelcache.payload` (see `22H311_NOTES.md`)
-3. **Data mount live trials** (see `research/DATA_MOUNT_SSHRD.md`): try **16.0**
-   then **18.x** n841 restore `mount_apfs`; only after exit 76 clears, run
-   SSHRD-style Preboot/xART/`seputil` staging. **No working A12/18.7.5 Data
-   mount claimed** (still exit 76 on `s2`/`s8` with 15.1 tools)
-4. Keep checkm8/palera1n/kexploit notes isolated from `boot/`
+1. **Primary (A12X):** Lock **ProductVersion / ProductBuildVersion** on the iPad;
+   confirm 26.5 + 26.6 IPSW availability for offline extract
+   ([RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md) Step 1)
+2. **Backup:** If IPSWs already local, inventory kernelcache/AVE Mach-Os (hashes only)
+3. Continue P001–P006 watches under [`research/ipados26.5/`](../research/ipados26.5/) —
+   Lab = No until binary evidence + hypothesis (1)(2)(3)
+4. XR optional: Path B iBEC reliability / Data mount trials — **labeled XR 18.7.5 only**
+5. Keep `research/` isolated from `boot/`; never reuse `n841ap` payloads for A12X
