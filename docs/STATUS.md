@@ -80,10 +80,14 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 | Path | Status |
 |------|--------|
 | **B** Stay 18.7.5 tethered boot-chain (iBEC execute → stage2) | Mac lab optional |
-| **A** Stay 18.7.5 Dopamine-style — original KRW→PPL track | **Parked / secondary** |
+| **A** Stay 18.7.5 Dopamine-style — teachers + **18.7.1→18.7.5** delta | **Parked / secondary** |
 | **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only |
 
-XR Path A method (not `pattern_F_` recovery):
+**2026-08-07 scene:** Dopamine **3.0** + [momentarius](https://github.com/staturnzz/momentarius) through **18.7.1** / **26.0.1**.  
+Delta answers: XR [T017](../research/kexploit/experiments/T017_1871_to_1875_delta.md) — **KRW dead** (ClearSword end 18.7.1 / CVE-2025-43520 @ 18.7.2); momentarius on 18.7.5 **unproven**.  
+iPad [P007](../research/ipados26.5/experiments/P007_2601_to_265_delta.md) — **A12X yes**; both KRW and PPL gated by **26.1 / 26.0.1**.
+
+XR Path A method:
 [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).
 
 ### Not claimed
@@ -96,10 +100,11 @@ Theory/RE roadmap added under [ROADMAP_THEORY.md](ROADMAP_THEORY.md) and
 `research/` (mitigations, kexploit theory, checkm8/palera1n notes). **No new
 live capability** — docs only; boot path unchanged.
 
-Offline Stage C artifact noted (Mac only): see
-[../research/kexploit/22H311_NOTES.md](../research/kexploit/22H311_NOTES.md)
-(`kernelcache.release.iphone11b` / `kernelcache.payload`). **Not** a kexploit
-claim — documentation of an extract for later RE probes.
+Offline Stage C: **22H311 kernelcache pinned** (2026-08-07 cloud RO session).
+Hashes + teacher-marker inventory in
+[../artifacts/xr-18.7.5/kernelcache-ro/SESSION_2026-08-07.md](../artifacts/xr-18.7.5/kernelcache-ro/SESSION_2026-08-07.md).
+Fetch helper: [`../tools/fetch_22h311_kernelcache.py`](../tools/fetch_22h311_kernelcache.py).
+**Not** a kexploit claim.
 
 Public tool applicability (2026-08-01): only **usbliter8 + ramdisk** applies as
 a real public capability on A12/18.7.5; Dopamine/palera1n are not drop-in for

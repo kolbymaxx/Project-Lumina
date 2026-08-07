@@ -1,0 +1,108 @@
+$_kern_packet_get_service_class_index
+$_kern_packet_get_timestamp_requested
+$_kern_packet_set_fpd_sequence_number
+$/private/var/containers/Shared/SystemGroup/systemgroup.com.apple.ondemandresources/Library/AssetPacks
+$__ZN12OSDictionary14ensureCapacityEj
+$__ZN12OSOrderedSet14ensureCapacityEj
+$__ZN15IOPMPowerSource11maxCapacityEv
+$__ZN7OSArray20setCapacityIncrementEj
+$__ZNK6OSData20getCapacityIncrementEv
+%06lu.%06u %s::%s: Invalid packet
+%06lu.%06u %s::%s: kSet_Ethernet_Packet_Filter
+%06lu.%06u %s::%s: Rx of %u packets complete
+%06lu.%06u %s %s::%s: generic packet word0 = 0x%x, word1 = 0x%x, word2 = 0x%x, word3 = 0x%x, buffer = 0x%llx, target = 0x%llx
+%06lu.%06u %s::%s: Transfer of %u packets enqueued
+%06lu.%06u Unknown: %s::%s: generic packet word0 = 0x%x, word1 = 0x%x, word2 = 0x%x, word3 = 0x%x, buffer = 0x%llx, target = 0x%llx
+( 0 != fFWNamespaceDevice )
+( 0 != fNamespaceAPILock )
+( 0 == (( inByteCapacity % kNVME_4K_LogicalBlockSize )) )
+0 == packetchain
+[0x%llx][%llx][%s::%s]: Constructing HBPP packets for %s
+[0x%llx][%llx][%s::%s]: ERROR!! corrupt packet checksum == 0x%04X. calculated == 0x%04X
+[0x%llx][%llx][%s::%s]: ERROR!! FlatPack Config is missing required key %s
+[0x%llx][%llx][%s::%s]: ERROR!! report size bigger than max packet size (%u > %u) returning kIOReturnDeviceError
+[0x%llx][%llx][%s::%s]: FlatPack table end found
+[0x%llx][%llx][%s::%s]: FlatPack table start found
+[0x%llx][%llx][%s::%s]: Injection max packet size already equal or bigger (%u >= %u)
+[0x%llx][%llx][%s::%s]: kConfigResponsePacketType was overwritten to use report ID 0x%02X
+[0x%llx][%llx][%s::%s]: Packet length not found
+[0x%llx][%llx][%s::%s]: Sending %s to address 0x%08X (packet %u of %u)
+[0x%llx][%llx][%s::%s]: Setting a max packet size of %u for injection
+[0x%llx][%llx][%s::%s]: Truncated input packet
+[0x%llx][%llx][%s::%s]: Verified FlatPack instructions with contents size = %u, number of entries = %u
+[0x%llx][%llx][%s::%s]: WARNING!! User client array size %u is larger than kMaxUserClientsCount %u, touch frame packets will get dropped for exceeding clients
+0__ZN24IOBufferMemoryDescriptor12withCapacityEmjb
+17 {curProtocol: 100, prevProtocol: 80, localPort: %hu, remotePort: %hu, tcpSeq: %u, tcpAck: %u, tcpLen: %hu, tcpFlags: 0x%02x, pid: %hu, logSeqn: %hhu}
+18 {curProtocol: 80, spi: 0x%X, espSeq: %u, PayloadProtocol: 100, localPort: %hu, remotePort: %hu, tcpSeq: %u, tcpAck: %u, tcpLen: %hu, tcpFlags: 0x%02x}
+1__ZN15IOPMPowerSource24capacityPercentRemainingEv
+\3-color-space-video-recording
+4__ZN29IOInterleavedMemoryDescriptor12withCapacityEyj
+6__ZN16IORangeAllocator28setFragmentCapacityIncrementEj
+8__ZN29IOInterleavedMemoryDescriptor16initWithCapacityEyj
+			9tLIQGRCIePkrF9wdCh1Q2JyqSKgYX0QTmZG7DcWpac=
+AbsoluteCapacity
+"Absurd combination of allocation flags for spaceman %llx" @%s:%d
+"ACM: %s keybag=%d cannot be added, no space!" @%s:%d
+ACMTRMCompactState_readFromBuffer(inBuffer, inBufferSize, &legacyPolicy, &policyRead, &legacyAccCache, &accCacheRead)
+acom.apple.sandbox.system-container
+acquired shared page for the TXM channel
+_address_space_debugged_state
+AGXk: %s:%d:%s: !!! Non-statistics packet in statistics ring
+AGXk: %s:%d:%s: !!! %s: Failed to prepare YUV ColorSpaceConversion table mapping
+AGXk: %s:%d:%s: !!! Stale recovery packet is received from firmware. Firmware should never send stale recovery packets.
+AGXk: %s:%d:%s: !!! Unexpected statistic packet value from fender
+allocatePacketPool
+alloc_space_for_write_with_hint_and_spino
+Allowed inter-packet arrival jiter
+Allow incoming link local packets with TTL less than 255
+already notified unattributed wake packet
+already notified wake packet
+amcc_rorgn_ppl_amcc.c
+amfi
+AMFI
+AMFI: [1] informing daemon of developer mode state change
+AMFI: [2] informing daemon of developer mode state change
+AMFI: ACM status %i
+amfi_allow_3p_launch_constraints
+AMFI: allowed with a license-to-operate
+AMFI: allowing pid %u to inherit IPC ports (cur_vp entitled)
+AMFI: allowing pid %u to inherit IPC ports (get-task-allow)
+AMFI: allowing pid %u to inherit IPC ports (no entitlements)
+AMFI: allowing pid %u to inherit IPC ports (platform binary)
+AMFI: allowing pid %u to inherit IPC ports (teamid match)
+amfi-allows-trust-cache-load
+AMFI: amfi-allows-trust-cache-load has unexpected size (%u).
+AMFI: AMFICompleteSecurityBootMode | bootMode: %u
+"AMFI: amfi-only-platform-code has unexpected size (%u)!" @%s:%d
+AMFI: AMFIUpdateDeviceState
+AMFI: apple-internal profile allows all entitlements
+AMFI: armed security boot mode: %s
+AMFI: armSecurityBootMode: invalid scalarInput
+AMFI: armSecurityBootMode: invalid scalarInputCount
+"AMFI: attempted to free OSEntitlements without invalidation" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly ceCtx: %p" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly data: %p" @%s:%d
+"AMFI: attempted to reinitialize OSEntitlementsReadOnly identity: %p" @%s:%d
+AMFI: Booted in a VM
+AMFI booted with research mode
+amfi.c
+"AMFI: calling %s without xART storage support" @%s:%d
+AMFI: can-execute-cdhash code in non-entitled context.
+AMFI: can-execute-cdhash is disabled by system configuration
+AMFI: CC_Parent: Unknown Constraint category: %d
+AMFI: CC_Responsible: Unknown Constraint category: %d
+AMFI: CC_Self: Unknown Constraint category: %d
+AMFI: code signature validation failed.
+AMFI: completeSecurityBootMode: invalid scalarInput
+AMFI: completeSecurityBootMode: invalid scalarInputCount
+AMFI: constraint violation %s has entitlements but is not a main binary
+_amfi_copy_seatbelt_profile_names
+amfi_copy_seatbelt_profile_names() failed
+--- counts ---
+__PPLTEXT count=3
+__PPLTRAMP count=3
+__PPLDATA count=6
+SPTM count=2
+TXM count=3
+pac_exception count=4
+trust_cache count=15

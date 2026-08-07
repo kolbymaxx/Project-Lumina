@@ -85,9 +85,10 @@ Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 
 ### XR / 18.7.5 (parked Path A)
 1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
-2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; Path A
-   discovery parked — see
-   ([kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md))
+2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive on 18.7.5**;
+   Dopamine 3.0 / momentarius is public through **18.7.1** only
+   ([T016](../research/kexploit/experiments/T016_dopamine3_momentarius_window.md)).
+   Path A parked — [ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md)
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
 Crossing these gates is future work. Document progress in [STATUS.md](STATUS.md).
@@ -106,11 +107,9 @@ Do **not** wire kexploit or checkm8/palera1n code into the boot path.
 
 ## Public tool applicability (2026-08-01)
 
-For **A12 + iOS 18.7.5**, the only public, real capability in this class is still
-**BootROM (usbliter8) + ramdisk**. There is **no** public Dopamine/palera1n-style
-jailbreak that applies to this chip + build. arm64e on iOS 18 still needs a
-**kernel** (or equivalent) primitive that is not shipping as a user-ready JB
-for A12.
+For **A12 + iOS 18.7.5**, public BootROM (usbliter8) + ramdisk still works.
+**Dopamine 3.0** is a real public JB for A12 through **18.7.1** (momentarius PPL) —
+**not** 18.7.5. palera1n remains wrong SoC. See T016.
 
 ### Public tools vs this device
 
@@ -118,8 +117,8 @@ for A12.
 |----------------|------------|------------------|-------|
 | usbliter8 | BootROM (SecureROM) pwn | **Yes — already have** | Stage finished |
 | iCH / similar SSH ramdisk | BootROM → ramdisk SSH | **Yes — here now** | Forensic/dev toolkit, **not** a jailbreak |
-| Dopamine (stable) | Rootless JB | **No** | A12/arm64e public path roughly stops ~16.5 |
-| Dopamine 2.5 beta / DarkSword-style chatter | Higher iOS via kernel path | **No for drop-in** | Not public / not something to paste into Lumina |
+| Dopamine 3.0 + momentarius | Rootless JB + public A12/A13 PPL | **No** (ceiling **18.7.1**) | Teacher / **18.7.1→18.7.5** delta — [T016](../research/kexploit/experiments/T016_dopamine3_momentarius_window.md) |
+| ClearSword / DarkSword | Kernel path in Dopamine | **No** on 18.7.5 | DarkSword fixed **18.7.2** (T004); ClearSword not past published window |
 | palera1n | checkm8 chain | **No** | **arm64** A8–A11 (up to ~18.x on those chips), not A12/arm64e |
 | YouTube “iOS 18 A12+ jailbreak” | Usually scam / outdated | **Ignore** | Not real public releases |
 | Random “kernel root” CVE clips | One-off bugs | **Low** | Often patched, wrong SoC, or not a full chain |

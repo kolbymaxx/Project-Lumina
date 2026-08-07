@@ -17,13 +17,15 @@ Fork matrix for advancing capability ourselves. Not a single exploit claim.
 - **(B)** workable tethered JB / lab root (may leave 18.7.5 for Path C)
 
 **Binding scene constraints:**
-- A12 is a **PPL** device. Dopamine-style past ~**17.3.1** needs **KRW + A12 PPL defeat**.
-- `pattern_F_` A12/A13 PPL bypass is **private**. Not recoverable from abstracts/demos. **Do not treat recovering it as the plan.**
-- **Path A discovery method** is original research: [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md) (KRW first, PPL second, fail-closed tests).
-- **Relaxin** marketed window: A12 on **17.0–17.3.1** only — **not** 18.7.5.
+- A12 is a **PPL** device. Dopamine-style needs **KRW + A12 PPL defeat** on the **target build**.
+- **2026-08-07:** public **momentarius** A12/A13/A12X PPL (Dopamine **3.0**) covers through **18.7.1** / **26.0.1** — **not 18.7.5**. Delta: [T017](../research/kexploit/experiments/T017_1871_to_1875_delta.md) — **KRW** is the citable 18.7.5 kill; momentarius viability on 18.7.5 still **unproven**.
+- `pattern_F_` remains a separate private bypass; do not conflate with momentarius. Recovering private demos is still **out**.
+- **Path A on 18.7.5** = study public Dopamine/momentarius/ClearSword as **teachers** + **18.7.1→18.7.5** delta; original KRW track still required for 22H311: [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).
+- **Relaxin** marketed window: A12 on **17.0–17.3.1** only — **not** 18.7.5 (superseded as “only public PPL path” by momentarius for ≤18.7.1).
 - usbliter8 ramdisk / lab root ≠ userspace Dopamine.
 
-**Status line:** no matching **public** primitive for A12 / **18.7.5**.  
+**Status line:** no matching **public** primitive for A12 / **18.7.5**  
+(public PPL+JB exists through **18.7.1** only).  
 Nothing under `research/` wired into `boot/` without an explicit lab decision.
 
 Cross-links: [STATUS.md](STATUS.md) · [RESEARCH.md](RESEARCH.md) ·
@@ -41,9 +43,9 @@ Cross-links: [STATUS.md](STATUS.md) · [RESEARCH.md](RESEARCH.md) ·
 | **Intent** | Semi-untethered / rootless-style JB **on 22H311** | Lab root / tethered SSH / optional boot-patched kernel on **same build** | Workable userspace JB via Relaxin’s **public** window |
 | **How we advance** | **Original KRW+PPL track** (docs/RE until FILTER passes) + public writeup watch | iBEC execute reliability + frozen stage2 protocol | Checklist/prep only until Path B green; then **version change** |
 | **Prerequisites** | Own (or later public) kernel primitive covering A12/18.7.5 **plus** A12 PPL defeat; bootstrap after that | Reliable: Pico-pwn → demote → patched iBSS → Recovery → **iBEC send + execute** → stage2 | Backup; surrealra1n (or equiv) + usbliter8; SEP mismatch plan; Relaxin for 17.0–17.3.1 A12 |
-| **Blockers** | No owned KRW yet; public PPL bypass absent (`pattern_F_` private); inventing triggers forbidden | **iBEC execute / leave-iBSS reliability**; Data mount / SEP still hard | **Leaves 18.7.5**; SEP newer than 17.x → bag panic class; rollback not free |
-| **Success signals** | Fail-closed hypothesis → lab-relevant KRW on 22H311; then separate PPL success that is **ours** (not a screenshot) | N consecutive: `1227 PWND` → `1281` → iBEC **executes** → stage2 with logged USB transitions | About = **17.0–17.3.1**; Relaxin runs; **labeled version change** |
-| **Depends on private 0days?** | Finding our own is the point of the track; reconstructing private demos is **out** | **No** for bootrom→ramdisk with public/usbliter8 tooling | **No** for Relaxin’s marketed 17.x window |
+| **Blockers** | No live KRW on **22H311** (ClearSword/DarkSword window ends ≤18.7.1 / fixed 18.7.2); momentarius **not** claimed on 18.7.5; inventing triggers forbidden | **iBEC execute / leave-iBSS reliability**; Data mount / SEP still hard | **Leaves 18.7.5**; SEP newer than 17.x → bag panic class; rollback not free |
+| **Success signals** | Live KRW on 22H311 **and** PPL defeat on 18.7.5 (ported momentarius **or** owned) with fail-closed tests — not a screenshot | N consecutive: `1227 PWND` → `1281` → iBEC **executes** → stage2 with logged USB transitions | About = **17.0–17.3.1**; Relaxin runs; **labeled version change** |
+| **Depends on private 0days?** | Public teachers exist through 18.7.1; **18.7.5** still needs new/still-live work or a proven port | **No** for bootrom→ramdisk with public/usbliter8 tooling | **No** for Relaxin’s marketed 17.x window |
 
 **Mapping:** Path A ∪ Path B ≈ Fork 1 (stay on 18.7.5). Path C ≈ Fork 2 (version change).  
 Do not merge Path C install notes into Path A discovery logs without labeling.

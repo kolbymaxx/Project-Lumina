@@ -5,7 +5,12 @@ artifacts/xr-18.7.5/*.txt
 artifacts/xr-18.7.5/*.plist
 !artifacts/xr-18.7.5/*.placeholder
 artifacts/xr-18.7.5/kernelcache/
+artifacts/xr-18.7.5/firmware-22H311/
 artifacts/xr-18.7.5/notes.md
+# keep RO probe text; ignore large probe noise if re-run locally
+!artifacts/xr-18.7.5/kernelcache-ro/
+!artifacts/xr-18.7.5/kernelcache-ro/**/*.md
+!artifacts/xr-18.7.5/kernelcache-ro/**/*.txt
 research/kexploit/darksword-kexploit/
 research/kexploit/DarkSword-RCE/
 research/kexploit/Dopamine/

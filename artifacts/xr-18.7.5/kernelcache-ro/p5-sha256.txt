@@ -1,0 +1,4 @@
+682c9b1eed9d69a2cd284b6012379d81c3f1fab8a9af1831366c5cc51b413a67  /workspace/artifacts/xr-18.7.5/firmware-22H311/kernelcache.release.iphone11b
+64d5715f0fa4003b3d94e71f4c5521fa209897ff87ce36122f248c2ca6c8d9c7  /workspace/artifacts/xr-18.7.5/firmware-22H311/kernelcache.payload
+-rw-r--r-- 1 ubuntu ubuntu 56590336 Aug  7 23:20 /workspace/artifacts/xr-18.7.5/firmware-22H311/kernelcache.payload
+-rw-r--r-- 1 ubuntu ubuntu 18677936 Aug  7 23:20 /workspace/artifacts/xr-18.7.5/firmware-22H311/kernelcache.release.iphone11b

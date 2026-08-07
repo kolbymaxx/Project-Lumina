@@ -1,0 +1,62 @@
+# ClearSword-adjacent markers (presence only)
+count=16  inpcb
+count=0  icmp6filt
+count=21  icmp6
+count=0  fileport_makeport
+count=1  physically contiguous
+count=0  contiguousMapping
+count=45  IOSurfaceRoot
+count=15  AppleAVE2
+
+# momentarius-adjacent markers
+count=72  IOMobileFramebuffer
+count=5  AppleCLCD
+count=577  IOMFB
+count=0  dbgwrap
+count=3  __PPLTEXT
+count=6  __PPLDATA
+count=3  __PPLTRAMP
+count=12  pmap_enter
+count=0  SCTLR
+
+# Sample IOMFB / CLCD strings
+ALSS: IOMFB says ALSS is available but can't find function-alss, might be a DCP platform
+AppleCLCD
+AppleRegisterStream::PinnedBuffer *IOMFB::UPPipe_H11P::build_prc_LUTs(AppleRegisterStream *, const uint32_t *, uint32_t, uint8_t)
+auto IOMFB::PLCHandler::completion_callback_async(void *)::(anonymous class)::operator()(OSObject *, void *, void *, void *, void *) const
+auto IOMFB::UPPipe_H11P::did_boot(AppleRegisterStream *)::(anonymous class)::operator()(void *, uint32_t, uint32_t, uint32_t) const
+auto IOMobileFramebufferShim::set_matrix(uint32_t, const IOMFBMatrix *)::(anonymous class)::operator()(Gate::owner_t *, void *, void *, void *, void *) const
+auto IOMobileFramebufferTilingMgr::setDisplayWall(uint8_t, uint32_t, bool)::(anonymous class)::operator()(void *, void *, void *, void *) const
+auto VideoInterfaceIOAV::set_mode(uint32_t, uint32_t, uint32_t *, uint32_t *, IOAVArray *, IOAVArray *)::(anonymous class)::operator()(IOMFB::Gate::owner_t *, void *, void *, void *, void *) const
+bool IOMFBAppleRegStmAPIODMA::add_tsq_pinned_buffer(IOMFBPIODMAPinnedAsync *)
+bool IOMFB::FrameInfoBuffer::upload_trace(void *)
+bool IOMFB::MatrixHandler::init(const uint32_t *, uint32_t, bool)
+bool IOMFB::UPBlock_Config_H11P::program_ocla(AppleRegisterStream *)
+bool IOMFB::UPBlock_PCC_v1::soft_reset(AppleRegisterStream *)
+bool IOMFB::UPPipe_H11P::external_normal_mode_calc_params()
+bool IOMFB::UPPipe_H11P::init_timing_mode_params()
+bool IOMFB::UPPipe_H11P::setup_tunables_base_target()
+bool IOMFB::UPPipe_H11P::verify_source_dimensions(SwapRequest *)
+bool IOMFB::UPPipe_H11P::verify_surfaces(SwapRequest *)
+bool IOMFB::UPPipe::is_swap_passthrough(const SwapRequest *, uint32_t *)
+bool IOMFB::UPPipe::verify_downscaling(SwapRequest *)
+bool IOMFB::UPPipe::verify_passthrough(SwapRequest *)
+bool IOMFB::UPReporterMgr::init_simple(IOMFBSimpleReporter **, IOReportLegend *, const char *, uint64_t, uint64_t *, const char **)
+bool IOMobileFramebufferLegacy::isDevice(char *)
+bool IOMobileFramebufferLegacy::isLayerValidForSwap(uint32_t, IOMFBSwapIORequest *)
+bool IOMobileFramebufferLegacy::setDisplayRefreshProperties()
+bool IOMobileFramebufferLegacy::verifyKeepOnScreen_gated(IOMFBSwapIORequest *)
+BWRHandler::BWRSurface *IOMFB::getBWRSurface(Surface *, BWRHandler::BWRSurface *)
+com.apple.private.iomfb.set-block
+com.apple.private.iomfb.set-block-client-profile
+const char *IOMFB::get_RTP_boot_arg_name(RuntimeProperty)
+const char *IOMFB::getRuntimePropertyName(RuntimeProperty)
+DIOMFB
+ DRM CHECK not done for IOMFBSwapRequestIntent_SwapIdleBuffer 
+GamutConversionLocation IOMFB::getGamutConversionLocationFromRTP(RuntimeProperty)
+HAppleCLCD
+IdleDetectorIndex IOMFB::getIdleDetectorFromRTP(RuntimeProperty)
+IdleDetectorRTPType IOMFB::getIdleDetectorRTPTypeForIdleDetectorRTP(RuntimeProperty)
+iomfb_aaf_async
+IOMFB: aborting swap due to M3 EV_SIG_WDT_EXPIRE
+iomfb_abort_swap_disable

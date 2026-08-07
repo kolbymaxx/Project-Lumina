@@ -1,0 +1,120 @@
+%06llu.%06llu IOHDCP[%llu] %s %s
+A0_Determine_Rx_HDCP_Capable
+acom.apple.nanomaps.xpc.GeoServices
+aDCPAVVideoInterfaceProxyUserClient
+AGXGFXDVAccessor
+ALSS: IOMFB says ALSS is available but can't find function-alss, might be a DCP platform
+ANE %s: kAppleMPMFunctionMapMemory, format %d
+ANE %s: kAppleMPMFunctionUnmapMemory, format %d
+aop-dcp-buffer-address
+aop-dcp-buffer-size
+AppleA7IOP(%s):WARNING: dart-map-firmware-debug-only is a debug only setting and should not be set in a normal build
+AppleANEMPMMapMemoryFunction
+AppleANEMPMUnmapMemoryFunction
+"AppleARMPerformanceController::_mapVoltageLevelToPerfState : voltageLevel not found" @%s:%d
+AppleARMSFRManifest: Error: Failed to allocate Memory map region
+AppleARMSFRManifest: Error: Failed to map Memory region
+AppleAVD: AVDDart ERROR: FlushInactiveDARTMappings with fMapper == NULL
+AppleAVD: AVDDart ERROR: fMapper[%d] == NULL
+AppleAVD: AVDDart ERROR: mapperIndex >= MAX_DART_SIDS
+AppleAVD: AVDDart ERROR: mapToDART failed
+AppleAVD: AVDDart ERROR: m_pUnmapDeferralList init failed
+AppleAVD: AVDDart ERROR: m_pUnmapDeferralList malloc failed
+AppleAVD: AVDDart ERROR: SetActive with fMapper == NULL
+AppleAVD: cryptScheme %d - Required HDCP Type is %llx %d %p
+AppleAVD: ERROR: mapping->ref_count out-of-range!!!
+AppleAVD: ERROR: %s(): allocateMemory failed: %d, remap count = %d
+AppleAVD: ERROR: %s(): Cannot find mapped memory! ioSurfID: %d - userspacePtr: 0x%llx
+AppleAVD: ERROR: %s(): cannot find mapping! avdsmID: %d
+AppleAVD: ERROR: %s(): Cannot unmap buffer in-use
+AppleAVD: ERROR: %s(): coreID: %d - SID: %d failed to allocate & map!
+AppleAVD: ERROR: %s(): failed to allocate & map memory!
+AppleAVD: ERROR: %s(): Failed to map memory that does not violate the boundary condition after %d tries
+AppleAVD: ERROR: %s(): Invalid input buffer, not found or not mapped
+AppleAVD: ERROR: %s(): Invalid mapType=%d
+AppleAVD: ERROR: %s(): Invalid mapType=%d for userspace parsing
+AppleAVD: ERROR: %s(): Invalid memType=%d or mapType=%d
+AppleAVD: ERROR: %s(): invalid numMappers: %d or coreID: %d
+AppleAVD: ERROR: %s(): kAllocMapTypeIOSurface - ioSurface is read-only
+AppleAVD: ERROR: %s(): OOB (length=%u) for returned mapping
+AppleAVD: ERROR: %s(): Unable to map decryptDataBuffer
+AppleAVD: ERROR: %s(): Userspace pointer (0x%llx) or iosid (%d) not mapped
+AppleAVD: for kEncryptionScheme_Fairplay, Required HDCP Type is %llx %d %p
+AppleAVD: INFO: %s(): buffer still in-use, not ready to unmap, ref_count=%d, IOSID=%u
+AppleAVD: INFO: %s(): existing mapping (IOSID %d) found, remap it
+AppleAVD: INFO: %s(): mapper/DART is inactive!
+AppleAVD: INFO: %s(): setMemoryDescriptor failed with status=0x%x. Flushing mapper cache, then retry.
+AppleAVD: INFO: %s(): setMemoryDescriptor success after flushing mapper cache
+AppleAVD: KDGetRequiredHDCPType returned %d
+AppleAVD: mapperIndex >= MAX_DART_SIDS
+AppleAVD: %s(): ERROR! DART Mapping failed! status: 0x%x - AVDVAddr: %llu
+AppleAVD: %s(): ERROR! DART VAddr Mapping Failed! ClientID: %d - status: 0x%x - FrameNum: %d
+AppleAVD: %s(): ERROR! mapper/DART is inactive!
+AppleAVD: %s(): ERROR! Something went wrong! DVA not mapped!
+AppleAVD: %s(): ERROR! unmapInfo is NULL!
+AppleAVD: %s(): failed memType %d mapType %d
+AppleAVD: %s(): ioMapRegisters mapping device memory failed (0)
+AppleAVD: %s(): ioMapRegisters mapping DKey address failed (0)
+AppleAVD: %s(): kAllocMapTypeAllocatedUserMapKernel - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeAllocatedUserMapKernel - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocatedUserMapKernel - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapKernelOnlyCached - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeAllocMapKernelOnlyCached - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapKernelOnly - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeAllocMapKernelOnly - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapUserKernel - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeAllocMapUserKernel - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapUserKernel - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapUserOnly - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeAllocMapUserOnly - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeAllocMapUserOnly - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): kAllocMapTypeInputBuffer - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeInputBuffer - IOMemoryDescriptor::withOptions API failed. %d 
+AppleAVD: %s(): kAllocMapTypeInputBuffer - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): kAllocMapTypeIOSurface - getMemoryDescriptor API failed. %d 
+AppleAVD: %s(): kAllocMapTypeIOSurface - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeIOSurface - lookupSurface failed. %d 
+AppleAVD: %s(): kAllocMapTypeIOSurface - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): kAllocMapTypeUserDevice - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeUserDevice - IOMemoryDescriptor::withAddressRange API failed. %d 
+AppleAVD: %s(): map frameParams.... as kAvdMemType_DATA
+AppleAVD: %s(): map frameParams.... as kAvdMemType_DATA1
+AppleAVD: %s(): map frameParams.... as kAvdMemType_DATA1, aid = %d
+AppleAVD: %s(): ------------------------- Mappings END -------------------------
+AppleAVD: %s(): ------------------------- Mappings START -------------------------
+AppleAVD: %s(): Mapping (this=%p) - iosid=%d, userspace addr=0x%llx, kernel addr=0x%llx, device addr=0x%llx, ref_count=%d
+AppleAVD: %s(): On-Demand DVA Mapping %s
+AppleAVD: %s(): registering mapper (nSID 0) for IOSurface Deallocation Purge!
+AppleAVD: %s(): Unmap attempt failed! gpuAddr: %llu - m_AVDDart: %p
+AppleAVD: %s(): unsupported maptype
+AppleAVD: %s(): WARNING!! Attempting to change OnDemandMapEnable with multiple clients opened (%d)! currently %s - requested %s
+AppleAVD: %s(): (WARNING) kernel mem not deallocated mapType %d
+AppleAVD: %s(): WARNING! m_IOSurfaceRoot is not valid! Skipping mapper registeration for IOSurface Deallocation Early Purge...
+AppleAVD: WARNING: %s(): Failed to add mapping to deferral list! (status = %d)
+AppleAVD: WARNING: %s(): found non-zero avdsmID %d! Skipping unmapping!
+AppleAVD: WARNING: %s(): Input Buffer Remapping - timeout status: %d
+AppleAVD: WARNING: %s(): mapping->ref_count is already zero!
+AppleAVD: WARNING: %s(): ref_count is already zero! onDemandDVAMap %u
+AppleAVD: WARNING: %s(): there are already %d frames referencing this mapping, could not add frame %d to ref list!
+AppleAVD: WARNING: %s(): Unmapping memory with a ref count of %d
+AppleBasebandPCIPDPQMAPSkywalk
+AppleCLCD
+AppleGasGaugeUpdateUserClient ERROR: failed to map memory
+AppleH10CamIn::LoadSavageFirmwareFiles - couldn't create memory map
+AppleH10CamIn::LoadYonkersFirmwareFiles - couldn't create memory map
+AppleH10CamIn::%s - Could not create DART map for fPMPBandwidthControlParams.intGenReg
+AppleH10CamIn::%s - Could not create DART map for fPMPBandwidthControlParams.scratchReg
+AppleH10CamIn::%s - Could not create DART map for fPMPClockSpeedControlParams.intGenReg
+AppleH10CamIn::%s - Could not create DART map for fPMPClockSpeedControlParams.scratchReg
+AppleH10CamIn::%s - Could not map memory for logging database
+AppleH10CamIn::%s - couldn't create memory map
+AppleH10CamIn::%s - couldn't create memory map for ISP-ANE networks
+AppleH10CamIn::%s - couldn't map command memory descriptor
+AppleH10CamIn::%s - Couldn't map ISP registers.
+AppleH10CamIn::%s - couldn't map memory descriptor
+AppleH10CamIn::%s - Couldn't map PS registers.
+AppleH10CamIn::%s - Couldn't map SOC SPMI0 registers.
+AppleH10CamIn::%s - Couldn't map SOC SPMI CSR registers.
+AppleH10CamIn::%s - creating kernel mapping for surface %d, usage='%c%c%c%c'
+AppleH10CamIn::%s - dartMapMemoryDescriptor failed
+AppleH10CamIn::%s - dartMapMemoryDescriptor for AOP Interrupt Register status = 0x%08x

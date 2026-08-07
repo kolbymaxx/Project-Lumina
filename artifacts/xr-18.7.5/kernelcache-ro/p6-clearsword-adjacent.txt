@@ -1,0 +1,120 @@
+$_vfs_context_is_dataless_manipulator
+.1Z_vfs_devvp
+,2\_sooptcopyin
+2_vfs_context_dataless_materialization_is_prevented
+,4]_sooptcopyout
+.9\_vfs_getattr
+9Z_vnode_put
+AGXIOSurfaceSharedEventCommandDescriptor
+aIOSurfaceAcceleratorParavirtClient
+__anchor__(_vfs_generic)
+__anchor__(_vfs_generic_nfs)
+ANE%d: %s: Could not create IOSurface for ANECPU firmware buffer
+ANE%d: %s: Could not create IOSurface for DeviceMemoryManager buffer
+ANE%d: %s: Could not create IOSurface for IPC Pipes
+ANE%d:%s: Could not create IOSurface for Mutable kernel buffer
+ANE%d: %s: Created IOSurface for ANECPU firmware buffer with virtualAddress: 0x%llx and physical address: 0x%llx
+ANE%d: %s :ERROR: Could not lookup input IOSurface id %d. Returning error 0x%x
+ANE%d: %s :ERROR: Could not lookup output IOSurface id %d. Returning error 0x%x
+ANE%d: %s: ERROR: Failed to allocate memory for input IOSurface array, programHandle: 0x%llx, totInputBuffers: %d, totOutputBuffers: %d
+ANE%d: %s: ERROR: Failed to allocate memory for output IOSurface array, programHandle: 0x%llx, totInputBuffers: %d, totOutputBuffers: %d
+ANE%d: %s: ERROR: IOSurface protection check failed! inputProtectionOptions: 0x%llx outputProtectionOptions: 0x%llx programHandle: 0x%llx
+ANE%d: %s: ERROR: vfs_context_create() failed
+ANE%d: %s: ERROR: wireIOSurface Failed for programHandle: 0x%llx, procedureId %u, inputSymbolIndex: %u, symbol: %s, surfaceId: %d
+ANE%d: %s: ERROR: wireIOSurface Failed for programHandle: 0x%llx, procedureId %u, outputSymbolIndex: %u, symbol: %s, surfaceId: %d
+ANE%d: %s: ERROR: wireIOSurface Failed for programHandle: 0x%llx, procedureId %u, surfaceId: %d
+ANE%d: %s: ERROR: wireIOSurface failed for stats buffer
+ANE%d: %s: ERROR: wireIOSurface for input ioSurface with surfaceId %u symbolIndex=%d FAILED
+ANE%d: %s: IOSurfaceRoot not available or of the wrong class
+ANE%d: %s: No name matching IOSurfaceRoot
+ANE%d: %s: vfs_context is NULL
+apfs_snap_has_vfs_entitlement
+AppleAVD: - AppleAVD[%p]::start(provider %p) returns null IOSurfaceRoot
+AppleAVD: ERROR: %s(): kAllocMapTypeIOSurface - ioSurface is read-only
+AppleAVD: %s(): ERROR! (DISP) Incorrect buffer options!! isBufferCorrectOptions: %d surfid %d otherIOSurfaceProtectionOptionsFromFairPlay %lld
+AppleAVD: %s(): ERROR! Failed to get IOSurface protection options status (0x%x)
+AppleAVD: %s(): ERROR! IOSurface is NULL!
+AppleAVD: %s(): ERROR! (REF) Incorrect buffer options!! isBufferCorrectOptions %d surfid %d otherIOSurfaceProtectionOptionsFromFairPlay %lld
+AppleAVD: %s(): kAllocMapTypeIOSurface - getMemoryDescriptor API failed. %d 
+AppleAVD: %s(): kAllocMapTypeIOSurface - IOMemoryDescriptor::prepare failed with err=%d
+AppleAVD: %s(): kAllocMapTypeIOSurface - lookupSurface failed. %d 
+AppleAVD: %s(): kAllocMapTypeIOSurface - map failed for memory Descriptor failed. %d 
+AppleAVD: %s(): registering mapper (nSID 0) for IOSurface Deallocation Purge!
+AppleAVD: %s(): WARNING! m_IOSurfaceRoot is not valid! Skipping mapper registeration for IOSurface Deallocation Early Purge...
+AppleAVE2Driver
+AppleAVE2UserClient
+AppleH10CamIn::%s - Could not create IOSurface for ANECPU firmware buffer
+AppleH10CamIn::%s - Could not create IOSurface for APFF networks
+AppleH10CamIn::%s - Could not create IOSurface for calibration data buffer: 0x%08X
+AppleH10CamIn::%s - Could not create IOSurface for data-file buffer
+AppleH10CamIn::%s - Could not create IOSurface for InterProcessorCommunication buffer
+AppleH10CamIn::%s - Could not create IOSurface for multi-camera-cal-swide buffer: 0x%08X
+AppleH10CamIn::%s - Could not create IOSurface for multi-camera-cal-wide buffer: 0x%08X
+AppleH10CamIn::%s - Could not create IOSurface for over-ride NVM buffer
+AppleH10CamIn::%s - Could not create IOSurface for set-file buffer
+AppleH10CamIn::%s - Could not look up IOSurface with ID 0x%08x 
+AppleH10CamIn::%s - Could not obtain IOMemoryDescriptor for IOSurface with ID 0x%08x 
+AppleH10CamIn::%s - Could not obtain physical memory address for IOSurface with ID 0x%08x 
+AppleH10CamIn::%s - IOSurface ID 0x%08x has insufficient size: 0x%08lx bytes 
+AppleH10CamIn::%s - IOSurfaceRoot not available or of the wrong class
+AppleJPEGDriver: %s : Input IOSurface illegal dimensions (Width %d x Height %d), specified dimensions (Width %d x Height %d), bailing ! ! !
+ApplePMGR: Copying FW DPE node data
+ApplePMGR: Copying HW DPE node data
+Attempt to %s IOSurface useCount while kIOSurfaceProhibitUseCount is set, ignored (creatorPID=%u currentPID=%u category=%u).
+"Bad IOSurfaceClient" @%s:%d
+bool AppleJPEGDriver::isSurfaceMultiPlane(IOSurface *)
+cannot allocate IOSurfaceAcceleratorKernelClient
+Cannot allocate IOSurfaceShared
+cIOSurfaceAcceleratorCapabilitiesDict
+com.apple.driver.AppleAVE
+com.apple.driver.AppleAVE2
+com.apple.iokit.IOSurface
+com.apple.private.iosurfaceinfo
+com.apple.private.IOSurface.protected-access
+__copyin_chk object size check failed: uaddr %p, kaddr %p, (%zu < %zu) @%s:%d
+copyin failed: length = %lu, trap = %s: %d
+copyin failed: trap = %s: %d
+CopyInterface_Impl_block_invoke
+__copyout_chk object size check failed: uaddr %p, kaddr %p, (%zu < %zu) @%s:%d
+copyout failed
+copyout failed: length = %lu, trap = %s: %d
+copyout failed: trap = %s: %d
+[_copyoutstr
+CreateIOSurface
+devfs_dntovn: cloning device with a vnode? @%s:%d
+devfs_dntovn: DN_DELETE set on a devnode upon entry. @%s:%d
+devfs_lock
+_devfs_make_node
+_devfs_make_node_clone
+devfs_rele_node: devnode without a refcount! @%s:%d
+%]_devfs_remove
+devfs_tree.c
+DK: rpc copyin(0x%x) %x
+DK: UEXT copyin(0x%x) %x
+ENOBUFS in icmp6_error %d
+error copying in constraint %d
+Error copying pipe from user, %d
+failed to copyin args
+failed to copyin strings
+failed to copyin token
+"Failed to create ioFence (0x%llx) on ioSurface (0x%llx, id: %d) in sync mode.\n" @%s:%d
+Failed to prepare IOSurface (%#x) (%#x)
+Failed to read AV1 Attachment from IOSurface. Error: %#x
+fSavedIOSurfaces <= AGXK_IOFENCE_DEBUG_MAX_SURFACE_COUNT
+Fusion: Errors when copying data from write-back cache
+Fusion: Errors when copying data into read cache
+gencnt != NULL
+getIOSurfaceFilmGrainAttachment
+getIOSurfaceFromID
+getRequiredIOSurfaceProtectionOptions
+given size (%llu) doesn't match IOSurfaceAcceleratorClientProperty's (%lu)
+.g^_vfs_setnoswap
+hfs_mount: copyin returned %d for fs
+hfs_mount: VFS_SYNC returned %d during b-tree sync of %s 
+hfs: vfs_fsadd failed: %d!
+HighPriority (kIOSurfaceAcceleratorHighPriorityCString) deprecated!
+HIOSurface
+icmp6
+ICMP6
+icmp6.c
+ICMP6 checksum error(%d|%x) %s
