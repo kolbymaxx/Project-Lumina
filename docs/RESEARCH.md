@@ -38,6 +38,10 @@ Notes dirs:
 
 | Doc | Contents |
 |-----|----------|
+| [RESEARCH_PLAN.md](RESEARCH_PLAN.md) | **Path A/B/C matrix** — lab primary (B) + original KRW+PPL discovery (A) |
+| [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md) | Path A method: KRW first, PPL second; fail-closed; not `pattern_F_` recovery |
+| [../research/kexploit/ANTI_PATTERNS.md](../research/kexploit/ANTI_PATTERNS.md) | Explicit anti-goals for the Dopamine-style ambition |
+| [../research/kexploit/HYPOTHESIS_TEMPLATE.md](../research/kexploit/HYPOTHESIS_TEMPLATE.md) | Fail-closed hypothesis cards |
 | [ROADMAP_THEORY.md](ROADMAP_THEORY.md) | Staged A→G plan: foothold → RE → kexploit study → mitigations → bootstrap → persistence honesty |
 | [../research/mitigations/README.md](../research/mitigations/README.md) | A12 / iOS 18 mitigation table (PAC, PPL, AMFI, SPTM contrast, SEP, …) |
 | [../research/kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md) | **Teachers not installers** — palera1n/Dopamine/Coruna map + RE order |
@@ -57,9 +61,14 @@ Rule unchanged: **nothing under `research/` is imported into `boot/`.**
 ## Hard gates (current)
 
 1. **Data mount** — 15.1 `mount_apfs` fails on iOS 18 Data (`Program version wrong`); next: newer restore `mount_apfs` then SSHRD-style `seputil` (docs in `DATA_MOUNT_SSHRD.md`)
-2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; study
-   Dopamine/palera1n/Coruna as teachers ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)).
-   **Fork 1 active** (stay on 18.7.5): [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md)
+2. **Kernel exploit for 18.7.5 / A12** — **no matching public primitive**; Path A
+   discovery is the **original KRW+PPL track**
+   ([kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md)),
+   not `pattern_F_` recovery. Study Dopamine/palera1n/Coruna as teachers
+   ([kexploit/RE_PRIORITY.md](../research/kexploit/RE_PRIORITY.md)).
+   **Fork 1 / Path A∪B active** (stay on 18.7.5):
+   [../research/kexploit/FORK1_STRATEGY.md](../research/kexploit/FORK1_STRATEGY.md) ·
+   [RESEARCH_PLAN.md](RESEARCH_PLAN.md)
 3. **Userspace bootstrap** — no Sileo/Dopamine path until primitives exist
 
 Crossing these gates is future work. Document progress in [STATUS.md](STATUS.md).
@@ -121,5 +130,7 @@ That is documentation / future RE — **not** a claim that a kexploit exists.
 ## Related
 
 - [STATUS.md](STATUS.md)
+- [RESEARCH_PLAN.md](RESEARCH_PLAN.md)
 - [../artifacts/xr-18.7.5/phase-a-2026-08-01.md](../artifacts/xr-18.7.5/phase-a-2026-08-01.md)
 - [../research/CUSTOM_BOOT_NEXT.md](../research/CUSTOM_BOOT_NEXT.md)
+- [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md)
