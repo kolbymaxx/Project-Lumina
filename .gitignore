@@ -32,3 +32,8 @@ research/usbliter8-t8027/artifacts/*.bin
 research/usbliter8-t8027/artifacts/*.i64
 research/usbliter8-t8027/artifacts/*.idb
 research/usbliter8-t8027/artifacts/*.bndb
+
+artifacts/a12x-26.5/dopamine3/*
+!artifacts/a12x-26.5/dopamine3/README.md
+!artifacts/a12x-26.5/dopamine3/HASHES.txt
+research/ipados26.5/vendors/Dopamine/

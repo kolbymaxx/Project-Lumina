@@ -19,6 +19,7 @@ Docs only. Not wired into `boot/`. Filter: [FILTER.md](FILTER.md).
 | CVE-2026-64709 Kernel disclose | Advisory watch | **Watch** | Leak companion only |
 | CVE-2026-43723 MediaRemote | Advisory watch | **Watch** | Root ≠ KRW ≠ PPL |
 | Sandbox / libc (64740 / 28973) | Advisory watch | **Note only** | Chain-stage, not entry |
-| Public A12/A12X PPL bypass | — | **Absent** | `pattern_F_` recovery rejected |
+| **Dopamine 3.0** (ClearSword + momentarius) | Public rootless JB | **Outside** | A12/A12X through **18.7.1** + **26.0–26.0.1** only — **not 26.5** ([P007](experiments/P007_dopamine3_teacher_not_installer.md)) |
+| Public A12/A12X PPL bypass | momentarius (in Dopamine 3.0) | **≤26.0.1 teacher** | Exists publicly **inside** that window; **not** claimed for 26.5 |
 
 Update rows when FILTER-pass cards change Result; do not upgrade status line from screenshots.
