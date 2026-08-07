@@ -6,7 +6,10 @@ Documentation / research only. **Not wired into `boot/`.**
 **Status (locked):** no matching public primitive for A12X / iPadOS 26.5.
 
 Plan: [../../docs/RESEARCH_PLAN_26.5.md](../../docs/RESEARCH_PLAN_26.5.md).  
-Filter: [FILTER.md](FILTER.md).
+Filter: [FILTER.md](FILTER.md).  
+Continuity: [CONTINUITY.md](CONTINUITY.md) · live action: [NEXT.md](NEXT.md).
+
+After each card Result or eng step: update **NEXT.md** to the highest remaining lead — do not restart the path matrix.
 
 ## Process
 

@@ -157,11 +157,8 @@ Full index: [RESEARCH.md](RESEARCH.md)
 - **No kexploit implementation wired into boot**
 
 ## Next
-1. **Primary (A12X):** Lock **ProductVersion / ProductBuildVersion** on the iPad;
-   confirm 26.5 + 26.6 IPSW availability for offline extract
-   ([RESEARCH_PLAN_26.5.md](RESEARCH_PLAN_26.5.md) Step 1)
-2. **Backup:** If IPSWs already local, inventory kernelcache/AVE Mach-Os (hashes only)
-3. Continue P001–P006 watches under [`research/ipados26.5/`](../research/ipados26.5/) —
-   Lab = No until binary evidence + hypothesis (1)(2)(3)
-4. XR optional: Path B iBEC reliability / Data mount trials — **labeled XR 18.7.5 only**
-5. Keep `research/` isolated from `boot/`; never reuse `n841ap` payloads for A12X
+Live pointer: [`../research/ipados26.5/NEXT.md`](../research/ipados26.5/NEXT.md)
+([CONTINUITY.md](../research/ipados26.5/CONTINUITY.md) — try N+1; no plan rewrite unless facts change).
+
+1. **Now:** Step 1 — lock build string + IPSW yes/no on A12X / 26.5
+2. XR optional only if labeled device/OS change; keep `research/` out of `boot/`

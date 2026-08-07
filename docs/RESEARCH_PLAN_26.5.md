@@ -167,12 +167,19 @@ Non-movers: “iOS 26 jailbroken” YouTube, Discord screenshots, advisory-only 
 
 ---
 
+## Continuity
+
+After each step or failed experiment: update
+[`../research/ipados26.5/NEXT.md`](../research/ipados26.5/NEXT.md) only —
+**one** next action on the highest remaining lead. Do **not** rewrite this path
+matrix unless facts change. Rule: [`../research/ipados26.5/CONTINUITY.md`](../research/ipados26.5/CONTINUITY.md).
+
 ## Next 48 hours
 
-**Primary:** **Step 1 — lock ProductVersion / ProductBuildVersion on the A12X iPad and confirm whether 26.5 + 26.6 IPSWs are obtainable for offline extract.**  
-- Success: build string + IPSW availability noted in STATUS / `research/ipados26.5/`.  
-- Fail: no IPSW → document block; stay on device 26.5; do not invent restore.
+Live pointer (authoritative): [`../research/ipados26.5/NEXT.md`](../research/ipados26.5/NEXT.md).
 
-**Backup:** **Step 3 lite — if IPSWs already on the Mac, run a minimal kernelcache/AVE file-level inventory (hashes + changed Mach-O list) without claiming sinks.**  
-- Success: artifact inventory file committed (paths/hashes only).  
-- Fail: extract error → host tooling issue; still no on-device trigger hunting.
+**Primary:** **Step 1 — lock ProductVersion / ProductBuildVersion on the A12X iPad and confirm whether 26.5 + 26.6 IPSWs are obtainable for offline extract.**  
+- Success: build string + IPSW availability noted in STATUS / `NEXT.md`.  
+- Fail: no IPSW → hard block on offline diff; switch to backup in `NEXT.md`; stay on device 26.5; do not invent restore.
+
+**Backup:** If IPSWs already local → Step 2/3 lite (hashes + Mach-O list). If IPSW unavailable → P001 writeup watchlist poll (docs only), then P002.
