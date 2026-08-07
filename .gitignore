@@ -6,6 +6,11 @@ artifacts/xr-18.7.5/*.plist
 !artifacts/xr-18.7.5/*.placeholder
 artifacts/xr-18.7.5/kernelcache/
 artifacts/xr-18.7.5/notes.md
+# A12X IPSW blobs (multi-GB) — keep DOWNLOAD.md / notes only
+artifacts/a12x-26.5/ipsw/*.ipsw
+artifacts/a12x-26.5/ipsw/*.download.log
+artifacts/a12x-26.5/ipsw/*.partial
+artifacts/a12x-26.5/extract/
 research/kexploit/darksword-kexploit/
 research/kexploit/DarkSword-RCE/
 research/kexploit/Dopamine/

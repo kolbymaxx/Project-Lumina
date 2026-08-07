@@ -18,14 +18,21 @@ Mac-only optional. Do not mix tracks without labeling device + OS.
 ## Devices
 | Device | SoC | OS | Role |
 |--------|-----|-----|------|
-| iPad Pro 12.9" 3rd gen | A12X (t8027) | **iPadOS 26.5.x** (pre-26.6) | **Primary research focus** — PE/kernel delta hunt; build string TBD on-device |
+| iPad Pro 12.9" 3rd gen | A12X (t8027) | **iPadOS 26.5** (build TBD; candidate IPSW **23F77**) | **Primary** — PE/kernel delta; Model **MTHN2LL/A** (`iPad8,7`), Serial **DLXYF04EKC48** |
 | iPhone XR (n841ap) | A12 | **18.7.5 (22H311)** | Live usbliter8 → ramdisk lab — **parked** for Path A; Path B optional |
 | iPhone 11 Pro Max | A13 | TBD | Second target (usbliter8 supports A13) |
 
-**iPad (A12X) DFU identity (locked 2026-08-03):** CPID `8027`, BDID `0A`,
+**iPad About lock (2026-08-07, clear photo):** Name Kolby's iPad; ProductVersion **26.5**;
+Model Number **MTHN2LL/A** (Wi‑Fi+Cellular 64 GB / A2014 → `iPad8,7`); Serial **DLXYF04EKC48**.
+Tap the iPadOS version line for ProductBuildVersion. Blurry OCR discarded: MTJD2LL/A / DLXYP0A6KUA6.
+
+**iPad DFU identity (prior Mac capture):** CPID `8027`, BDID `0A`,
 ECID `0019052A1413002E`, SRTG `[iBoot-4172.0.0.100.14]`, UDID shape
 `00008027-0019052A1413002E` — see [research/usbliter8-t8027-bringup.md](research/usbliter8-t8027-bringup.md).  
 usbliter8 **PWND not achieved** on t8027 (Path C deferred).
+
+**IPSW (this cloud VM):** shared `iPad_Pro_A12X_A12Z_26.5_23F77` + `_26.6_23G71` under
+`artifacts/a12x-26.5/ipsw/` (binaries gitignored). 26.5 unsigned = offline RE only — not a restore path.
 
 XR UDID: `00008020-00117540340B002E`  
 ECID: `00117540340B002E`  
@@ -160,5 +167,7 @@ Full index: [RESEARCH.md](RESEARCH.md)
 Live pointer: [`../research/ipados26.5/NEXT.md`](../research/ipados26.5/NEXT.md)
 ([CONTINUITY.md](../research/ipados26.5/CONTINUITY.md) — try N+1; no plan rewrite unless facts change).
 
-1. **Now:** Step 1 — lock build string + IPSW yes/no on A12X / 26.5
-2. XR optional only if labeled device/OS change; keep `research/` out of `boot/`
+1. **Now:** Step 2 — extract kernelcache from downloaded 26.5/26.6 IPSWs when curls finish
+2. Optional: tap iPadOS version on About to lock ProductBuildVersion (expect 23F77 if not 26.5.2)
+3. XR optional only if labeled device/OS change; keep `research/` out of `boot/`
+4. Never restore unsigned 26.5; IPSWs are offline RE only
