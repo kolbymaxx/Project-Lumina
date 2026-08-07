@@ -3,6 +3,7 @@
 | ID | File | Role |
 |----|------|------|
 | — | [INTAKE_26.6.md](INTAKE_26.6.md) | First advisory triage |
+| — | [INTAKE_dopamine3_momentarius.md](INTAKE_dopamine3_momentarius.md) | Dopamine 3.0 / momentarius — **≤26.0.1**, not 26.5 |
 | P000 | [P000_template.md](P000_template.md) | Template |
 | P001 | [P001_ave_cve_2026_64747_watch.md](P001_ave_cve_2026_64747_watch.md) | AVE kernel-priv watch |
 | P002 | [P002_kernel_cve_2026_64751_write_watch.md](P002_kernel_cve_2026_64751_write_watch.md) | Kernel write/UAF watch |

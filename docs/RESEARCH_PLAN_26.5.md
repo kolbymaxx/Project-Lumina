@@ -7,7 +7,8 @@
 Canonical hunt tree: [`../research/ipados26.5/`](../research/ipados26.5/).  
 XR 18.7.5 / usbliter8 track stays under [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) + [`../research/kexploit/`](../research/kexploit/) — **do not mix** without labeling a device/OS change.
 
-**Status line:** no matching public primitive for **A12X / iPadOS 26.5**.
+**Status line:** no matching public primitive for **A12X / iPadOS 26.5**.  
+**(2026-08-07)** Public Dopamine 3.0 / momentarius PPL covers **26.0–26.0.1** (A12/A13; A12X verify in code) — **not 26.5**. Intake: [`../research/ipados26.5/experiments/INTAKE_dopamine3_momentarius.md`](../research/ipados26.5/experiments/INTAKE_dopamine3_momentarius.md).
 
 ---
 
@@ -17,7 +18,7 @@ XR 18.7.5 / usbliter8 track stays under [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md) +
 |---|--------------------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------------|
 | **Intent** | Semi-untethered / Dopamine-shaped chain **on 26.5 A12X** (KRW first, PPL second) | Reproducible **controlled** signal on-device or offline; no full-JB claim | Pwned DFU → board-specific ramdisk/SSH for tethered lab root |
 | **Prerequisites** | Device already on **26.5.x**; public IPSW pair **26.5 ↔ 26.6** (or extractable kernel/kexts); FILTER-pass cards; fail-closed hypotheses | Same binary/advisory baseline; willingness to run **non–daily-driver** tests on 26.5 (unpatched) | Pico firmware offsets/ROP/PAC strategy for **t8027** SecureROM `iBoot-4172.0.0.100.14`; host payloads **not** XR `n841ap` |
-| **Blockers** | No owned KRW; no public A12/A12X PPL bypass; advisory ≠ trigger; unsigned 26.5 restore if already left the build | Reachability unknown until diffs + IOKit/clients mapped; panic may brick session until reboot | SecureROM **PAC-heavy** on t8027 (unlike t8020 XR); upstream A12X “theoretical only”; nothing in `boot/` |
+| **Blockers** | No owned KRW on **26.5**; public momentarius PPL only through **26.0.1** (not 26.5); A12X code-confirm pending; advisory ≠ trigger | Reachability unknown until diffs + IOKit/clients mapped; panic may brick session until reboot | SecureROM **PAC-heavy** on t8027 (unlike t8020 XR); upstream A12X “theoretical only”; nothing in `boot/` |
 | **Success signals** | Fail-closed KRW (or KRW-shaped) on **26.5** with citable method **we** own; then **separate** PPL success that is ours | N≥3 reproducible: panic with stable backtrace, measurable corruption, or privilege change logged | Serial gains `PWND:[usbliter8]`; then separate board ramdisk — still ≠ 26.5 PE |
 | **Risk** | Staying on 26.5 = living **without** 26.6 fixes (daily-driver risk); false leads from advisory-only ranking | Device instability; data loss on panic loops; confusing Path B root with Path A KRW | Time sink if PAC/ROP never closes; polluting XR boot wrappers |
 | **Depends on private 0days?** | **No** for the *method* (original discovery). **Yes** if someone expects a drop-in private PPL/`pattern_F_` — that is **rejected** | **No** — Path B can succeed on public delta + lab | **No** for BootROM class if ported from public usbliter8; **unproven** for A12X today |

@@ -80,10 +80,13 @@ Ramdisk `mount_apfs` incompatible with Data/`s8` APFS generation (and/or unlock)
 | Path | Status |
 |------|--------|
 | **B** Stay 18.7.5 tethered boot-chain (iBEC execute → stage2) | Mac lab optional |
-| **A** Stay 18.7.5 Dopamine-style — original KRW→PPL track | **Parked / secondary** |
+| **A** Stay 18.7.5 Dopamine-style — teachers + **18.7.1→18.7.5** delta | **Parked / secondary** |
 | **C** Leave → 17.0–17.3.1 + Relaxin | Checklist/prep only |
 
-XR Path A method (not `pattern_F_` recovery):
+**2026-08-07 scene:** Dopamine **3.0** + public [momentarius](https://github.com/staturnzz/momentarius) A12/A13 PPL through **18.7.1** / **26.0.1** — **not** XR **18.7.5**, **not** iPad **26.5**.  
+Intake: [T016](../research/kexploit/experiments/T016_dopamine3_momentarius_window.md) · [INTAKE_2026-08-07_dopamine3.md](../research/kexploit/experiments/INTAKE_2026-08-07_dopamine3.md).
+
+XR Path A method:
 [../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md](../research/kexploit/ORIGINAL_KRW_PPL_TRACK.md).
 
 ### Not claimed
