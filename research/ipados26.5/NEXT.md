@@ -5,25 +5,24 @@ Rule: [CONTINUITY.md](CONTINUITY.md).
 
 ## Current
 
-**Try Step 1:** On the A12X iPad, lock **ProductVersion** + **ProductBuildVersion**
-(and model). On the Mac, check whether **26.5.x** and **26.6** IPSWs for this
-board are downloadable / already local.
+**Try Step 4:** Follow the checklist in
+[`STEP4_REACHABILITY.md`](STEP4_REACHABILITY.md) — decide **yes / no / unknown**
+for third-party reachability of **`AppleAVE2UserClient`** on **26.5**.
 
 | | Signal |
 |---|--------|
-| **Success** | Build string written into `docs/STATUS.md` + note here; IPSW yes/no recorded |
-| **Fail** | Cannot obtain 26.5 IPSW → **hard block** on offline diff → switch to **Backup** |
+| **Success** | Answer + citation recorded on P001 / REACHABILITY note |
+| **Fail / unknown** | Demote AVE for lab; **try P002** next |
 
-## Backup (only if Step 1 IPSW = no)
+## Also useful (not instead of Step 4)
 
-**Watchlist poll for P001 (AVE CVE-2026-64747):** search for any **citable**
-writeup/PoC discussion with version bounds — docs only; do not invent triggers.
+- Dopamine 3.0 / momentarius / ClearSword = **teachers ≤26.0.1** ([P007](experiments/P007_dopamine3_teacher_not_installer.md))
+- Watchlist PPL line updated: [WRITEUP_WATCHLIST.md](WRITEUP_WATCHLIST.md)
 
-| | Signal |
-|---|--------|
-| **Success** | Link + bounds added to P001 Source; still Lab = No until binary evidence |
-| **Fail** | Nothing citable → leave P001 Unknown; try **P002** watchlist poll next |
+## Device lock
+
+- **26.5** · **MTHN2LL/A** (`iPad8,7`) · **DLXYF04EKC48** · IPSW **23F77↔23G71**
 
 ## Done / parked
 
-_(none yet)_
+- Steps 1–3 + P007 Dopamine intake
