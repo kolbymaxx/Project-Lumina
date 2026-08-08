@@ -254,7 +254,7 @@ Fill **t8027 candidate** only with evidence-backed VAs. Until then: `TODO — de
 | `PLATFORM_SET_REMOTE_BOOT` | `0x100006850` | TODO — derive | ROM — early target |
 | `MAIN_TASK_STACK_LR` | `0x19C01DF08` | TODO — derive | SRAM |
 | `JUMP_AWAY` | `0x100001C8C` | TODO — derive | ROM |
-| PAC / `WITH_PAC` | none on t8020 | **Confirmed PAC-heavy** (`pacibsp`/`retab` abundant) | t8020 non-PAC assumption likely wrong for t8027; FIRST_RE_PASS §1 |
+| PAC / `WITH_PAC` | none on t8020 | **CONFIRMED PAC-heavy** (`pacibsp`×462/`retab`×364 via rom_re_assist.py) | t8020 unsigned LR-ROP DEAD on DFU path; victim = callback/fn ptr, not saved LR. See PAC_AND_CONTROL_FLOW §6 (verdict + re-prioritized worksheet). |
 
 ---
 

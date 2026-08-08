@@ -187,6 +187,80 @@ Until (1)–(5) have evidence, prefer ibis/worksheet work over flashing speculat
 
 ---
 
+## 6. CONFIRMED — PAC-policy verdict (automated static RE-assist, 2026-08-08)
+
+The #1 gate ("blocks entire ROP strategy") is now **answered by automated static
+analysis**, not THEORY. Tool: [`tools/rom_re_assist.py`](tools/rom_re_assist.py)
+(capstone, `skipdata=True`). Report:
+[`experiments/logs/rom_re_assist-20260808-160259.md`](experiments/logs/rom_re_assist-20260808-160259.md).
+
+### Evidence
+
+- PAC density reproduces FIRST_RE_PASS §1 exactly: `pacibsp` ×462,
+  `retab` ×364, plain `ret` ×282 (tool sanity-pass).
+- **Non-PAC code islands: 1 page only** — `0x10001d000` — and it is the
+  panic/idle-task **STRING** region (`"double panic in"`, `"panic: "`,
+  `"constructing idle task"`, `"idle task"` live there), NOT code.
+- **DFU/USB code pages `0x100006000`–`0x10000b000`: 6 pages,
+  114 `retab`, 0 plain-ret-only.** Every return on the DFU code path
+  authenticates LR.
+- USB serial builder frame @ `0x1000067bc` (FIRST_RE_PASS confirmed): window
+  scan shows `pacibsp` present, returns = `['retab','retab','retab']` ->
+  **PAC-protected (retab)**. The hot DFU/USB path is inside the PAC regime.
+- t8020 ROP gadget *shapes* do exist in 4172 (G1 `ldr x19,[sp,#imm]` ×5,
+  G2 ×249, G3 ×34, G4 ×7, G5 ×1, G6 ×88) but the G1 hits on the DFU-relevant
+  pages are all inside `retab`-returning functions. The 2 non-PAC G1 hits
+  (`0x10000c310`, `0x100018628`) are outside the DFU code range.
+
+### Verdict
+
+**t8020-style unsigned LR-ROP is DEAD on the t8027 DFU path.** Smashing a
+saved LR with a raw gadget VA faults on `retab`. A **PAC-aware first hijack
+is REQUIRED** — strategy A (signed-return / `PACIB` forge), C (callback /
+function-pointer smash loaded via unauthenticated `blr`), or E (data-only
+-> later signed return). This kills planning assumption D ("ignore PAC /
+hope LR raw works") and deprioritizes copying t8020 ROP gadget VAs.
+
+### What this unblocks
+
+- The port is NOT blocked — it is redirected. The memory story (DWC2 race +
+  `0x19C0` SRAM geometry, `JUMP_STATE` confirmed) is still viable; only
+  the first-hijack control-flow shape changes from t8020 LR-ROP to a
+  PAC-aware path.
+- Next highest-priority worksheet rows (PAC_AND_CONTROL_FLOW §4): #1 victim
+  control-flow object (now: a callback / function pointer, not a saved LR),
+  #2 PAC model for that object (which PAC key/modifier, or is it an
+  unauthenticated `blr`), #5 signing primitive / signed-pointer write path.
+- The `rom_re_assist.py` string-xref map (section 5) is currently empty
+  (ADRP+ADD finder bug) — does not block the PAC verdict but should be
+  fixed to bootstrap the `HANDLE_USB_REQ` / `USB_DESC_MAKE_STR` hunt (§4.6).
+
+### Re-prioritized worksheet (post-PAC-verdict)
+
+The confirmed verdict changes the priority order from PAC_AND_CONTROL_FLOW §4. Old
+#1 (victim LR / PAC or not) is ANSWERED: the DFU victim return is `retab`, so a
+saved LR is NOT the victim. Smashing a saved LR faults. The first
+hijack must target a callback / function pointer loaded via unauthenticated `blr`, or a data-only corruption that diverts a legitimate signed return.
+
+New priority (highest first):
+
+| Pri | Item | Rationale (post-verdict) |
+|-----|------|--------------------------|
+| 1 | **Victim = callback / function pointer** (not a saved LR). Find `USB_REQ_HANDLER_CB`-class SRAM pointer; its store/load sites; whether the consuming `blr` is authenticated (`PACIB` on load) or plain `blr`. | Smashed LR faults on `retab`; a callback loaded+`blr`'d may not be authenticated. |
+| 2 | **PAC model for that callback** (which PAC key/modifier, or unauthenticated `blr`). | Gates gadget form (signed-pointer forge vs raw pointer). |
+| 3 | **Signing primitive / signed-pointer write path** (t8030 `PACIB` teacher, `handler.c`). | Needed only if the callback `blr` is authenticated. |
+| 4 | `HANDLE_USB_REQ` + plant site (`USB_REQ_HANDLER_CB_ADDR`). | Post-pwn I/O; needs IDA/ibis (DFU string xrefs not reachable by static capstone — rom_re_assist §5). |
+| 5 | `PLATFORM_DEMOTE` / `PLATFORM_SET_REMOTE_BOOT` / `JUMP_AWAY`. | Handler usefulness. |
+| 6 | `JUMP_STATE` (done, 0x19C014030) + validate `TRAMP_BASE` 0x19C018000. | Shellcode plant region. |
+| 7 | `NEW_SP` / `ov_start` in 0x19C028000 bank. | Overwrite packing (needs DFU heap map). |
+| 8 | USB MMIO (`USB_DMA_DEST`) — still no `0x2391` evidence. | Race DMA redirect (find DWC2 DOEPDMA without assuming 0x2391). |
+| 9 | Heap `blocks.S` / cleanup literals. | Stability after hijack. |
+| 10 | `delay` retune. | Last; hardware. |
+
+**Killed:** copying t8020 ROP gadget VAs; assuming unsigned `MAIN_TASK_STACK_LR` write like t8020 handler; planning assumption D ("ignore PAC").
+
+**Unblocked by rom_re_assist (evidence):** the G1 `ldr x19,[sp,#imm]` gadget hits on the DFU-relevant pages are all inside `retab`-returning functions, so the t8020 ROP entry gadget is genuinely unusable on the DFU path — not just "probably." The 2 non-PAC G1 hits (`0x10000c310`, `0x100018628`) are outside the DFU code range.
+
 ## See also
 
 - [FIRST_RE_PASS.md](FIRST_RE_PASS.md) — PAC counts, region table, string xrefs  
