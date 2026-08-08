@@ -1,0 +1,210 @@
+diff --git a/README.md b/README.md
+index e8d7a84..f9660a2 100644
+--- a/README.md
++++ b/README.md
+@@ -20,12 +20,12 @@ The shipped `1.0.0-3+debug` deb painted the whole Music app black. Root causes:
+ 
+ 1.0.1 fixes all four: stricter matchers, translucent `CAGradientLayer` wash behind content, no theme without artwork, and one-shot chrome stripping.
+ 
+-## Install via Sileo (KDotz Repo — recommended)
++## Install via Sileo (Lumina Repo — recommended)
+ 
+ Add this source in Sileo (**Sources → Edit → Add**):
+ 
+ ```
+-https://raw.githubusercontent.com/kolbymaxx/Siri27/main/
++https://raw.githubusercontent.com/ma6x9x/lumina-repo/main/
+ ```
+ 
+ Then search for **Music27** and install. New versions show up as normal Sileo updates when the repo is refreshed.
+@@ -43,16 +43,16 @@ make package FINALPACKAGE=1
+ 
+ Requires Theos with an iOS 15+ SDK (this project targets `iphone:clang:16.5:15.0`) and a rootless packaging scheme.
+ 
+-## Publish updates to KDotz Repo
++## Publish updates to Lumina Repo
+ 
+-After building a new `.deb`, publish it into [KDotz Repo](https://github.com/kolbymaxx/Siri27) (`dist/` + apt index):
++After building a new `.deb`, publish it into [Lumina Repo](https://github.com/ma6x9x/lumina-repo) (`dist/` + apt index):
+ 
+ ```bash
+-./scripts/publish-to-kdotz.sh
+-# then push the branch it creates on kolbymaxx/Siri27 (or merge to main)
++./scripts/publish-to-lumina.sh
++# then push the branch it creates on ma6x9x/lumina-repo (or merge to main)
+ ```
+ 
+-Or copy the deb into `Siri27/dist/` and run `scripts/update-apt-repo.sh` there, then commit `Packages`, `Packages.gz`, and `Release`.
++Or copy the deb into `lumina-repo/dist/` and run `scripts/update-apt-repo.sh` there, then commit `Packages`, `Packages.gz`, and `Release`.
+ 
+ ## Scope / honesty
+ 
+diff --git a/kdotz-repo-sync/APPLY-TO-SIRI27.sh b/kdotz-repo-sync/APPLY-TO-SIRI27.sh
+index d6af776..b70f353 100755
+--- a/kdotz-repo-sync/APPLY-TO-SIRI27.sh
++++ b/kdotz-repo-sync/APPLY-TO-SIRI27.sh
+@@ -1,22 +1,22 @@
+ #!/usr/bin/env bash
+-# Apply this KDotz Repo sync into kolbymaxx/Siri27 and push to main.
++# Apply this Lumina Repo sync into ma6x9x/Siri27 and push to main.
+ # Run on a machine that has write access to Siri27:
+-#   ./kdotz-repo-sync/APPLY-TO-SIRI27.sh
++#   ./lumina-repo-sync/APPLY-TO-SIRI27.sh
+ set -euo pipefail
+ SYNC="$(cd "$(dirname "$0")" && pwd)"
+ WORKDIR="$(mktemp -d)"
+ trap 'rm -rf "$WORKDIR"' EXIT
+-git clone git@github.com:kolbymaxx/Siri27.git "$WORKDIR/Siri27" \
+-  || git clone https://github.com/kolbymaxx/Siri27.git "$WORKDIR/Siri27"
++git clone git@github.com:ma6x9x/Siri27.git "$WORKDIR/Siri27" \
++  || git clone https://github.com/ma6x9x/Siri27.git "$WORKDIR/Siri27"
+ cd "$WORKDIR/Siri27"
+ cp "$SYNC/dist/"*.deb dist/
+ cp "$SYNC/Packages" "$SYNC/Packages.gz" "$SYNC/Release" .
+ cp "$SYNC/README.md" README.md
+-git checkout -b cursor/add-music27-to-kdotz-1f6a 2>/dev/null || git checkout cursor/add-music27-to-kdotz-1f6a
++git checkout -b cursor/add-music27-to-lumina-1f6a 2>/dev/null || git checkout cursor/add-music27-to-lumina-1f6a
+ git add dist Packages Packages.gz Release README.md
+-git commit -m "Add Music27 1.0.1 to KDotz Repo" || echo "(commit may already exist)"
++git commit -m "Add Music27 1.0.1 to Lumina Repo" || echo "(commit may already exist)"
+ git push -u origin HEAD
+ echo
+-echo "Opened branch cursor/add-music27-to-kdotz-1f6a on Siri27."
++echo "Opened branch cursor/add-music27-to-lumina-1f6a on Siri27."
+ echo "Merge to main so Sileo source updates:"
+-echo "  https://raw.githubusercontent.com/kolbymaxx/Siri27/main/"
++echo "  https://raw.githubusercontent.com/ma6x9x/Siri27/main/"
+diff --git a/kdotz-repo-sync/README.md b/kdotz-repo-sync/README.md
+index 74a64e1..844e3ce 100644
+--- a/kdotz-repo-sync/README.md
++++ b/kdotz-repo-sync/README.md
+@@ -1,3 +1,5 @@
++# ARCHIVED — use ma6x9x/lumina-repo
++
+ # KDotz Repo
+ 
+ Sileo / Zebra apt source for Kolby’s jailbreak tweaks (rootless + roothide).
+diff --git a/scripts/publish-to-kdotz.sh b/scripts/publish-to-kdotz.sh
+index 08790b5..dd4dba2 100755
+--- a/scripts/publish-to-kdotz.sh
++++ b/scripts/publish-to-kdotz.sh
+@@ -1,57 +1,3 @@
+ #!/usr/bin/env bash
+-# Publish a built Music27 .deb into the KDotz Repo (kolbymaxx/Siri27).
+-#
+-# Usage (from Music27 repo root, after `make package`):
+-#   ./scripts/publish-to-kdotz.sh
+-#   ./scripts/publish-to-kdotz.sh /path/to/com.music27.tweak_1.0.2_iphoneos-arm64.deb
+-#
+-# Requires: git, dpkg-dev (dpkg-scanpackages), network access to push Siri27.
+-set -euo pipefail
+-
+-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+-DEB="${1:-}"
+-
+-if [[ -z "$DEB" ]]; then
+-  DEB="$(ls -t "$ROOT"/packages/com.music27.tweak_*.deb 2>/dev/null | head -1 || true)"
+-fi
+-
+-if [[ -z "${DEB:-}" || ! -f "$DEB" ]]; then
+-  echo "No Music27 .deb found. Build first: make package FINALPACKAGE=1" >&2
+-  echo "Or pass a path: $0 /path/to/file.deb" >&2
+-  exit 1
+-fi
+-
+-DEB="$(cd "$(dirname "$DEB")" && pwd)/$(basename "$DEB")"
+-BASENAME="$(basename "$DEB")"
+-echo "Publishing $BASENAME → KDotz Repo (kolbymaxx/Siri27)"
+-
+-WORKDIR="$(mktemp -d)"
+-cleanup() { rm -rf "$WORKDIR"; }
+-trap cleanup EXIT
+-
+-git clone --depth 1 https://github.com/kolbymaxx/Siri27.git "$WORKDIR/Siri27"
+-cp "$DEB" "$WORKDIR/Siri27/dist/"
+-(
+-  cd "$WORKDIR/Siri27"
+-  bash scripts/update-apt-repo.sh
+-  git checkout -b "cursor/publish-music27-${BASENAME%.deb}-1f6a" 2>/dev/null \
+-    || git checkout -b "cursor/publish-music27-$(date +%Y%m%d%H%M%S)-1f6a"
+-  git add "dist/$BASENAME" Packages Packages.gz Release README.md 2>/dev/null || true
+-  git add "dist/$BASENAME" Packages Packages.gz Release
+-  if git diff --cached --quiet; then
+-    echo "Nothing to publish (already up to date)."
+-    exit 0
+-  fi
+-  git commit -m "Publish Music27 ${BASENAME#com.music27.tweak_}"
+-  echo
+-  echo "Committed on branch $(git branch --show-current)."
+-  echo "Push with:"
+-  echo "  cd $WORKDIR/Siri27 && git push -u origin HEAD"
+-  echo
+-  echo "Or copy the updated files from: $WORKDIR/Siri27"
+-  # Keep workdir for the caller if PUBLISH_KEEP=1
+-  if [[ "${PUBLISH_KEEP:-0}" == "1" ]]; then
+-    trap - EXIT
+-    echo "WORKDIR=$WORKDIR"
+-  fi
+-)
++# Deprecated: KDotz Repo → Lumina Repo (ma6x9x/lumina-repo).
++exec "$(cd "$(dirname "$0")" && pwd)/publish-to-lumina.sh" "$@"
+diff --git a/scripts/publish-to-lumina.sh b/scripts/publish-to-lumina.sh
+new file mode 100755
+index 0000000..802ff93
+--- /dev/null
++++ b/scripts/publish-to-lumina.sh
+@@ -0,0 +1,54 @@
++#!/usr/bin/env bash
++# Publish a built Music27 .deb into Lumina Repo (ma6x9x/lumina-repo).
++#
++# Usage (from Music27 repo root, after `make package`):
++#   ./scripts/publish-to-lumina.sh
++#   ./scripts/publish-to-lumina.sh /path/to/com.music27.tweak_1.0.2_iphoneos-arm64.deb
++#
++# Requires: git, dpkg-dev (dpkg-scanpackages), network access to push lumina-repo.
++set -euo pipefail
++
++ROOT="$(cd "$(dirname "$0")/.." && pwd)"
++DEB="${1:-}"
++
++if [[ -z "$DEB" ]]; then
++  DEB="$(ls -t "$ROOT"/packages/com.music27.tweak_*.deb 2>/dev/null | head -1 || true)"
++fi
++
++if [[ -z "${DEB:-}" || ! -f "$DEB" ]]; then
++  echo "No Music27 .deb found. Build first: make package FINALPACKAGE=1" >&2
++  echo "Or pass a path: $0 /path/to/file.deb" >&2
++  exit 1
++fi
++
++DEB="$(cd "$(dirname "$DEB")" && pwd)/$(basename "$DEB")"
++BASENAME="$(basename "$DEB")"
++echo "Publishing $BASENAME → Lumina Repo (ma6x9x/lumina-repo)"
++
++WORKDIR="$(mktemp -d)"
++cleanup() { rm -rf "$WORKDIR"; }
++trap cleanup EXIT
++
++git clone --depth 1 https://github.com/ma6x9x/lumina-repo.git "$WORKDIR/lumina-repo"
++cp "$DEB" "$WORKDIR/lumina-repo/dist/"
++(
++  cd "$WORKDIR/lumina-repo"
++  bash scripts/update-apt-repo.sh
++  git checkout -b "cursor/publish-music27-${BASENAME%.deb}-1f6a" 2>/dev/null \
++    || git checkout -b "cursor/publish-music27-$(date +%Y%m%d%H%M%S)-1f6a"
++  git add "dist/$BASENAME" Packages Packages.gz Packages.bz2 Packages.xz Release 2>/dev/null || \
++    git add "dist/$BASENAME" Packages Packages.gz Release
++  if git diff --cached --quiet; then
++    echo "Nothing to publish (already up to date)."
++    exit 0
++  fi
++  git commit -m "Publish Music27 ${BASENAME#com.music27.tweak_}"
++  echo
++  echo "Committed on branch $(git branch --show-current)."
++  echo "Push with:"
++  echo "  cd $WORKDIR/lumina-repo && git push -u origin HEAD"
++  if [[ "${PUBLISH_KEEP:-0}" == "1" ]]; then
++    trap - EXIT
++    echo "WORKDIR=$WORKDIR"
++  fi
++)
